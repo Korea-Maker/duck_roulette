@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { SlotReel } from './SlotReel';
 import { SpinButton } from './SpinButton';
 import { ResultDisplay } from './ResultDisplay';
+import { ThemeSelector } from './ThemeSelector';
 import { useSlotMachine } from '../hooks/useSlotMachine';
 import { useSound } from '../hooks/useSound';
 import { LANES } from '../data/lanes';
@@ -15,18 +16,21 @@ const laneItems: SlotItem[] = LANES.map((lane) => ({
   id: lane.id,
   label: lane.koreanLabel,
   color: lane.color,
+  image: lane.image,
 }));
 
 const championItems: SlotItem[] = CHAMPIONS.map((champ) => ({
   id: champ.id,
   label: champ.koreanName,
   color: 'text-cyan-300',
+  image: `https://ddragon.leagueoflegends.com/cdn/14.1.1/img/champion/${champ.id}.png`,
 }));
 
 const damageTypeItems: SlotItem[] = DAMAGE_TYPES.map((type) => ({
   id: type.id,
   label: `${type.koreanLabel} (${type.label})`,
   color: type.color,
+  image: type.icon,
 }));
 
 export function SlotMachine() {
@@ -40,6 +44,7 @@ export function SlotMachine() {
     toggleChampion,
     toggleDamageType,
     spin,
+    hideResult,
   } = useSlotMachine();
 
   const { startSpin, stopSpin, playResult } = useSound();
@@ -58,6 +63,9 @@ export function SlotMachine() {
 
   return (
     <div className="flex flex-col items-center gap-8 p-4">
+      {/* 테마 선택기 */}
+      <ThemeSelector />
+
       {/* 타이틀 */}
       <motion.h1
         className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500"
@@ -141,12 +149,13 @@ export function SlotMachine() {
         )}
       </motion.div>
 
-      {/* 결과 표시 */}
+      {/* 결과 표시 모달 */}
       <ResultDisplay
         lane={state.lane.enabled ? state.lane.currentValue : null}
         champion={state.champion.enabled ? state.champion.currentValue : null}
         damageType={state.damageType.enabled ? state.damageType.currentValue : null}
         show={showResult && !isSpinning}
+        onClose={hideResult}
       />
 
       {/* 푸터 */}

@@ -108,6 +108,11 @@ export function useSlotMachine() {
     }, SPIN_DURATION);
   }, [state, selectedIndices]);
 
+  // 결과 닫기
+  const hideResult = useCallback(() => {
+    setShowResult(false);
+  }, []);
+
   // 스피닝 중인지 확인
   const isSpinning = state.lane.isSpinning || state.champion.isSpinning || state.damageType.isSpinning;
 
@@ -124,5 +129,6 @@ export function useSlotMachine() {
     toggleChampion,
     toggleDamageType,
     spin,
+    hideResult,
   };
 }

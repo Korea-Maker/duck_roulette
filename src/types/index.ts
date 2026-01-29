@@ -16,6 +16,7 @@ export interface SlotItem {
   id: string;
   label: string;
   color?: string;
+  image?: string;
 }
 
 // 슬롯 필드 상태
@@ -62,6 +63,7 @@ export interface ResultDisplayProps {
   champion: Champion | null;
   damageType: DamageType | null;
   show: boolean;
+  onClose: () => void;
 }
 
 // 라인 정보 (표시용)
@@ -70,6 +72,7 @@ export interface LaneInfo {
   label: string;
   koreanLabel: string;
   color: string;
+  image?: string;
 }
 
 // 데미지 타입 정보 (표시용)
@@ -78,4 +81,5 @@ export interface DamageTypeInfo {
   label: string;
   koreanLabel: string;
   color: string;
+  icon?: string;
 }

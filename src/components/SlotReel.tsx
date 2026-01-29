@@ -4,10 +4,10 @@ import type { SlotReelProps, SlotItem as SlotItemType } from '../types';
 import { SlotItem } from './SlotItem';
 import { ToggleSwitch } from './ToggleSwitch';
 
-const ITEM_HEIGHT = 64; // h-16 = 64px
+const ITEM_HEIGHT = 64; // h-16 = 64px (increased to accommodate images)
 const VISIBLE_ITEMS = 3;
 const SPIN_DURATION = 2000; // 2초
-const SPIN_ITEMS_COUNT = 30; // 스핀 중 보여줄 아이템 수
+const SPIN_ITEMS_COUNT = 20; // 스핀 중 보여줄 아이템 수
 
 export function SlotReel({
   items,
@@ -25,12 +25,20 @@ export function SlotReel({
     if (!isSpinning) return [];
 
     const shuffled: SlotItemType[] = [];
+    // 랜덤 아이템들 추가
     for (let i = 0; i < SPIN_ITEMS_COUNT; i++) {
       const randomItem = items[Math.floor(Math.random() * items.length)];
       shuffled.push(randomItem);
     }
-    // 마지막에 선택된 아이템 추가
-    shuffled.push(items[selectedIndex]);
+    // 마지막 3개 아이템: 중앙에 최종 선택 아이템이 정확히 멈추도록
+    // [위의 아이템, 선택된 아이템(중앙), 아래 아이템]
+    const prevIndex = (selectedIndex - 1 + items.length) % items.length;
+    const nextIndex = (selectedIndex + 1) % items.length;
+
+    shuffled.push(items[prevIndex]);
+    shuffled.push(items[selectedIndex]); // 이것이 중앙에 위치할 최종 아이템
+    shuffled.push(items[nextIndex]);
+
     return shuffled;
   }, [isSpinning, items, selectedIndex]);
 
@@ -145,19 +153,21 @@ export function SlotReel({
               className="absolute w-full"
               initial={{ y: 0 }}
               animate={{
-                y: -(spinItems.length - VISIBLE_ITEMS + 1) * ITEM_HEIGHT
+                // 최종 아이템이 중앙(ITEM_HEIGHT 위치)에 정확히 멈추도록 계산
+                // spinItems.length - 2 = 선택된 아이템의 인덱스 (마지막에서 두번째)
+                y: -(spinItems.length - 2) * ITEM_HEIGHT
               }}
               transition={{
                 duration: SPIN_DURATION / 1000,
-                ease: [0.25, 0.1, 0.25, 1], // 감속 이징
+                ease: [0.33, 0.01, 0.15, 1], // 강한 감속 커브
               }}
-              style={{ top: ITEM_HEIGHT }}
+              style={{ top: 0 }}
             >
               {spinItems.map((item, index) => (
                 <SlotItem
                   key={`spin-${index}`}
                   item={item}
-                  isActive={index === spinItems.length - 1}
+                  isActive={index === spinItems.length - 2} // 마지막에서 두번째가 선택된 아이템
                 />
               ))}
             </motion.div>
