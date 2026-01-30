@@ -1,6 +1,6 @@
 import type { Champion } from '../types';
 
-// Riot Data Dragon 기반 챔피언 목록 (170개) - 각 챔피언의 대표 색상 포함
+// Riot Data Dragon 기반 챔피언 목록 (172개) - 각 챔피언의 대표 색상 포함
 export const CHAMPIONS: Champion[] = [
   { id: 'Aatrox', name: 'Aatrox', koreanName: '아트록스', color: '#ff4444' },
   { id: 'Ahri', name: 'Ahri', koreanName: '아리', color: '#ff69b4' },
@@ -165,6 +165,8 @@ export const CHAMPIONS: Champion[] = [
   { id: 'Yone', name: 'Yone', koreanName: '요네', color: '#ff4466' },
   { id: 'Yorick', name: 'Yorick', koreanName: '요릭', color: '#44aa66' },
   { id: 'Yuumi', name: 'Yuumi', koreanName: '유미', color: '#ff88ff' },
+  { id: 'Yunara', name: 'Yunara', koreanName: '유나라', color: '#88ddff' },
+  { id: 'Zaahen', name: 'Zaahen', koreanName: '자헨', color: '#cc66ff' },
   { id: 'Zac', name: 'Zac', koreanName: '자크', color: '#66ff44' },
   { id: 'Zed', name: 'Zed', koreanName: '제드', color: '#ff4466' },
   { id: 'Zeri', name: 'Zeri', koreanName: '제리', color: '#44ff88' },
