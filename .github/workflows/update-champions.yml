@@ -1,0 +1,45 @@
+name: Update Champions
+
+on:
+  schedule:
+    # 매일 오전 9시 (KST) = UTC 0시
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 수동 실행 가능
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Update Champions
+        run: node scripts/update-champions.cjs
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet src/data/champions.ts || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and Push
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add src/data/champions.ts
+          git commit -m "chore: 챔피언 목록 자동 업데이트 ($(date +%Y-%m-%d))"
+          git push
+
+      - name: Deploy to Vercel
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          npm install -g vercel
+          vercel --prod --yes --token=$VERCEL_TOKEN
