@@ -3,11 +3,7 @@ import { useEffect, useState, useMemo } from 'react';
 import type { SlotReelProps, SlotItem as SlotItemType } from '../types';
 import { SlotItem } from './SlotItem';
 import { ToggleSwitch } from './ToggleSwitch';
-
-const ITEM_HEIGHT = 64; // h-16 = 64px (increased to accommodate images)
-const VISIBLE_ITEMS = 3;
-const SPIN_DURATION = 2000; // 2초
-const SPIN_ITEMS_COUNT = 20; // 스핀 중 보여줄 아이템 수
+import { SLOT_CONFIG } from '../config/constants';
 
 export function SlotReel({
   items,
@@ -26,7 +22,7 @@ export function SlotReel({
 
     const shuffled: SlotItemType[] = [];
     // 랜덤 아이템들 추가
-    for (let i = 0; i < SPIN_ITEMS_COUNT; i++) {
+    for (let i = 0; i < SLOT_CONFIG.SPIN_ITEMS_COUNT; i++) {
       const randomItem = items[Math.floor(Math.random() * items.length)];
       shuffled.push(randomItem);
     }
@@ -90,7 +86,7 @@ export function SlotReel({
       {/* 슬롯 릴 */}
       <motion.div
         className={`slot-reel w-44 relative ${!enabled ? 'opacity-50' : ''}`}
-        style={{ height: ITEM_HEIGHT * VISIBLE_ITEMS }}
+        style={{ height: SLOT_CONFIG.ITEM_HEIGHT * SLOT_CONFIG.VISIBLE_ITEMS }}
         animate={isSpinning && enabled ? {
           scale: [1, 1.02, 1],
         } : {}}
@@ -104,8 +100,8 @@ export function SlotReel({
         <motion.div
           className="absolute left-0 right-0 z-10 pointer-events-none border-y-4 border-yellow-400"
           style={{
-            top: ITEM_HEIGHT,
-            height: ITEM_HEIGHT,
+            top: SLOT_CONFIG.ITEM_HEIGHT,
+            height: SLOT_CONFIG.ITEM_HEIGHT,
             background: 'linear-gradient(90deg, rgba(255,215,0,0.15) 0%, rgba(255,215,0,0.3) 50%, rgba(255,215,0,0.15) 100%)',
           }}
           animate={isSpinning && enabled ? {
@@ -131,7 +127,7 @@ export function SlotReel({
         <div
           className="absolute top-0 left-0 right-0 z-20 pointer-events-none"
           style={{
-            height: ITEM_HEIGHT,
+            height: SLOT_CONFIG.ITEM_HEIGHT,
             background: 'linear-gradient(to bottom, rgba(17,24,39,1) 0%, rgba(17,24,39,0) 100%)'
           }}
         />
@@ -140,7 +136,7 @@ export function SlotReel({
         <div
           className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none"
           style={{
-            height: ITEM_HEIGHT,
+            height: SLOT_CONFIG.ITEM_HEIGHT,
             background: 'linear-gradient(to top, rgba(17,24,39,1) 0%, rgba(17,24,39,0) 100%)'
           }}
         />
@@ -155,10 +151,10 @@ export function SlotReel({
               animate={{
                 // 최종 아이템이 중앙(ITEM_HEIGHT 위치)에 정확히 멈추도록 계산
                 // spinItems.length - 2 = 선택된 아이템의 인덱스 (마지막에서 두번째)
-                y: -(spinItems.length - 2) * ITEM_HEIGHT
+                y: -(spinItems.length - 2) * SLOT_CONFIG.ITEM_HEIGHT
               }}
               transition={{
-                duration: SPIN_DURATION / 1000,
+                duration: SLOT_CONFIG.SPIN_DURATION / 1000,
                 ease: [0.33, 0.01, 0.15, 1], // 강한 감속 커브
               }}
               style={{ top: 0 }}
@@ -188,7 +184,7 @@ export function SlotReel({
                 damping: 15,
                 duration: 0.6,
               }}
-              style={{ top: ITEM_HEIGHT }}
+              style={{ top: SLOT_CONFIG.ITEM_HEIGHT }}
             >
               {currentItem && (
                 <SlotItem item={currentItem} isActive />

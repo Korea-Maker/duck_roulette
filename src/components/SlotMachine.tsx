@@ -9,6 +9,7 @@ import { useSound } from '../hooks/useSound';
 import { LANES } from '../data/lanes';
 import { CHAMPIONS } from '../data/champions';
 import { DAMAGE_TYPES } from '../data/damageTypes';
+import { getChampionImageUrl } from '../utils/champion';
 import type { SlotItem } from '../types';
 
 // 데이터를 SlotItem 형태로 변환
@@ -23,7 +24,7 @@ const championItems: SlotItem[] = CHAMPIONS.map((champ) => ({
   id: champ.id,
   label: champ.koreanName,
   color: 'text-cyan-300',
-  image: `https://ddragon.leagueoflegends.com/cdn/14.1.1/img/champion/${champ.id}.png`,
+  image: getChampionImageUrl(champ.id),
 }));
 
 const damageTypeItems: SlotItem[] = DAMAGE_TYPES.map((type) => ({
