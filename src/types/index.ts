@@ -9,6 +9,7 @@ export interface Champion {
   id: string;
   name: string;
   koreanName: string;
+  color: string; // 챔피언 대표 색상 (hex)
 }
 
 // 슬롯 아이템 타입 (제네릭)

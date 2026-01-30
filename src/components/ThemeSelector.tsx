@@ -7,6 +7,7 @@ const themes = [
   { id: 'soft-gold' as ThemeName, label: 'Soft Gold', icon: '✨', color: '#C9A961' },
   { id: 'ocean-calm' as ThemeName, label: 'Ocean Calm', icon: '🌊', color: '#5E9EA0' },
   { id: 'sunset-warm' as ThemeName, label: 'Sunset Warm', icon: '🌅', color: '#E89B8E' },
+  { id: 'summoners-rift' as ThemeName, label: 'Summoner\'s Rift', icon: '⚔️', color: '#4A9D5F' },
 ];
 
 export function ThemeSelector() {

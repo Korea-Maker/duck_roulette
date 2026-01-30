@@ -126,6 +126,145 @@ body::after {
   }
 }
 
+/* LED Frame Animations */
+@keyframes led-chase {
+  0% {
+    box-shadow:
+      0 0 20px 2px #ff0000,
+      0 0 40px 4px rgba(255, 0, 0, 0.5),
+      inset 0 0 20px rgba(255, 0, 0, 0.2);
+  }
+  14% {
+    box-shadow:
+      0 0 20px 2px #ff7700,
+      0 0 40px 4px rgba(255, 119, 0, 0.5),
+      inset 0 0 20px rgba(255, 119, 0, 0.2);
+  }
+  28% {
+    box-shadow:
+      0 0 20px 2px #ffff00,
+      0 0 40px 4px rgba(255, 255, 0, 0.5),
+      inset 0 0 20px rgba(255, 255, 0, 0.2);
+  }
+  42% {
+    box-shadow:
+      0 0 20px 2px #00ff00,
+      0 0 40px 4px rgba(0, 255, 0, 0.5),
+      inset 0 0 20px rgba(0, 255, 0, 0.2);
+  }
+  57% {
+    box-shadow:
+      0 0 20px 2px #00ffff,
+      0 0 40px 4px rgba(0, 255, 255, 0.5),
+      inset 0 0 20px rgba(0, 255, 255, 0.2);
+  }
+  71% {
+    box-shadow:
+      0 0 20px 2px #0077ff,
+      0 0 40px 4px rgba(0, 119, 255, 0.5),
+      inset 0 0 20px rgba(0, 119, 255, 0.2);
+  }
+  85% {
+    box-shadow:
+      0 0 20px 2px #ff00ff,
+      0 0 40px 4px rgba(255, 0, 255, 0.5),
+      inset 0 0 20px rgba(255, 0, 255, 0.2);
+  }
+  100% {
+    box-shadow:
+      0 0 20px 2px #ff0000,
+      0 0 40px 4px rgba(255, 0, 0, 0.5),
+      inset 0 0 20px rgba(255, 0, 0, 0.2);
+  }
+}
+
+@keyframes led-chase-fast {
+  0% {
+    box-shadow:
+      0 0 25px 3px #ff0000,
+      0 0 50px 6px rgba(255, 0, 0, 0.7),
+      inset 0 0 25px rgba(255, 0, 0, 0.3);
+  }
+  10% {
+    box-shadow:
+      0 0 25px 3px #ff7700,
+      0 0 50px 6px rgba(255, 119, 0, 0.7),
+      inset 0 0 25px rgba(255, 119, 0, 0.3);
+  }
+  20% {
+    box-shadow:
+      0 0 25px 3px #ffff00,
+      0 0 50px 6px rgba(255, 255, 0, 0.7),
+      inset 0 0 25px rgba(255, 255, 0, 0.3);
+  }
+  30% {
+    box-shadow:
+      0 0 25px 3px #00ff00,
+      0 0 50px 6px rgba(0, 255, 0, 0.7),
+      inset 0 0 25px rgba(0, 255, 0, 0.3);
+  }
+  40% {
+    box-shadow:
+      0 0 25px 3px #00ffff,
+      0 0 50px 6px rgba(0, 255, 255, 0.7),
+      inset 0 0 25px rgba(0, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 25px 3px #0077ff,
+      0 0 50px 6px rgba(0, 119, 255, 0.7),
+      inset 0 0 25px rgba(0, 119, 255, 0.3);
+  }
+  60% {
+    box-shadow:
+      0 0 25px 3px #7700ff,
+      0 0 50px 6px rgba(119, 0, 255, 0.7),
+      inset 0 0 25px rgba(119, 0, 255, 0.3);
+  }
+  70% {
+    box-shadow:
+      0 0 25px 3px #ff00ff,
+      0 0 50px 6px rgba(255, 0, 255, 0.7),
+      inset 0 0 25px rgba(255, 0, 255, 0.3);
+  }
+  80% {
+    box-shadow:
+      0 0 25px 3px #ff0077,
+      0 0 50px 6px rgba(255, 0, 119, 0.7),
+      inset 0 0 25px rgba(255, 0, 119, 0.3);
+  }
+  90% {
+    box-shadow:
+      0 0 25px 3px #ff7700,
+      0 0 50px 6px rgba(255, 119, 0, 0.7),
+      inset 0 0 25px rgba(255, 119, 0, 0.3);
+  }
+  100% {
+    box-shadow:
+      0 0 25px 3px #ff0000,
+      0 0 50px 6px rgba(255, 0, 0, 0.7),
+      inset 0 0 25px rgba(255, 0, 0, 0.3);
+  }
+}
+
+@keyframes led-bulbs-rotate {
+  0% {
+    background-position: 0% 0%, 25% 0%, 50% 0%, 75% 0%;
+  }
+  100% {
+    background-position: 100% 0%, 125% 0%, 150% 0%, 175% 0%;
+  }
+}
+
+@keyframes led-bulbs-rotate-fast {
+  0% {
+    background-position: 0% 0%, 20% 0%, 40% 0%, 60% 0%, 80% 0%;
+  }
+  100% {
+    background-position: 100% 0%, 120% 0%, 140% 0%, 160% 0%, 180% 0%;
+  }
+}
+
 .slot-container {
   @apply rounded-3xl p-8 shadow-2xl;
   background:
@@ -137,6 +276,7 @@ body::after {
   position: relative;
 }
 
+/* LED Frame - Base glow */
 .slot-container::before {
   content: '';
   position: absolute;
@@ -150,6 +290,66 @@ body::after {
   filter: blur(8px);
   opacity: 0.15;
   animation: machine-pulse 6s ease-in-out infinite;
+}
+
+/* LED Frame - Main border with color cycling */
+.slot-container::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  right: -6px;
+  bottom: -6px;
+  border-radius: 1.6rem;
+  z-index: -2;
+  border: 4px solid transparent;
+  animation: led-chase 4s linear infinite;
+  pointer-events: none;
+}
+
+/* LED Frame when spinning - faster animation */
+.slot-container.spinning::after {
+  animation: led-chase-fast 0.8s linear infinite;
+}
+
+/* LED Bulbs effect using repeating gradients */
+.led-frame {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border-radius: 1.7rem;
+  z-index: -3;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 3%,
+      rgba(255, 215, 0, 0.6) 3.5%,
+      rgba(255, 100, 0, 0.6) 4%,
+      transparent 4.5%,
+      transparent 7%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0%,
+      transparent 3%,
+      rgba(0, 255, 255, 0.6) 3.5%,
+      rgba(0, 100, 255, 0.6) 4%,
+      transparent 4.5%,
+      transparent 7%
+    );
+  background-size: 40px 100%, 100% 40px;
+  animation: led-bulbs-rotate 3s linear infinite;
+  opacity: 0.7;
+}
+
+/* LED Frame bulbs when spinning */
+.slot-container.spinning .led-frame {
+  animation: led-bulbs-rotate-fast 0.5s linear infinite;
+  opacity: 1;
 }
 
 @keyframes reel-glow {
@@ -632,4 +832,215 @@ img[src*="ddragon.leagueoflegends.com"] {
 .result-card .border-yellow-400 {
   animation: champion-glow 3s ease-in-out infinite;
   filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4));
+}
+
+/* Theme: Summoner's Rift */
+.theme-summoners-rift {
+  --theme-primary: #4A9D5F;
+  --theme-secondary: #2E7D47;
+  --theme-accent: #6BC47D;
+  --theme-bg-start: #0f1a14;
+  --theme-bg-mid: #1a2f28;
+  --theme-bg-end: #1a1429;
+  --theme-text: rgba(230, 255, 240, 0.85);
+  --theme-glow: rgba(74, 157, 95, 0.25);
+}
+
+.theme-summoners-rift body {
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(107, 196, 125, 0.15) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 30%, rgba(74, 157, 95, 0.12) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 70%, rgba(65, 105, 225, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 80%, rgba(138, 43, 226, 0.06) 0%, transparent 40%),
+    linear-gradient(165deg,
+      #0a1510 0%,
+      #1a2f28 15%,
+      #0f1a14 30%,
+      #1a3f35 45%,
+      #1a2f48 60%,
+      #1a1429 80%,
+      #0a0a12 100%);
+  background-size: 300% 300%;
+  animation: gradient-shift 20s ease infinite;
+}
+
+.theme-summoners-rift body::before {
+  background-image:
+    radial-gradient(2px 2px at 15% 25%, rgba(107, 196, 125, 0.12), transparent),
+    radial-gradient(1px 1px at 45% 35%, rgba(74, 157, 95, 0.10), transparent),
+    radial-gradient(1px 1px at 75% 55%, rgba(65, 105, 225, 0.08), transparent),
+    radial-gradient(2px 2px at 30% 75%, rgba(138, 43, 226, 0.06), transparent),
+    radial-gradient(1px 1px at 85% 15%, rgba(255, 215, 0, 0.05), transparent),
+    radial-gradient(1px 1px at 60% 85%, rgba(74, 157, 95, 0.08), transparent);
+  background-size: 250px 250px, 350px 350px, 300px 300px, 400px 400px, 200px 200px, 450px 450px;
+}
+
+.theme-summoners-rift body::after {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(74, 157, 95, 0.03) 2px,
+    rgba(74, 157, 95, 0.03) 4px
+  );
+  opacity: 0.15;
+}
+
+.theme-summoners-rift .slot-item .border-yellow-400 {
+  border-color: #FFD700 !important;
+  box-shadow:
+    0 0 15px rgba(255, 215, 0, 0.5),
+    0 0 25px rgba(255, 215, 0, 0.3),
+    inset 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+@keyframes rift-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 20px rgba(74, 157, 95, 0.3),
+      0 0 35px rgba(107, 196, 125, 0.2),
+      inset 0 0 40px rgba(0, 0, 0, 0.7),
+      inset 0 -5px 20px rgba(74, 157, 95, 0.15);
+  }
+  50% {
+    box-shadow:
+      0 0 30px rgba(74, 157, 95, 0.4),
+      0 0 45px rgba(107, 196, 125, 0.3),
+      inset 0 0 40px rgba(0, 0, 0, 0.7),
+      inset 0 -5px 25px rgba(74, 157, 95, 0.2);
+  }
+}
+
+.theme-summoners-rift .slot-container {
+  animation: rift-pulse 6s ease-in-out infinite;
+  background:
+    linear-gradient(145deg, #1a2f28 0%, #0f1a14 50%, #1a2f28 100%),
+    radial-gradient(ellipse at top left, rgba(74, 157, 95, 0.15), transparent 60%),
+    radial-gradient(ellipse at bottom right, rgba(138, 43, 226, 0.08), transparent 60%);
+}
+
+.theme-summoners-rift .slot-container::before {
+  background: linear-gradient(135deg, #4A9D5F 0%, #6BC47D 50%, #2E7D47 100%);
+  filter: blur(12px);
+  opacity: 0.2;
+}
+
+.theme-summoners-rift .result-card {
+  background:
+    linear-gradient(145deg, #2E7D47 0%, #1a2f28 50%, #2E7D47 100%),
+    radial-gradient(ellipse at top, rgba(107, 196, 125, 0.2), transparent);
+}
+
+.theme-summoners-rift .result-card::before {
+  background: linear-gradient(135deg, #4A9D5F 0%, #6BC47D 100%);
+  opacity: 0.25;
+}
+
+/* Slot Machine Lever Styles */
+.lever-container {
+  @apply relative flex flex-col items-center;
+  @apply transition-all duration-300;
+  @apply disabled:opacity-40 disabled:cursor-not-allowed;
+  height: 120px;
+  width: 50px;
+  cursor: pointer;
+}
+
+.lever-base {
+  @apply absolute bottom-0;
+  width: 60px;
+  height: 20px;
+  background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+  border-radius: 10px;
+  border: 2px solid #3a3a3a;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.6),
+    inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  z-index: 1;
+}
+
+.lever-arm {
+  @apply absolute;
+  width: 8px;
+  height: 80px;
+  top: 20px;
+  background: linear-gradient(90deg,
+    #4a4a4a 0%,
+    #5a5a5a 20%,
+    #6a6a6a 50%,
+    #5a5a5a 80%,
+    #4a4a4a 100%
+  );
+  border-radius: 4px;
+  box-shadow:
+    2px 0 4px rgba(0, 0, 0, 0.4),
+    -1px 0 2px rgba(255, 255, 255, 0.1),
+    inset 1px 0 1px rgba(255, 255, 255, 0.2),
+    inset -1px 0 1px rgba(0, 0, 0, 0.3);
+  transform-origin: top center;
+  z-index: 2;
+}
+
+.lever-handle {
+  @apply absolute -top-2;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(145deg, #ff4444 0%, #cc0000 50%, #aa0000 100%);
+  border-radius: 50%;
+  border: 3px solid #8b0000;
+  box-shadow:
+    0 4px 12px rgba(255, 68, 68, 0.5),
+    0 2px 6px rgba(0, 0, 0, 0.6),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 100, 100, 0.6);
+}
+
+/* Lever glow effect when enabled */
+.lever-container:not(:disabled) .lever-handle {
+  animation: lever-handle-glow 3s ease-in-out infinite;
+}
+
+@keyframes lever-handle-glow {
+  0%, 100% {
+    box-shadow:
+      0 4px 12px rgba(255, 68, 68, 0.5),
+      0 2px 6px rgba(0, 0, 0, 0.6),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.4),
+      inset 0 2px 4px rgba(255, 100, 100, 0.6);
+  }
+  50% {
+    box-shadow:
+      0 4px 16px rgba(255, 68, 68, 0.8),
+      0 2px 8px rgba(255, 0, 0, 0.4),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.4),
+      inset 0 2px 6px rgba(255, 100, 100, 0.8);
+  }
+}
+
+/* Lever hover effect */
+.lever-container:not(:disabled):hover .lever-handle {
+  background: linear-gradient(145deg, #ff5555 0%, #dd0000 50%, #bb0000 100%);
+  box-shadow:
+    0 4px 20px rgba(255, 68, 68, 0.9),
+    0 2px 10px rgba(255, 0, 0, 0.6),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.4),
+    inset 0 2px 6px rgba(255, 120, 120, 0.8);
+}
+
+/* Subtle metallic shine on arm */
+.lever-arm::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  border-radius: 2px;
 }

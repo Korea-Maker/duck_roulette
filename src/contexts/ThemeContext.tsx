@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-export type ThemeName = 'pure-dark' | 'soft-gold' | 'ocean-calm' | 'sunset-warm';
+export type ThemeName = 'pure-dark' | 'soft-gold' | 'ocean-calm' | 'sunset-warm' | 'summoners-rift';
 
 interface ThemeContextType {
   theme: ThemeName;
@@ -17,7 +17,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Remove all theme classes
-    document.body.classList.remove('theme-pure-dark', 'theme-soft-gold', 'theme-ocean-calm', 'theme-sunset-warm');
+    document.body.classList.remove('theme-pure-dark', 'theme-soft-gold', 'theme-ocean-calm', 'theme-sunset-warm', 'theme-summoners-rift');
     // Add current theme class
     document.body.classList.add(`theme-${theme}`);
     // Save to localStorage

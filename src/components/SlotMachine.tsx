@@ -33,7 +33,11 @@ const damageTypeItems: SlotItem[] = DAMAGE_TYPES.map((type) => ({
   image: type.icon,
 }));
 
-export function SlotMachine() {
+interface SlotMachineProps {
+  onSpinComplete?: (champion: string, lane: string, type: string) => void;
+}
+
+export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
   const {
     state,
     selectedIndices,
@@ -45,7 +49,7 @@ export function SlotMachine() {
     toggleDamageType,
     spin,
     hideResult,
-  } = useSlotMachine();
+  } = useSlotMachine({ onSpinComplete });
 
   const { startSpin, stopSpin, playResult } = useSound();
 
@@ -93,11 +97,14 @@ export function SlotMachine() {
 
       {/* 슬롯 머신 컨테이너 */}
       <motion.div
-        className="slot-container"
+        className={`slot-container ${isSpinning ? 'spinning' : ''}`}
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
+        {/* LED Frame */}
+        <div className="led-frame" />
+
         {/* 슬롯 릴들 */}
         <div className="flex flex-col md:flex-row gap-6 md:gap-8 p-4">
           <SlotReel
@@ -128,13 +135,44 @@ export function SlotMachine() {
           />
         </div>
 
-        {/* 스핀 버튼 */}
-        <div className="flex justify-center mt-6">
+        {/* 스핀 버튼 & 레버 */}
+        <div className="flex justify-center items-end gap-8 mt-6">
           <SpinButton
             onClick={spin}
             disabled={isSpinning || allDisabled}
             isSpinning={isSpinning}
           />
+
+          {/* 슬롯 머신 레버 */}
+          <motion.button
+            className="lever-container"
+            onClick={spin}
+            disabled={isSpinning || allDisabled}
+            whileHover={!isSpinning && !allDisabled ? { scale: 1.05 } : {}}
+            whileTap={!isSpinning && !allDisabled ? { scale: 0.95 } : {}}
+          >
+            {/* 레버 베이스 (고정부) */}
+            <div className="lever-base" />
+
+            {/* 레버 막대 */}
+            <motion.div
+              className="lever-arm"
+              animate={isSpinning ? {
+                rotateZ: [0, 35, 0],
+                transformOrigin: 'top center',
+              } : {
+                rotateZ: 0,
+              }}
+              transition={isSpinning ? {
+                duration: 0.6,
+                times: [0, 0.3, 1],
+                ease: ['easeOut', 'easeInOut'],
+              } : {}}
+            >
+              {/* 레버 손잡이 */}
+              <div className="lever-handle" />
+            </motion.div>
+          </motion.button>
         </div>
 
         {/* 비활성화 경고 */}

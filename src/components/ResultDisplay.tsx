@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import confetti from 'canvas-confetti';
 import type { ResultDisplayProps } from '../types';
 import { getLaneInfo } from '../data/lanes';
 import { getDamageTypeInfo } from '../data/damageTypes';
@@ -45,24 +46,81 @@ export function ResultDisplay({ lane, champion, damageType, show, onClose }: Res
     }
   }, [show]);
 
+  // 승리 컨페티 효과
+  useEffect(() => {
+    if (show && hasAnyResult) {
+      const duration = 2500;
+      const animationEnd = Date.now() + duration;
+
+      const interval = setInterval(() => {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          clearInterval(interval);
+          return;
+        }
+
+        const particleCount = 3;
+
+        // 왼쪽에서 발사
+        confetti({
+          particleCount,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0, y: 0.6 },
+          colors: ['#FFD700', '#FFA500', '#FF6347', '#00CED1', '#FF69B4'],
+          gravity: 1.2,
+          scalar: 1.2,
+        });
+
+        // 오른쪽에서 발사
+        confetti({
+          particleCount,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1, y: 0.6 },
+          colors: ['#FFD700', '#FFA500', '#FF6347', '#00CED1', '#FF69B4'],
+          gravity: 1.2,
+          scalar: 1.2,
+        });
+      }, 100);
+
+      return () => clearInterval(interval);
+    }
+  }, [show, hasAnyResult]);
+
   if (!show || !hasAnyResult) return null;
 
   const championImageUrl = champion
     ? `https://ddragon.leagueoflegends.com/cdn/14.1.1/img/champion/${champion.id}.png`
     : null;
 
+  // 챔피언 색상 가져오기 (기본값: 골드)
+  const championColor = champion?.color || '#FFD700';
+
+  // RGB 변환 함수 (hex -> rgba)
+  const hexToRgba = (hex: string, alpha: number = 1) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+
   return (
     <AnimatePresence>
       {show && (
         <>
-          {/* 배경 오버레이 */}
+          {/* 배경 오버레이 - 챔피언 색상으로 빛남 */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/80 z-40"
-            style={{ backdropFilter: 'blur(8px)' }}
+            className="fixed inset-0 z-40"
+            style={{
+              backdropFilter: 'blur(8px)',
+              background: `radial-gradient(circle at center, ${hexToRgba(championColor, 0.2)} 0%, rgba(0, 0, 0, 0.85) 60%, rgba(0, 0, 0, 0.95) 100%)`,
+            }}
             onClick={onClose}
           />
 
@@ -74,7 +132,11 @@ export function ResultDisplay({ lane, champion, damageType, show, onClose }: Res
               exit={{ opacity: 0, scale: 0.7, y: 50 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
               className="relative result-card max-w-lg w-full"
-              style={{ resize: 'none' }}
+              style={{
+                resize: 'none',
+                borderColor: championColor,
+                boxShadow: `0 0 40px ${hexToRgba(championColor, 0.6)}, 0 0 80px ${hexToRgba(championColor, 0.3)}, 0 20px 60px rgba(0, 0, 0, 0.7)`,
+              }}
               onClick={(e) => e.stopPropagation()}
             >
               {/* 닫기 버튼 */}
@@ -127,11 +189,12 @@ export function ResultDisplay({ lane, champion, damageType, show, onClose }: Res
                       <motion.img
                         src={championImageUrl}
                         alt={champion.koreanName}
-                        className={`w-48 h-48 rounded-2xl border-8 border-yellow-400 transition-opacity duration-300 ${
+                        className={`w-48 h-48 rounded-2xl border-8 transition-opacity duration-300 ${
                           imageLoaded ? 'opacity-100' : 'opacity-0'
                         }`}
                         style={{
-                          boxShadow: '0 0 40px rgba(255, 215, 0, 0.8), 0 0 80px rgba(255, 100, 50, 0.5), 0 20px 60px rgba(0, 0, 0, 0.7)',
+                          borderColor: championColor,
+                          boxShadow: `0 0 40px ${hexToRgba(championColor, 0.9)}, 0 0 80px ${hexToRgba(championColor, 0.6)}, 0 20px 60px rgba(0, 0, 0, 0.7)`,
                         }}
                         onLoad={() => setImageLoaded(true)}
                         onError={() => setImageError(true)}
@@ -142,10 +205,11 @@ export function ResultDisplay({ lane, champion, damageType, show, onClose }: Res
                     </div>
                   )}
                   <motion.span
-                    className="font-black text-4xl text-cyan-300"
+                    className="font-black text-4xl"
                     style={{
                       fontFamily: "'Orbitron', sans-serif",
-                      textShadow: '0 0 20px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.3)',
+                      color: championColor,
+                      textShadow: `0 0 20px ${hexToRgba(championColor, 0.8)}, 0 0 40px ${hexToRgba(championColor, 0.5)}, 0 0 60px ${hexToRgba(championColor, 0.3)}`,
                     }}
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}

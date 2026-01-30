@@ -8,7 +8,11 @@ const SPIN_DURATION = 2000; // 2초
 
 const getRandomIndex = (max: number): number => Math.floor(Math.random() * max);
 
-export function useSlotMachine() {
+interface UseSlotMachineOptions {
+  onSpinComplete?: (champion: string, lane: string, type: string) => void;
+}
+
+export function useSlotMachine(options?: UseSlotMachineOptions) {
   const [state, setState] = useState<SlotMachineState>({
     lane: {
       enabled: true,
@@ -87,26 +91,35 @@ export function useSlotMachine() {
 
     // 스피닝 종료 후 결과 설정
     setTimeout(() => {
+      const finalLane = lane.enabled ? LANES[newLaneIndex].id : state.lane.currentValue;
+      const finalChampion = champion.enabled ? CHAMPIONS[newChampionIndex] : state.champion.currentValue;
+      const finalType = damageType.enabled ? DAMAGE_TYPES[newDamageIndex].id : state.damageType.currentValue;
+
       setState((prev) => ({
         lane: {
           ...prev.lane,
           isSpinning: false,
-          currentValue: prev.lane.enabled ? LANES[newLaneIndex].id : prev.lane.currentValue,
+          currentValue: finalLane,
         },
         champion: {
           ...prev.champion,
           isSpinning: false,
-          currentValue: prev.champion.enabled ? CHAMPIONS[newChampionIndex] : prev.champion.currentValue,
+          currentValue: finalChampion,
         },
         damageType: {
           ...prev.damageType,
           isSpinning: false,
-          currentValue: prev.damageType.enabled ? DAMAGE_TYPES[newDamageIndex].id : prev.damageType.currentValue,
+          currentValue: finalType,
         },
       }));
       setShowResult(true);
+
+      // 히스토리에 추가 (모든 값이 있을 때만)
+      if (finalChampion && finalLane && finalType && options?.onSpinComplete) {
+        options.onSpinComplete(finalChampion.id, finalLane, finalType);
+      }
     }, SPIN_DURATION);
-  }, [state, selectedIndices]);
+  }, [state, selectedIndices, options]);
 
   // 결과 닫기
   const hideResult = useCallback(() => {
