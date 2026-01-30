@@ -1,12 +1,13 @@
 import type { Champion } from '../types';
 
-// Riot Data Dragon 기반 챔피언 목록 (172개) - 각 챔피언의 대표 색상 포함
+// Riot Data Dragon 기반 챔피언 목록 (170개) - 각 챔피언의 대표 색상 포함
 export const CHAMPIONS: Champion[] = [
   { id: 'Aatrox', name: 'Aatrox', koreanName: '아트록스', color: '#ff4444' },
   { id: 'Ahri', name: 'Ahri', koreanName: '아리', color: '#ff69b4' },
   { id: 'Akali', name: 'Akali', koreanName: '아칼리', color: '#00ff88' },
   { id: 'Akshan', name: 'Akshan', koreanName: '아크샨', color: '#ffaa44' },
   { id: 'Alistar', name: 'Alistar', koreanName: '알리스타', color: '#9966ff' },
+  { id: 'Ambessa', name: 'Ambessa', koreanName: '암베사', color: '#c9a227' },
   { id: 'Amumu', name: 'Amumu', koreanName: '아무무', color: '#44ff88' },
   { id: 'Anivia', name: 'Anivia', koreanName: '애니비아', color: '#00ddff' },
   { id: 'Annie', name: 'Annie', koreanName: '애니', color: '#ff6644' },
@@ -82,7 +83,9 @@ export const CHAMPIONS: Champion[] = [
   { id: 'Malzahar', name: 'Malzahar', koreanName: '말자하', color: '#9966ff' },
   { id: 'Maokai', name: 'Maokai', koreanName: '마오카이', color: '#44aa66' },
   { id: 'MasterYi', name: 'Master Yi', koreanName: '마스터 이', color: '#6699ff' },
+  { id: 'Mel', name: 'Mel', koreanName: '멜', color: '#d4af37' },
   { id: 'Milio', name: 'Milio', koreanName: '밀리오', color: '#ff8844' },
+  { id: 'MonkeyKing', name: 'Wukong', koreanName: '오공', color: '#ff9944' },
   { id: 'MissFortune', name: 'Miss Fortune', koreanName: '미스 포츈', color: '#ff6644' },
   { id: 'Mordekaiser', name: 'Mordekaiser', koreanName: '모데카이저', color: '#44ff66' },
   { id: 'Morgana', name: 'Morgana', koreanName: '모르가나', color: '#9966ff' },
@@ -155,7 +158,6 @@ export const CHAMPIONS: Champion[] = [
   { id: 'Vladimir', name: 'Vladimir', koreanName: '블라디미르', color: '#cc4444' },
   { id: 'Volibear', name: 'Volibear', koreanName: '볼리베어', color: '#66ccff' },
   { id: 'Warwick', name: 'Warwick', koreanName: '워윅', color: '#cc6644' },
-  { id: 'Wukong', name: 'Wukong', koreanName: '오공', color: '#cc8844' },
   { id: 'Xayah', name: 'Xayah', koreanName: '자야', color: '#ff4488' },
   { id: 'Xerath', name: 'Xerath', koreanName: '제라스', color: '#4488ff' },
   { id: 'XinZhao', name: 'Xin Zhao', koreanName: '신 짜오', color: '#cc8844' },
