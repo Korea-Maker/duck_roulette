@@ -4,6 +4,7 @@ import { SlotReel } from './SlotReel';
 import { SpinButton } from './SpinButton';
 import { ResultDisplay } from './ResultDisplay';
 import { ThemeSelector } from './ThemeSelector';
+import { SoundToggle } from './SoundToggle';
 import { useSlotMachine } from '../hooks/useSlotMachine';
 import { useSound } from '../hooks/useSound';
 import { LANES } from '../data/lanes';
@@ -52,7 +53,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
     hideResult,
   } = useSlotMachine({ onSpinComplete });
 
-  const { startSpin, stopSpin, playResult } = useSound();
+  const { startSpin, stopSpin, playResult, isMuted, toggleMute } = useSound();
 
   // Pre-calculate particle positions (only once)
   const particlePositions = useMemo(() =>
@@ -251,6 +252,9 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
         show={showResult && !isSpinning}
         onClose={hideResult}
       />
+
+      {/* 소리 토글 버튼 */}
+      <SoundToggle isMuted={isMuted} onToggle={toggleMute} />
 
       {/* 푸터 */}
       <motion.footer

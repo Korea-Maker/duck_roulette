@@ -4,6 +4,7 @@ import type { PartyLayoutType } from '../../types';
 import { usePartySlotMachine } from '../../hooks/usePartySlotMachine';
 import { useSound } from '../../hooks/useSound';
 import { SpinButton } from '../SpinButton';
+import { SoundToggle } from '../SoundToggle';
 import { LayoutSelector } from './LayoutSelector';
 import { PartyResultDisplay } from './PartyResultDisplay';
 import { HorizontalLayout, VerticalLayout, CircularLayout } from './layouts';
@@ -175,6 +176,9 @@ export function PartySlotMachine() {
         show={showResult}
         onClose={handleClose}
       />
+
+      {/* 소리 토글 버튼 */}
+      <SoundToggle isMuted={sound.isMuted} onToggle={sound.toggleMute} />
     </div>
   );
 }
