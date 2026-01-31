@@ -209,6 +209,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
         damageType={state.damageType.enabled ? state.damageType.currentValue : null}
         show={showResult && !isSpinning}
         onClose={hideResult}
+        onSpinAgain={spin}
       />
 
       {/* 소리 토글 버튼 */}

@@ -6,7 +6,7 @@ import { ChampionPortrait } from './ChampionPortrait';
 import { ResultInfo } from './ResultInfo';
 import { hexToRgba } from '../../utils/colorFilters';
 
-export function ResultDisplay({ lane, champion, damageType, show, onClose }: ResultDisplayProps) {
+export function ResultDisplay({ lane, champion, damageType, show, onClose, onSpinAgain }: ResultDisplayProps) {
   const hasAnyResult = lane || champion || damageType;
 
   // 컨페티 효과
@@ -118,7 +118,10 @@ export function ResultDisplay({ lane, champion, damageType, show, onClose }: Res
 
               {/* 다시 돌리기 버튼 */}
               <motion.button
-                onClick={onClose}
+                onClick={() => {
+                  onClose();
+                  onSpinAgain?.();
+                }}
                 className="w-full py-4 rounded-xl font-black text-xl text-white bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 hover:from-yellow-400 hover:via-orange-400 hover:to-red-400 transition-all duration-300"
                 style={{
                   fontFamily: "'Orbitron', sans-serif",

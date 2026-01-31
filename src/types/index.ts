@@ -65,6 +65,7 @@ export interface ResultDisplayProps {
   damageType: DamageType | null;
   show: boolean;
   onClose: () => void;
+  onSpinAgain?: () => void;
 }
 
 // 라인 정보 (표시용)
