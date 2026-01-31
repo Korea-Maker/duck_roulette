@@ -84,3 +84,70 @@ export interface DamageTypeInfo {
   color: string;
   icon?: string;
 }
+
+// ============================================
+// 파티 모드 타입 정의
+// ============================================
+
+// 라인 순서 (고정)
+export const PARTY_LANES: Lane[] = ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'];
+
+// 파티 멤버 슬롯 상태
+export interface PartyMemberSlotState {
+  lane: Lane;                        // 고정 (TOP, JG, MID, ADC, SUP)
+  champion: SlotField<Champion>;     // 랜덤
+  damageType: SlotField<DamageType>; // 랜덤
+}
+
+// 5인 파티 전체 상태
+export interface PartySlotMachineState {
+  members: PartyMemberSlotState[]; // 5명
+  isSpinning: boolean;
+  showResult: boolean;
+}
+
+// 레이아웃 타입
+export type PartyLayoutType = 'horizontal' | 'vertical' | 'circular';
+
+// 앱 모드
+export type AppMode = 'single' | 'party';
+
+// 파티 결과 타입
+export interface PartyResult {
+  lane: Lane;
+  champion: Champion | null;
+  damageType: DamageType | null;
+}
+
+// 파티 결과 표시 Props
+export interface PartyResultDisplayProps {
+  results: PartyResult[];
+  show: boolean;
+  onClose: () => void;
+}
+
+// 파티 멤버 슬롯 Props
+export interface PartyMemberSlotProps {
+  member: PartyMemberSlotState;
+  laneInfo: LaneInfo;
+  isSpinning: boolean;
+  compact?: boolean;
+}
+
+// 레이아웃 Props
+export interface PartyLayoutProps {
+  members: PartyMemberSlotState[];
+  isSpinning: boolean;
+}
+
+// 레이아웃 선택기 Props
+export interface LayoutSelectorProps {
+  currentLayout: PartyLayoutType;
+  onLayoutChange: (layout: PartyLayoutType) => void;
+}
+
+// 모드 선택기 Props
+export interface ModeSelectorProps {
+  currentMode: AppMode;
+  onModeChange: (mode: AppMode) => void;
+}

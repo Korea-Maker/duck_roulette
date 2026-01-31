@@ -1130,3 +1130,225 @@ img[src*="ddragon.leagueoflegends.com"] {
   );
   border-radius: 2px;
 }
+
+/* =============================================
+   PARTY MODE STYLES
+   ============================================= */
+
+/* Party Member Slot */
+.party-member-slot {
+  @apply backdrop-blur-sm;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.party-member-slot:hover {
+  box-shadow:
+    0 0 20px rgba(255, 215, 0, 0.3),
+    inset 0 0 20px rgba(255, 215, 0, 0.05);
+}
+
+/* Party slot spinning state */
+@keyframes party-slot-spin-glow {
+  0%, 100% {
+    box-shadow:
+      0 0 10px rgba(255, 215, 0, 0.3),
+      inset 0 0 15px rgba(255, 215, 0, 0.1);
+  }
+  50% {
+    box-shadow:
+      0 0 25px rgba(255, 100, 50, 0.6),
+      inset 0 0 25px rgba(255, 100, 50, 0.2);
+  }
+}
+
+.party-member-slot.spinning {
+  animation: party-slot-spin-glow 0.5s ease-in-out infinite;
+}
+
+/* Layout Selector */
+.layout-selector {
+  @apply backdrop-blur-md;
+}
+
+/* Mode Selector pill style */
+.mode-selector {
+  @apply backdrop-blur-md;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Circular Layout */
+@keyframes circular-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.circular-layout-spinning .circular-center {
+  animation: circular-rotate 3s linear infinite;
+}
+
+/* Circular connection lines */
+.circular-layout svg line {
+  stroke-dasharray: 5, 5;
+  animation: dash-flow 1s linear infinite;
+}
+
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+
+/* Party Result Modal */
+@keyframes party-result-entrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.party-result-modal {
+  animation: party-result-entrance 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Party result member cards */
+@keyframes party-member-reveal {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotateY(180deg);
+  }
+  60% {
+    transform: scale(1.1) rotateY(0deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateY(0deg);
+  }
+}
+
+.party-result-member {
+  animation: party-member-reveal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+.party-result-member:nth-child(1) { animation-delay: 0.1s; }
+.party-result-member:nth-child(2) { animation-delay: 0.2s; }
+.party-result-member:nth-child(3) { animation-delay: 0.3s; }
+.party-result-member:nth-child(4) { animation-delay: 0.4s; }
+.party-result-member:nth-child(5) { animation-delay: 0.5s; }
+
+/* Horizontal Layout responsive adjustments */
+@media (max-width: 640px) {
+  .party-horizontal-layout {
+    @apply grid-cols-2;
+  }
+
+  .party-horizontal-layout > div:last-child {
+    @apply col-span-2 justify-self-center;
+    max-width: 50%;
+  }
+}
+
+/* Vertical Layout styles */
+.party-vertical-layout {
+  @apply max-w-lg mx-auto;
+}
+
+.party-vertical-row {
+  @apply transition-all duration-300;
+}
+
+.party-vertical-row:hover {
+  @apply bg-gray-700/30;
+  transform: translateX(5px);
+}
+
+/* Mini slot reel for party mode */
+.mini-slot-reel {
+  @apply relative overflow-hidden rounded-lg;
+  background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+  border: 2px solid var(--theme-primary);
+}
+
+.mini-slot-reel::before,
+.mini-slot-reel::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 20%;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.mini-slot-reel::before {
+  top: 0;
+  background: linear-gradient(to bottom, rgba(10, 10, 10, 1) 0%, transparent 100%);
+}
+
+.mini-slot-reel::after {
+  bottom: 0;
+  background: linear-gradient(to top, rgba(10, 10, 10, 1) 0%, transparent 100%);
+}
+
+/* Damage type badges */
+.damage-badge-ad {
+  @apply bg-orange-500/20 text-orange-400 border border-orange-500/50;
+  text-shadow: 0 0 8px rgba(255, 165, 0, 0.5);
+}
+
+.damage-badge-ap {
+  @apply bg-purple-500/20 text-purple-400 border border-purple-500/50;
+  text-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
+}
+
+/* Theme-specific party mode adjustments */
+.theme-summoners-rift .party-member-slot {
+  background: linear-gradient(145deg, rgba(26, 47, 40, 0.9) 0%, rgba(15, 26, 20, 0.9) 100%);
+  border-color: rgba(74, 157, 95, 0.3);
+}
+
+.theme-summoners-rift .party-member-slot:hover {
+  border-color: rgba(107, 196, 125, 0.6);
+  box-shadow: 0 0 20px rgba(74, 157, 95, 0.4);
+}
+
+.theme-ocean-calm .party-member-slot {
+  background: linear-gradient(145deg, rgba(15, 23, 41, 0.9) 0%, rgba(10, 18, 32, 0.9) 100%);
+  border-color: rgba(94, 158, 160, 0.3);
+}
+
+.theme-sunset-warm .party-member-slot {
+  background: linear-gradient(145deg, rgba(26, 20, 24, 0.9) 0%, rgba(18, 15, 18, 0.9) 100%);
+  border-color: rgba(232, 155, 142, 0.3);
+}
+
+.theme-soft-gold .party-member-slot {
+  background: linear-gradient(145deg, rgba(26, 24, 21, 0.9) 0%, rgba(18, 17, 16, 0.9) 100%);
+  border-color: rgba(201, 169, 97, 0.3);
+}
+
+/* Party mode background particles */
+@keyframes party-particle-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-60px) scale(1.5);
+  }
+}
+
+.party-particle {
+  animation: party-particle-rise 1.5s ease-out infinite;
+}
