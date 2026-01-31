@@ -1,8 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState, useMemo } from 'react';
-import type { PartyMemberSlotProps, SlotItem as SlotItemType } from '../../types';
+import type { PartyMemberSlotState, SlotItem as SlotItemType } from '../../types';
 import { SLOT_CONFIG } from '../../config/constants';
 import { CHAMPIONS } from '../../data/champions';
+import { LANES } from '../../data/lanes';
 import { getChampionImageUrl } from '../../utils/champion';
 
 interface MiniSlotReelProps {
@@ -106,7 +107,13 @@ function MiniSlotReel({ items, isSpinning, currentValue, compact }: MiniSlotReel
   );
 }
 
-export function PartyMemberSlot({ member, laneInfo, isSpinning, compact }: PartyMemberSlotProps) {
+interface PartyMemberSlotProps {
+  member: PartyMemberSlotState;
+  isSpinning: boolean;
+  compact?: boolean;
+}
+
+export function PartyMemberSlot({ member, isSpinning, compact }: PartyMemberSlotProps) {
   // 챔피언 슬롯 아이템으로 변환
   const championItems: SlotItemType[] = useMemo(() =>
     CHAMPIONS.map(champ => ({
@@ -116,6 +123,12 @@ export function PartyMemberSlot({ member, laneInfo, isSpinning, compact }: Party
       image: getChampionImageUrl(champ.id),
     })),
   []);
+
+  // 현재 라인 정보
+  const currentLaneInfo = useMemo(() => {
+    if (!member.lane.currentValue) return null;
+    return LANES.find(l => l.id === member.lane.currentValue) || null;
+  }, [member.lane.currentValue]);
 
   // 현재 챔피언 값
   const currentChampion: SlotItemType | null = member.champion.currentValue
@@ -137,22 +150,43 @@ export function PartyMemberSlot({ member, laneInfo, isSpinning, compact }: Party
       whileHover={{ scale: 1.02, borderColor: 'rgba(255, 215, 0, 0.5)' }}
       transition={{ duration: 0.2 }}
     >
-      {/* 라인 라벨 */}
-      <div className="flex items-center gap-2">
-        {laneInfo.image && (
-          <img
-            src={laneInfo.image}
-            alt={laneInfo.label}
-            className={`${compact ? 'w-5 h-5' : 'w-6 h-6'} object-contain`}
-          />
+      {/* 라인 슬롯 */}
+      <motion.div
+        className="flex items-center gap-2"
+        animate={member.lane.isSpinning ? {
+          opacity: [1, 0.7, 1],
+        } : {}}
+        transition={{ duration: 0.3, repeat: member.lane.isSpinning ? Infinity : 0 }}
+      >
+        {member.lane.isSpinning ? (
+          <motion.div
+            className="flex items-center gap-1"
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ duration: 0.3, repeat: Infinity }}
+          >
+            <span className={`${compact ? 'w-5 h-5' : 'w-6 h-6'} bg-gray-600 rounded animate-pulse`} />
+            <span className={`font-bold text-gray-400 ${compact ? 'text-xs' : 'text-sm'}`}>
+              ???
+            </span>
+          </motion.div>
+        ) : currentLaneInfo && (
+          <>
+            {currentLaneInfo.image && (
+              <img
+                src={currentLaneInfo.image}
+                alt={currentLaneInfo.label}
+                className={`${compact ? 'w-5 h-5' : 'w-6 h-6'} object-contain`}
+              />
+            )}
+            <span
+              className={`font-bold ${currentLaneInfo.color} ${compact ? 'text-xs' : 'text-sm'}`}
+              style={{ textShadow: '0 0 10px currentColor' }}
+            >
+              {currentLaneInfo.koreanLabel}
+            </span>
+          </>
         )}
-        <span
-          className={`font-bold ${laneInfo.color} ${compact ? 'text-xs' : 'text-sm'}`}
-          style={{ textShadow: '0 0 10px currentColor' }}
-        >
-          {laneInfo.koreanLabel}
-        </span>
-      </div>
+      </motion.div>
 
       {/* 챔피언 슬롯 */}
       <div className="relative">
@@ -192,7 +226,7 @@ export function PartyMemberSlot({ member, laneInfo, isSpinning, compact }: Party
         } : {}}
         transition={{ duration: 0.3, repeat: member.damageType.isSpinning ? Infinity : 0 }}
       >
-        {member.damageType.currentValue || '??'}
+        {member.damageType.isSpinning ? '??' : member.damageType.currentValue || '??'}
       </motion.div>
     </motion.div>
   );

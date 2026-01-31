@@ -7,9 +7,19 @@ import { SLOT_CONFIG, PARTY_CONFIG } from '../config/constants';
 
 const getRandomIndex = (max: number): number => Math.floor(Math.random() * max);
 
+// 중복 없이 랜덤 라인 선택
+const getRandomLanes = (count: number): Lane[] => {
+  const shuffled = [...PARTY_LANES].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, count);
+};
+
 // 초기 멤버 상태 생성
-const createInitialMember = (lane: Lane): PartyMemberSlotState => ({
-  lane,
+const createInitialMember = (index: number, lanes: Lane[]): PartyMemberSlotState => ({
+  lane: {
+    enabled: true,
+    currentValue: lanes[index],
+    isSpinning: false,
+  },
   champion: {
     enabled: true,
     currentValue: CHAMPIONS[getRandomIndex(CHAMPIONS.length)],
@@ -23,11 +33,14 @@ const createInitialMember = (lane: Lane): PartyMemberSlotState => ({
 });
 
 // 멤버 수에 따른 초기 상태 생성
-const createInitialState = (memberCount: number): PartySlotMachineState => ({
-  members: PARTY_LANES.slice(0, memberCount).map(createInitialMember),
-  isSpinning: false,
-  showResult: false,
-});
+const createInitialState = (memberCount: number): PartySlotMachineState => {
+  const randomLanes = getRandomLanes(memberCount);
+  return {
+    members: Array.from({ length: memberCount }, (_, i) => createInitialMember(i, randomLanes)),
+    isSpinning: false,
+    showResult: false,
+  };
+};
 
 interface UsePartySlotMachineOptions {
   memberCount?: number;
@@ -36,17 +49,18 @@ interface UsePartySlotMachineOptions {
 
 export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
   const memberCount = options?.memberCount ?? 5;
-  const activeLanes = PARTY_LANES.slice(0, memberCount);
 
   const [state, setState] = useState<PartySlotMachineState>(() => createInitialState(memberCount));
 
   // 선택된 인덱스 (각 멤버별)
   const [selectedIndices, setSelectedIndices] = useState<{
+    lane: number[];
     champion: number[];
     damageType: number[];
   }>({
-    champion: activeLanes.map(() => 0),
-    damageType: activeLanes.map(() => 0),
+    lane: Array.from({ length: memberCount }, () => 0),
+    champion: Array.from({ length: memberCount }, () => 0),
+    damageType: Array.from({ length: memberCount }, () => 0),
   });
 
   // 멤버 수 변경 시 상태 재생성
@@ -54,11 +68,12 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
     if (state.members.length !== memberCount) {
       setState(createInitialState(memberCount));
       setSelectedIndices({
-        champion: activeLanes.map(() => 0),
-        damageType: activeLanes.map(() => 0),
+        lane: Array.from({ length: memberCount }, () => 0),
+        champion: Array.from({ length: memberCount }, () => 0),
+        damageType: Array.from({ length: memberCount }, () => 0),
       });
     }
-  }, [memberCount, activeLanes, state.members.length]);
+  }, [memberCount, state.members.length]);
 
   // 스핀 핸들러
   const spin = useCallback(() => {
@@ -67,16 +82,19 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
     setState(prev => ({ ...prev, showResult: false, isSpinning: true }));
 
     // 각 멤버별 랜덤 결과 미리 계산
-    const newChampionIndices = activeLanes.map(() => getRandomIndex(CHAMPIONS.length));
-    const newDamageIndices = activeLanes.map(() => getRandomIndex(DAMAGE_TYPES.length));
+    const newRandomLanes = getRandomLanes(memberCount);
+    const newLaneIndices = newRandomLanes.map(lane => PARTY_LANES.indexOf(lane));
+    const newChampionIndices = Array.from({ length: memberCount }, () => getRandomIndex(CHAMPIONS.length));
+    const newDamageIndices = Array.from({ length: memberCount }, () => getRandomIndex(DAMAGE_TYPES.length));
 
     setSelectedIndices({
+      lane: newLaneIndices,
       champion: newChampionIndices,
       damageType: newDamageIndices,
     });
 
     // 모든 멤버 스피닝 시작 (stagger 효과)
-    activeLanes.forEach((_, index) => {
+    Array.from({ length: memberCount }).forEach((_, index) => {
       setTimeout(() => {
         setState(prev => ({
           ...prev,
@@ -84,6 +102,7 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
             i === index
               ? {
                   ...member,
+                  lane: { ...member.lane, isSpinning: true },
                   champion: { ...member.champion, isSpinning: true },
                   damageType: { ...member.damageType, isSpinning: true },
                 }
@@ -95,8 +114,8 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
 
     // 스피닝 종료 후 결과 설정
     setTimeout(() => {
-      const results: PartyResult[] = activeLanes.map((lane, index) => ({
-        lane,
+      const results: PartyResult[] = Array.from({ length: memberCount }, (_, index) => ({
+        lane: newRandomLanes[index],
         champion: CHAMPIONS[newChampionIndices[index]],
         damageType: DAMAGE_TYPES[newDamageIndices[index]].id,
       }));
@@ -107,6 +126,11 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
         showResult: true,
         members: prev.members.map((member, index) => ({
           ...member,
+          lane: {
+            ...member.lane,
+            isSpinning: false,
+            currentValue: newRandomLanes[index],
+          },
           champion: {
             ...member.champion,
             isSpinning: false,
@@ -124,8 +148,8 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
       if (options?.onSpinComplete) {
         options.onSpinComplete(results);
       }
-    }, SLOT_CONFIG.SPIN_DURATION + (activeLanes.length - 1) * PARTY_CONFIG.STAGGER_DELAY);
-  }, [state.isSpinning, activeLanes, options]);
+    }, SLOT_CONFIG.SPIN_DURATION + (memberCount - 1) * PARTY_CONFIG.STAGGER_DELAY);
+  }, [state.isSpinning, memberCount, options]);
 
   // 결과 닫기
   const hideResult = useCallback(() => {
@@ -136,15 +160,16 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
   const reset = useCallback(() => {
     setState(createInitialState(memberCount));
     setSelectedIndices({
-      champion: activeLanes.map(() => 0),
-      damageType: activeLanes.map(() => 0),
+      lane: Array.from({ length: memberCount }, () => 0),
+      champion: Array.from({ length: memberCount }, () => 0),
+      damageType: Array.from({ length: memberCount }, () => 0),
     });
-  }, [memberCount, activeLanes]);
+  }, [memberCount]);
 
   // 현재 결과 가져오기
   const getResults = useCallback((): PartyResult[] => {
     return state.members.map(member => ({
-      lane: member.lane,
+      lane: member.lane.currentValue!,
       champion: member.champion.currentValue,
       damageType: member.damageType.currentValue,
     }));

@@ -1,14 +1,16 @@
 import { motion } from 'framer-motion';
-import type { PartyLayoutProps, Lane } from '../../../types';
+import type { PartyLayoutProps } from '../../../types';
 import { PartyMemberSlot } from '../PartyMemberSlot';
-import { LANES } from '../../../data/lanes';
-import { PARTY_CONFIG, CIRCULAR_ANGLES } from '../../../config/constants';
+import { PARTY_CONFIG } from '../../../config/constants';
 
 export function CircularLayout({ members, isSpinning }: PartyLayoutProps) {
   const radius = PARTY_CONFIG.CIRCULAR_RADIUS;
+  const memberCount = members.length;
 
-  const getPosition = (lane: Lane) => {
-    const angle = CIRCULAR_ANGLES[lane];
+  // 멤버 수에 따른 각도 계산 (균등 분배, TOP이 12시 방향)
+  const getPosition = (index: number) => {
+    const angleStep = 360 / memberCount;
+    const angle = -90 + (index * angleStep); // -90도부터 시작 (12시 방향)
     const radian = (angle * Math.PI) / 180;
     return {
       x: Math.cos(radian) * radius,
@@ -56,13 +58,13 @@ export function CircularLayout({ members, isSpinning }: PartyLayoutProps) {
         }}
       >
         <g transform={`translate(${radius + 50}, ${radius + 50})`}>
-          {members.map((member, index) => {
-            const pos = getPosition(member.lane);
-            const nextMember = members[(index + 1) % members.length];
-            const nextPos = getPosition(nextMember.lane);
+          {members.map((_, index) => {
+            const pos = getPosition(index);
+            const nextIndex = (index + 1) % memberCount;
+            const nextPos = getPosition(nextIndex);
             return (
               <motion.line
-                key={`line-${member.lane}`}
+                key={`line-${index}`}
                 x1={pos.x}
                 y1={pos.y}
                 x2={nextPos.x}
@@ -80,12 +82,11 @@ export function CircularLayout({ members, isSpinning }: PartyLayoutProps) {
 
       {/* 멤버 슬롯들 */}
       {members.map((member, index) => {
-        const laneInfo = LANES.find(l => l.id === member.lane) || LANES[index];
-        const pos = getPosition(member.lane);
+        const pos = getPosition(index);
 
         return (
           <motion.div
-            key={member.lane}
+            key={index}
             className="absolute"
             style={{
               left: '50%',
@@ -107,7 +108,6 @@ export function CircularLayout({ members, isSpinning }: PartyLayoutProps) {
           >
             <PartyMemberSlot
               member={member}
-              laneInfo={laneInfo}
               isSpinning={isSpinning}
               compact
             />

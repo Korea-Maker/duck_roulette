@@ -94,7 +94,7 @@ export const PARTY_LANES: Lane[] = ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'];
 
 // 파티 멤버 슬롯 상태
 export interface PartyMemberSlotState {
-  lane: Lane;                        // 고정 (TOP, JG, MID, ADC, SUP)
+  lane: SlotField<Lane>;             // 랜덤
   champion: SlotField<Champion>;     // 랜덤
   damageType: SlotField<DamageType>; // 랜덤
 }
@@ -129,7 +129,6 @@ export interface PartyResultDisplayProps {
 // 파티 멤버 슬롯 Props
 export interface PartyMemberSlotProps {
   member: PartyMemberSlotState;
-  laneInfo: LaneInfo;
   isSpinning: boolean;
   compact?: boolean;
 }
