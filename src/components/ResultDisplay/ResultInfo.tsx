@@ -54,7 +54,7 @@ export function ResultInfo({ lane, damageType }: ResultInfoProps) {
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          <span className="text-gray-300 font-semibold text-lg">타입:</span>
+          <span className="text-gray-300 font-semibold text-lg">템트리:</span>
           <div className="flex items-center gap-3">
             {damageInfo.icon && (
               <img

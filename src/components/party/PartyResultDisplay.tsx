@@ -6,7 +6,7 @@ import { LANES } from '../../data/lanes';
 import { DAMAGE_TYPES } from '../../data/damageTypes';
 import { getChampionImageUrl } from '../../utils/champion';
 
-export function PartyResultDisplay({ results, show, onClose }: PartyResultDisplayProps) {
+export function PartyResultDisplay({ results, show, onClose, onSpinAgain }: PartyResultDisplayProps) {
   // 컨페티 효과
   useConfetti(show, results.length > 0);
 
@@ -171,7 +171,10 @@ export function PartyResultDisplay({ results, show, onClose }: PartyResultDispla
 
               {/* 다시 돌리기 버튼 */}
               <motion.button
-                onClick={onClose}
+                onClick={() => {
+                  onClose();
+                  onSpinAgain?.();
+                }}
                 className="w-full py-4 rounded-xl font-black text-xl text-white bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 hover:from-yellow-400 hover:via-orange-400 hover:to-red-400 transition-all duration-300"
                 style={{
                   fontFamily: "'Orbitron', sans-serif",

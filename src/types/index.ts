@@ -124,6 +124,7 @@ export interface PartyResultDisplayProps {
   results: PartyResult[];
   show: boolean;
   onClose: () => void;
+  onSpinAgain?: () => void;
 }
 
 // 파티 멤버 슬롯 Props

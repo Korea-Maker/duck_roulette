@@ -183,6 +183,7 @@ export function PartySlotMachine() {
         results={getResults()}
         show={showResult}
         onClose={handleClose}
+        onSpinAgain={handleSpin}
       />
 
       {/* 소리 토글 버튼 */}
