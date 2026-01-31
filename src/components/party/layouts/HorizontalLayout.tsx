@@ -6,7 +6,7 @@ import { LANES } from '../../../data/lanes';
 export function HorizontalLayout({ members, isSpinning }: PartyLayoutProps) {
   return (
     <motion.div
-      className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 w-full max-w-5xl mx-auto"
+      className="flex flex-wrap justify-center gap-3 sm:gap-4 w-full max-w-5xl mx-auto"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
