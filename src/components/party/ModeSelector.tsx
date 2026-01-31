@@ -3,7 +3,7 @@ import type { ModeSelectorProps, AppMode } from '../../types';
 
 const modes: { type: AppMode; label: string; icon: string }[] = [
   { type: 'single', label: '솔로', icon: '👤' },
-  { type: 'party', label: '파티 (5인)', icon: '👥' },
+  { type: 'party', label: '파티', icon: '👥' },
 ];
 
 export function ModeSelector({ currentMode, onModeChange }: ModeSelectorProps) {
@@ -24,7 +24,8 @@ export function ModeSelector({ currentMode, onModeChange }: ModeSelectorProps) {
           {currentMode === type && (
             <motion.div
               className="absolute inset-0 bg-yellow-500/20 rounded-full border border-yellow-500/50"
-              layoutId="mode-indicator"
+              layoutId="mode-selector-indicator"
+              initial={false}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             />
           )}

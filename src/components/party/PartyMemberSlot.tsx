@@ -16,7 +16,7 @@ interface MiniSlotReelProps {
 function MiniSlotReel({ items, isSpinning, currentValue, compact }: MiniSlotReelProps) {
   const [spinItems, setSpinItems] = useState<SlotItemType[]>([]);
 
-  const itemHeight = compact ? 48 : 56;
+  const itemHeight = compact ? 48 : 72;
 
   const selectedIndex = useMemo(() => {
     if (!currentValue) return 0;
@@ -46,7 +46,7 @@ function MiniSlotReel({ items, isSpinning, currentValue, compact }: MiniSlotReel
       className="relative overflow-hidden rounded-lg bg-gray-900/50"
       style={{
         height: itemHeight,
-        width: compact ? 48 : 56,
+        width: compact ? 48 : 72,
       }}
     >
       <AnimatePresence mode="wait">
@@ -65,13 +65,13 @@ function MiniSlotReel({ items, isSpinning, currentValue, compact }: MiniSlotReel
               <div
                 key={`spin-${index}`}
                 className="flex items-center justify-center"
-                style={{ height: itemHeight, width: compact ? 48 : 56 }}
+                style={{ height: itemHeight, width: compact ? 48 : 72 }}
               >
                 {item.image ? (
                   <img
                     src={item.image}
                     alt={item.label}
-                    className="w-10 h-10 rounded object-cover"
+                    className={compact ? "w-10 h-10 rounded object-cover" : "w-14 h-14 rounded-lg object-cover"}
                   />
                 ) : (
                   <span className={`text-lg font-bold ${item.color || 'text-white'}`}>
@@ -93,7 +93,7 @@ function MiniSlotReel({ items, isSpinning, currentValue, compact }: MiniSlotReel
               <img
                 src={currentValue.image}
                 alt={currentValue.label}
-                className="w-10 h-10 rounded object-cover"
+                className={compact ? "w-10 h-10 rounded object-cover" : "w-14 h-14 rounded-lg object-cover"}
               />
             ) : (
               <span className={`text-lg font-bold ${currentValue?.color || 'text-white'}`}>
