@@ -111,18 +111,12 @@ body::after {
 /* Slot Machine Styles */
 @keyframes machine-pulse {
   0%, 100% {
-    box-shadow:
-      0 0 15px var(--theme-glow),
-      0 0 25px rgba(0, 0, 0, 0.3),
-      inset 0 0 40px rgba(0, 0, 0, 0.6),
-      inset 0 -5px 15px var(--theme-glow);
+    opacity: 0.95;
+    transform: scale(1);
   }
   50% {
-    box-shadow:
-      0 0 20px var(--theme-glow),
-      0 0 30px rgba(0, 0, 0, 0.3),
-      inset 0 0 40px rgba(0, 0, 0, 0.6),
-      inset 0 -5px 20px var(--theme-glow);
+    opacity: 1;
+    transform: scale(1.005);
   }
 }
 
@@ -181,69 +175,69 @@ body::after {
 @keyframes led-chase-fast {
   0% {
     box-shadow:
-      0 0 25px 3px #ff0000,
-      0 0 50px 6px rgba(255, 0, 0, 0.7),
-      inset 0 0 25px rgba(255, 0, 0, 0.3);
+      0 0 35px 5px #ff0000,
+      0 0 70px 10px rgba(255, 0, 0, 0.9),
+      inset 0 0 35px rgba(255, 0, 0, 0.5);
   }
   10% {
     box-shadow:
-      0 0 25px 3px #ff7700,
-      0 0 50px 6px rgba(255, 119, 0, 0.7),
-      inset 0 0 25px rgba(255, 119, 0, 0.3);
+      0 0 35px 5px #ff7700,
+      0 0 70px 10px rgba(255, 119, 0, 0.9),
+      inset 0 0 35px rgba(255, 119, 0, 0.5);
   }
   20% {
     box-shadow:
-      0 0 25px 3px #ffff00,
-      0 0 50px 6px rgba(255, 255, 0, 0.7),
-      inset 0 0 25px rgba(255, 255, 0, 0.3);
+      0 0 35px 5px #ffff00,
+      0 0 70px 10px rgba(255, 255, 0, 0.9),
+      inset 0 0 35px rgba(255, 255, 0, 0.5);
   }
   30% {
     box-shadow:
-      0 0 25px 3px #00ff00,
-      0 0 50px 6px rgba(0, 255, 0, 0.7),
-      inset 0 0 25px rgba(0, 255, 0, 0.3);
+      0 0 35px 5px #00ff00,
+      0 0 70px 10px rgba(0, 255, 0, 0.9),
+      inset 0 0 35px rgba(0, 255, 0, 0.5);
   }
   40% {
     box-shadow:
-      0 0 25px 3px #00ffff,
-      0 0 50px 6px rgba(0, 255, 255, 0.7),
-      inset 0 0 25px rgba(0, 255, 255, 0.3);
+      0 0 35px 5px #00ffff,
+      0 0 70px 10px rgba(0, 255, 255, 0.9),
+      inset 0 0 35px rgba(0, 255, 255, 0.5);
   }
   50% {
     box-shadow:
-      0 0 25px 3px #0077ff,
-      0 0 50px 6px rgba(0, 119, 255, 0.7),
-      inset 0 0 25px rgba(0, 119, 255, 0.3);
+      0 0 35px 5px #0077ff,
+      0 0 70px 10px rgba(0, 119, 255, 0.9),
+      inset 0 0 35px rgba(0, 119, 255, 0.5);
   }
   60% {
     box-shadow:
-      0 0 25px 3px #7700ff,
-      0 0 50px 6px rgba(119, 0, 255, 0.7),
-      inset 0 0 25px rgba(119, 0, 255, 0.3);
+      0 0 35px 5px #7700ff,
+      0 0 70px 10px rgba(119, 0, 255, 0.9),
+      inset 0 0 35px rgba(119, 0, 255, 0.5);
   }
   70% {
     box-shadow:
-      0 0 25px 3px #ff00ff,
-      0 0 50px 6px rgba(255, 0, 255, 0.7),
-      inset 0 0 25px rgba(255, 0, 255, 0.3);
+      0 0 35px 5px #ff00ff,
+      0 0 70px 10px rgba(255, 0, 255, 0.9),
+      inset 0 0 35px rgba(255, 0, 255, 0.5);
   }
   80% {
     box-shadow:
-      0 0 25px 3px #ff0077,
-      0 0 50px 6px rgba(255, 0, 119, 0.7),
-      inset 0 0 25px rgba(255, 0, 119, 0.3);
+      0 0 35px 5px #ff0077,
+      0 0 70px 10px rgba(255, 0, 119, 0.9),
+      inset 0 0 35px rgba(255, 0, 119, 0.5);
   }
   90% {
     box-shadow:
-      0 0 25px 3px #ff7700,
-      0 0 50px 6px rgba(255, 119, 0, 0.7),
-      inset 0 0 25px rgba(255, 119, 0, 0.3);
+      0 0 35px 5px #ff7700,
+      0 0 70px 10px rgba(255, 119, 0, 0.9),
+      inset 0 0 35px rgba(255, 119, 0, 0.5);
   }
   100% {
     box-shadow:
-      0 0 25px 3px #ff0000,
-      0 0 50px 6px rgba(255, 0, 0, 0.7),
-      inset 0 0 25px rgba(255, 0, 0, 0.3);
+      0 0 35px 5px #ff0000,
+      0 0 70px 10px rgba(255, 0, 0, 0.9),
+      inset 0 0 35px rgba(255, 0, 0, 0.5);
   }
 }
 
@@ -272,8 +266,13 @@ body::after {
     radial-gradient(ellipse at top left, var(--theme-glow), transparent 60%),
     radial-gradient(ellipse at bottom right, var(--theme-glow), transparent 60%);
   border: 3px solid var(--theme-primary);
+  box-shadow:
+    0 0 15px var(--theme-glow),
+    0 0 25px rgba(0, 0, 0, 0.3),
+    inset 0 0 40px rgba(0, 0, 0, 0.6);
   animation: machine-pulse 6s ease-in-out infinite;
   position: relative;
+  will-change: transform, opacity;
 }
 
 /* LED Frame - Base glow */
@@ -307,9 +306,24 @@ body::after {
   pointer-events: none;
 }
 
-/* LED Frame when spinning - faster animation */
+/* LED Frame when spinning - faster animation with shake */
 .slot-container.spinning::after {
-  animation: led-chase-fast 0.8s linear infinite;
+  animation: led-chase-fast 0.5s linear infinite, frame-shake 0.1s ease-in-out infinite;
+}
+
+@keyframes frame-shake {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-1px, 1px);
+  }
+  50% {
+    transform: translate(1px, -1px);
+  }
+  75% {
+    transform: translate(-1px, -1px);
+  }
 }
 
 /* LED Bulbs effect using repeating gradients */
@@ -346,24 +360,27 @@ body::after {
   opacity: 0.7;
 }
 
-/* LED Frame bulbs when spinning */
+/* LED Frame bulbs when spinning - more intense */
 .slot-container.spinning .led-frame {
-  animation: led-bulbs-rotate-fast 0.5s linear infinite;
+  animation: led-bulbs-rotate-fast 0.3s linear infinite, bulb-intensity-pulse 0.2s ease-in-out infinite;
   opacity: 1;
+}
+
+@keyframes bulb-intensity-pulse {
+  0%, 100% {
+    filter: brightness(1.2) saturate(1.3);
+  }
+  50% {
+    filter: brightness(1.5) saturate(1.5);
+  }
 }
 
 @keyframes reel-glow {
   0%, 100% {
-    box-shadow:
-      inset 0 0 20px rgba(0, 0, 0, 0.8),
-      inset 0 0 40px var(--theme-glow),
-      0 0 5px var(--theme-glow);
+    opacity: 0.95;
   }
   50% {
-    box-shadow:
-      inset 0 0 20px rgba(0, 0, 0, 0.8),
-      inset 0 0 45px var(--theme-glow),
-      0 0 8px var(--theme-glow);
+    opacity: 1;
   }
 }
 
@@ -372,8 +389,13 @@ body::after {
   background:
     linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
   border: 2px solid var(--theme-primary);
+  box-shadow:
+    inset 0 0 20px rgba(0, 0, 0, 0.8),
+    inset 0 0 40px var(--theme-glow),
+    0 0 5px var(--theme-glow);
   animation: reel-glow 5s ease-in-out infinite;
   position: relative;
+  will-change: opacity;
 }
 
 .slot-reel::after {
@@ -390,16 +412,10 @@ body::after {
 
 @keyframes text-glow-pulse {
   0%, 100% {
-    text-shadow:
-      0 0 3px currentColor,
-      0 0 6px currentColor,
-      0 1px 2px rgba(0, 0, 0, 0.5);
+    opacity: 0.95;
   }
   50% {
-    text-shadow:
-      0 0 5px currentColor,
-      0 0 8px currentColor,
-      0 1px 2px rgba(0, 0, 0, 0.5);
+    opacity: 1;
   }
 }
 
@@ -412,22 +428,17 @@ body::after {
     0 0 5px currentColor,
     0 0 8px currentColor,
     0 1px 2px rgba(0, 0, 0, 0.5);
+  will-change: opacity;
 }
 
 @keyframes button-glow {
   0%, 100% {
-    box-shadow:
-      0 0 10px var(--theme-glow),
-      0 0 15px var(--theme-glow),
-      inset 0 0 10px rgba(255, 255, 255, 0.05),
-      0 4px 20px rgba(0, 0, 0, 0.3);
+    transform: scale(1);
+    opacity: 0.95;
   }
   50% {
-    box-shadow:
-      0 0 15px var(--theme-glow),
-      0 0 20px var(--theme-glow),
-      inset 0 0 10px rgba(255, 255, 255, 0.08),
-      0 4px 20px rgba(0, 0, 0, 0.3);
+    transform: scale(1.01);
+    opacity: 1;
   }
 }
 
@@ -455,12 +466,18 @@ body::after {
     linear-gradient(to bottom, rgba(255, 255, 255, 0.1), transparent);
   background-blend-mode: normal, overlay;
   border: 2px solid var(--theme-primary);
+  box-shadow:
+    0 0 10px var(--theme-glow),
+    0 0 15px var(--theme-glow),
+    inset 0 0 10px rgba(255, 255, 255, 0.05),
+    0 4px 20px rgba(0, 0, 0, 0.3);
   text-shadow:
     0 1px 2px rgba(0, 0, 0, 0.5),
     0 0 5px var(--theme-glow);
   position: relative;
   overflow: hidden;
   animation: button-glow 5s ease-in-out infinite;
+  will-change: transform, opacity;
 }
 
 .spin-button::before {
@@ -533,15 +550,24 @@ body::after {
 
 @keyframes result-entrance {
   0% {
-    transform: scale(0.8) rotateX(90deg);
+    transform: scale(0) rotateY(-180deg) rotateX(90deg);
     opacity: 0;
+    filter: blur(10px);
   }
-  50% {
-    transform: scale(1.1) rotateX(0deg);
+  40% {
+    transform: scale(1.3) rotateY(0deg) rotateX(0deg);
+    filter: blur(0px);
+  }
+  60% {
+    transform: scale(0.9) rotateY(0deg) rotateX(0deg);
+  }
+  80% {
+    transform: scale(1.05) rotateY(0deg) rotateX(0deg);
   }
   100% {
-    transform: scale(1) rotateX(0deg);
+    transform: scale(1) rotateY(0deg) rotateX(0deg);
     opacity: 1;
+    filter: blur(0px);
   }
 }
 
@@ -551,7 +577,7 @@ body::after {
     linear-gradient(145deg, var(--theme-primary) 0%, var(--theme-secondary) 50%, var(--theme-primary) 100%),
     radial-gradient(ellipse at top, var(--theme-glow), transparent);
   border: 2px solid var(--theme-primary);
-  animation: result-glow 5s ease-in-out infinite, result-entrance 0.6s ease-out;
+  animation: result-glow 5s ease-in-out infinite, result-entrance 1s cubic-bezier(0.34, 1.56, 0.64, 1);
   position: relative;
   transform-style: preserve-3d;
   perspective: 1000px;
@@ -936,90 +962,150 @@ img[src*="ddragon.leagueoflegends.com"] {
   opacity: 0.25;
 }
 
-/* Slot Machine Lever Styles */
+/* Coin Slot Styles */
 .lever-container {
-  @apply relative flex flex-col items-center;
+  @apply relative flex flex-col items-center justify-center;
   @apply transition-all duration-300;
   @apply disabled:opacity-40 disabled:cursor-not-allowed;
-  height: 120px;
-  width: 50px;
+  height: 100px;
+  width: 90px;
   cursor: pointer;
+  perspective: 600px;
 }
 
+/* 코인 투입구 본체 */
 .lever-base {
-  @apply absolute bottom-0;
-  width: 60px;
-  height: 20px;
-  background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
-  border-radius: 10px;
-  border: 2px solid #3a3a3a;
+  @apply absolute;
+  width: 80px;
+  height: 90px;
+  background: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 30%, #1a1a1a 70%, #0a0a0a 100%);
+  border-radius: 12px;
+  border: 3px solid #4a4a4a;
   box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.6),
-    inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    0 8px 25px rgba(0, 0, 0, 0.9),
+    0 4px 10px rgba(0, 0, 0, 0.7),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1),
+    inset 0 -4px 10px rgba(0, 0, 0, 0.6);
   z-index: 1;
 }
 
-.lever-arm {
-  @apply absolute;
-  width: 8px;
-  height: 80px;
-  top: 20px;
-  background: linear-gradient(90deg,
-    #4a4a4a 0%,
-    #5a5a5a 20%,
-    #6a6a6a 50%,
-    #5a5a5a 80%,
-    #4a4a4a 100%
-  );
-  border-radius: 4px;
-  box-shadow:
-    2px 0 4px rgba(0, 0, 0, 0.4),
-    -1px 0 2px rgba(255, 255, 255, 0.1),
-    inset 1px 0 1px rgba(255, 255, 255, 0.2),
-    inset -1px 0 1px rgba(0, 0, 0, 0.3);
-  transform-origin: top center;
-  z-index: 2;
-}
-
-.lever-handle {
-  @apply absolute -top-2;
+/* 투입구 슬롯 (가로 구멍) */
+.lever-base::before {
+  content: '';
+  position: absolute;
+  top: 15px;
   left: 50%;
   transform: translateX(-50%);
-  width: 28px;
-  height: 28px;
-  background: linear-gradient(145deg, #ff4444 0%, #cc0000 50%, #aa0000 100%);
-  border-radius: 50%;
-  border: 3px solid #8b0000;
+  width: 50px;
+  height: 6px;
+  background: linear-gradient(180deg, #000 0%, #1a1a1a 100%);
+  border-radius: 3px;
   box-shadow:
-    0 4px 12px rgba(255, 68, 68, 0.5),
-    0 2px 6px rgba(0, 0, 0, 0.6),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.4),
-    inset 0 2px 4px rgba(255, 100, 100, 0.6);
+    inset 0 2px 4px rgba(0, 0, 0, 0.9),
+    0 1px 1px rgba(255, 255, 255, 0.1);
 }
 
-/* Lever glow effect when enabled */
+/* INSERT COIN 텍스트 영역 */
+.lever-base::after {
+  content: 'INSERT COIN';
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: #FFD700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* 숨김 - 더 이상 사용 안함 */
+.lever-arm {
+  display: none;
+}
+
+/* 코인 */
+.lever-handle {
+  @apply absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  background:
+    radial-gradient(circle at 30% 30%, #fff4a3 0%, transparent 30%),
+    radial-gradient(circle at 70% 70%, #8B6914 0%, transparent 30%),
+    linear-gradient(145deg, #FFD700 0%, #FFC107 30%, #DAA520 60%, #B8860B 100%);
+  border-radius: 50%;
+  border: 3px solid #8B6914;
+  box-shadow:
+    0 6px 20px rgba(255, 215, 0, 0.6),
+    0 3px 10px rgba(0, 0, 0, 0.7),
+    inset 0 -3px 6px rgba(139, 105, 20, 0.6),
+    inset 0 3px 6px rgba(255, 255, 200, 0.5);
+  z-index: 10;
+}
+
+/* 코인 중앙 문양 */
+.lever-handle::before {
+  content: '₩';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  font-weight: bold;
+  color: #8B6914;
+  text-shadow:
+    1px 1px 0 rgba(255, 255, 200, 0.5),
+    -1px -1px 0 rgba(139, 105, 20, 0.3);
+}
+
+/* 코인 가장자리 테두리 */
+.lever-handle::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  border: 2px solid rgba(139, 105, 20, 0.4);
+  border-radius: 50%;
+}
+
+/* 코인 glow 효과 */
 .lever-container:not(:disabled) .lever-handle {
-  animation: lever-handle-glow 3s ease-in-out infinite;
+  animation: coin-glow 2s ease-in-out infinite, coin-float 3s ease-in-out infinite;
 }
 
-@keyframes lever-handle-glow {
+@keyframes coin-glow {
   0%, 100% {
     box-shadow:
-      0 4px 12px rgba(255, 68, 68, 0.5),
-      0 2px 6px rgba(0, 0, 0, 0.6),
-      inset 0 -2px 4px rgba(0, 0, 0, 0.4),
-      inset 0 2px 4px rgba(255, 100, 100, 0.6);
+      0 6px 20px rgba(255, 215, 0, 0.6),
+      0 3px 10px rgba(0, 0, 0, 0.7),
+      inset 0 -3px 6px rgba(139, 105, 20, 0.6),
+      inset 0 3px 6px rgba(255, 255, 200, 0.5);
   }
   50% {
     box-shadow:
-      0 4px 16px rgba(255, 68, 68, 0.8),
-      0 2px 8px rgba(255, 0, 0, 0.4),
-      inset 0 -2px 4px rgba(0, 0, 0, 0.4),
-      inset 0 2px 6px rgba(255, 100, 100, 0.8);
+      0 8px 30px rgba(255, 215, 0, 0.9),
+      0 4px 15px rgba(255, 200, 0, 0.5),
+      inset 0 -3px 6px rgba(139, 105, 20, 0.6),
+      inset 0 3px 8px rgba(255, 255, 200, 0.7);
   }
 }
 
-/* Lever hover effect */
+@keyframes coin-float {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+}
+
+/* 코인 hover 효과 */
 .lever-container:not(:disabled):hover .lever-handle {
   background: linear-gradient(145deg, #ff5555 0%, #dd0000 50%, #bb0000 100%);
   box-shadow:

@@ -18,8 +18,6 @@ export function SlotReel({
 
   // 스핀용 아이템 배열 생성 (랜덤하게 섞인 아이템들 + 최종 결과)
   const generateSpinItems = useMemo(() => {
-    if (!isSpinning) return [];
-
     const shuffled: SlotItemType[] = [];
     // 랜덤 아이템들 추가
     for (let i = 0; i < SLOT_CONFIG.SPIN_ITEMS_COUNT; i++) {
@@ -36,7 +34,7 @@ export function SlotReel({
     shuffled.push(items[nextIndex]);
 
     return shuffled;
-  }, [isSpinning, items, selectedIndex]);
+  }, [items, selectedIndex]);
 
   useEffect(() => {
     if (isSpinning && enabled) {
@@ -86,14 +84,18 @@ export function SlotReel({
       {/* 슬롯 릴 */}
       <motion.div
         className={`slot-reel w-44 relative ${!enabled ? 'opacity-50' : ''}`}
-        style={{ height: SLOT_CONFIG.ITEM_HEIGHT * SLOT_CONFIG.VISIBLE_ITEMS }}
+        style={{
+          height: SLOT_CONFIG.ITEM_HEIGHT * SLOT_CONFIG.VISIBLE_ITEMS,
+          willChange: isSpinning && enabled ? 'transform' : 'auto',
+        }}
         animate={isSpinning && enabled ? {
-          scale: [1, 1.02, 1],
+          x: [0, -1, 1, 0],
+          y: [0, -0.5, 0.5, 0],
         } : {}}
         transition={{
-          duration: 0.3,
+          duration: 0.2,
           repeat: isSpinning && enabled ? Infinity : 0,
-          ease: 'easeInOut',
+          ease: 'linear',
         }}
       >
         {/* 중앙 하이라이트 */}
@@ -155,7 +157,7 @@ export function SlotReel({
               }}
               transition={{
                 duration: SLOT_CONFIG.SPIN_DURATION / 1000,
-                ease: [0.33, 0.01, 0.15, 1], // 강한 감속 커브
+                ease: [0.25, 0.1, 0.1, 1], // 극적인 감속 커브 - 천천히 시작, 급격히 감속
               }}
               style={{ top: 0 }}
             >
@@ -174,15 +176,17 @@ export function SlotReel({
               className="absolute w-full flex flex-col items-center justify-center"
               initial={{ scale: 0.8, opacity: 0, rotateX: 90 }}
               animate={{
-                scale: [0.8, 1.15, 1],
+                scale: [0.8, 1.3, 0.95, 1.1, 1],
                 opacity: 1,
                 rotateX: 0,
+                y: [0, -8, 4, -2, 0],
               }}
               transition={{
                 type: 'spring',
-                stiffness: 200,
-                damping: 15,
-                duration: 0.6,
+                stiffness: 300,
+                damping: 12,
+                duration: 0.8,
+                times: [0, 0.3, 0.5, 0.75, 1],
               }}
               style={{ top: SLOT_CONFIG.ITEM_HEIGHT }}
             >

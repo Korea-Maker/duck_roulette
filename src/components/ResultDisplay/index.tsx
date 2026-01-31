@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import type { ResultDisplayProps } from '../../types';
 import { useConfetti } from './useConfetti';
 import { ChampionPortrait } from './ChampionPortrait';
@@ -7,9 +7,6 @@ import { ResultInfo } from './ResultInfo';
 import { hexToRgba } from '../../utils/colorFilters';
 
 export function ResultDisplay({ lane, champion, damageType, show, onClose }: ResultDisplayProps) {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
-
   const hasAnyResult = lane || champion || damageType;
 
   // 컨페티 효과
@@ -37,14 +34,6 @@ export function ResultDisplay({ lane, champion, damageType, show, onClose }: Res
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [show]);
-
-  // 이미지 상태 리셋
-  useEffect(() => {
-    if (show) {
-      setImageLoaded(false);
-      setImageError(false);
-    }
   }, [show]);
 
   if (!show || !hasAnyResult) return null;
@@ -121,13 +110,7 @@ export function ResultDisplay({ lane, champion, damageType, show, onClose }: Res
 
               {/* 챔피언 이미지 (크게 강조) */}
               {champion && (
-                <ChampionPortrait
-                  champion={champion}
-                  imageLoaded={imageLoaded}
-                  setImageLoaded={setImageLoaded}
-                  imageError={imageError}
-                  setImageError={setImageError}
-                />
+                <ChampionPortrait key={champion.id} champion={champion} />
               )}
 
               {/* 라인과 타입 정보 */}

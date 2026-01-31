@@ -2,8 +2,8 @@
 export const SLOT_CONFIG = {
   ITEM_HEIGHT: 64,      // 슬롯 아이템 높이 (px)
   VISIBLE_ITEMS: 3,     // 보이는 아이템 수
-  SPIN_DURATION: 2000,  // 스핀 지속 시간 (ms)
-  SPIN_ITEMS_COUNT: 20, // 스핀 중 보여줄 아이템 수
+  SPIN_DURATION: 3000,  // 스핀 지속 시간 (ms) - 긴장감을 위해 증가
+  SPIN_ITEMS_COUNT: 30, // 스핀 중 보여줄 아이템 수 - 더 많은 아이템 통과
 } as const;
 
 // 애니메이션 설정

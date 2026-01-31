@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { SlotReel } from './SlotReel';
 import { SpinButton } from './SpinButton';
 import { ResultDisplay } from './ResultDisplay';
@@ -54,6 +54,15 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
 
   const { startSpin, stopSpin, playResult } = useSound();
 
+  // Pre-calculate particle positions (only once)
+  const particlePositions = useMemo(() =>
+    Array.from({ length: 6 }, () => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      xOffset: (Math.random() - 0.5) * 40,
+    })),
+  []);
+
   // Handle spinning sound
   useEffect(() => {
     if (isSpinning) {
@@ -103,6 +112,41 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
+        {/* 배경 파티클 효과 - 스핀 중 */}
+        {isSpinning && (
+          <motion.div
+            className="absolute inset-0 pointer-events-none z-0 rounded-3xl overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {particlePositions.map((pos, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-2 h-2 rounded-full bg-yellow-400"
+                style={{
+                  left: `${pos.left}%`,
+                  top: `${pos.top}%`,
+                  boxShadow: '0 0 10px rgba(255, 215, 0, 0.8)',
+                  willChange: 'transform, opacity',
+                }}
+                animate={{
+                  y: [0, -20, 0],
+                  x: [0, pos.xOffset, 0],
+                  opacity: [0, 0.8, 0],
+                  scale: [0, 1.5, 0],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  delay: i * 0.25,
+                  ease: 'easeOut',
+                }}
+              />
+            ))}
+          </motion.div>
+        )}
+
         {/* LED Frame */}
         <div className="led-frame" />
 
@@ -131,7 +175,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
             isSpinning={state.damageType.isSpinning}
             selectedIndex={selectedIndices.damageType}
             enabled={state.damageType.enabled}
-            label="💥 타입"
+            label="💥 템트리"
             onToggle={toggleDamageType}
           />
         </div>
@@ -155,24 +199,35 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
             {/* 레버 베이스 (고정부) */}
             <div className="lever-base" />
 
-            {/* 레버 막대 */}
+            {/* 코인 투입구 (숨김) */}
+            <div className="lever-arm" />
+
+            {/* 코인 - 투입 애니메이션 */}
             <motion.div
-              className="lever-arm"
+              className="lever-handle"
+              style={{ x: '-50%' }}
               animate={isSpinning ? {
-                rotateZ: [0, 35, 0],
-                transformOrigin: 'top center',
+                y: [0, 55, 55],
+                scale: [1, 0.8, 0],
+                rotateZ: [0, 180, 360],
+                opacity: [1, 1, 0],
               } : {
+                y: 0,
+                scale: 1,
                 rotateZ: 0,
+                opacity: 1,
               }}
               transition={isSpinning ? {
-                duration: 0.6,
-                times: [0, 0.3, 1],
-                ease: ['easeOut', 'easeInOut'],
-              } : {}}
-            >
-              {/* 레버 손잡이 */}
-              <div className="lever-handle" />
-            </motion.div>
+                duration: 0.7,
+                times: [0, 0.5, 1],
+                ease: 'easeIn',
+              } : {
+                type: 'spring',
+                stiffness: 300,
+                damping: 20,
+                delay: 0.3,
+              }}
+            />
           </motion.button>
         </div>
 
