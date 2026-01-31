@@ -107,7 +107,7 @@ export interface PartySlotMachineState {
 }
 
 // 레이아웃 타입
-export type PartyLayoutType = 'horizontal' | 'vertical' | 'circular';
+export type PartyLayoutType = 'horizontal' | 'circular';
 
 // 앱 모드
 export type AppMode = 'single' | 'party';

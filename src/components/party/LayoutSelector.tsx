@@ -2,9 +2,8 @@ import { motion } from 'framer-motion';
 import type { LayoutSelectorProps, PartyLayoutType } from '../../types';
 
 const layouts: { type: PartyLayoutType; label: string; icon: string }[] = [
-  { type: 'horizontal', label: '가로', icon: '⬜⬜⬜⬜⬜' },
-  { type: 'vertical', label: '세로', icon: '📋' },
   { type: 'circular', label: '원형', icon: '⭕' },
+  { type: 'horizontal', label: '가로', icon: '⬜⬜⬜' },
 ];
 
 export function LayoutSelector({ currentLayout, onLayoutChange }: LayoutSelectorProps) {

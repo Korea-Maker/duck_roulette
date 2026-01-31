@@ -8,7 +8,7 @@ import { SoundToggle } from '../SoundToggle';
 import { LayoutSelector } from './LayoutSelector';
 import { MemberCountSelector } from './MemberCountSelector';
 import { PartyResultDisplay } from './PartyResultDisplay';
-import { HorizontalLayout, VerticalLayout, CircularLayout } from './layouts';
+import { HorizontalLayout, CircularLayout } from './layouts';
 import { PARTY_CONFIG } from '../../config/constants';
 
 export function PartySlotMachine() {
@@ -46,13 +46,11 @@ export function PartySlotMachine() {
   // 레이아웃 렌더링
   const LayoutComponent = useMemo(() => {
     switch (layout) {
-      case 'vertical':
-        return VerticalLayout;
-      case 'circular':
-        return CircularLayout;
       case 'horizontal':
-      default:
         return HorizontalLayout;
+      case 'circular':
+      default:
+        return CircularLayout;
     }
   }, [layout]);
 

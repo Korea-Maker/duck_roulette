@@ -22,7 +22,7 @@ export const PARTY_CONFIG = {
   STAGGER_DELAY: 200,                 // 각 슬롯 시작 딜레이 (ms)
   RESULT_DELAY: 500,                  // 결과 표시 전 대기 (ms)
   CIRCULAR_RADIUS: 140,               // 원형 레이아웃 반지름 (px)
-  DEFAULT_LAYOUT: 'horizontal' as const,
+  DEFAULT_LAYOUT: 'circular' as const,
 } as const;
 
 // 라인별 각도 (원형 레이아웃용) - TOP이 12시 방향
