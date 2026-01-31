@@ -101,7 +101,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
       </motion.h1>
 
       <p className="text-gray-400 text-center max-w-md">
-        오늘의 챔피언, 라인, 타입을 랜덤으로 정해보세요!
+        오늘의 챔피언, 라인, 템트리를 랜덤으로 정해보세요!
         <br />
         각 슬롯을 ON/OFF하여 원하는 항목만 돌릴 수 있습니다.
       </p>
