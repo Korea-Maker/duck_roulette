@@ -13,8 +13,14 @@ const getRandomLanes = (count: number): Lane[] => {
   return shuffled.slice(0, count);
 };
 
+// 중복 없이 랜덤 챔피언 선택
+const getRandomChampions = (count: number) => {
+  const shuffled = [...CHAMPIONS].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, count);
+};
+
 // 초기 멤버 상태 생성
-const createInitialMember = (index: number, lanes: Lane[]): PartyMemberSlotState => ({
+const createInitialMember = (index: number, lanes: Lane[], champions: typeof CHAMPIONS): PartyMemberSlotState => ({
   lane: {
     enabled: true,
     currentValue: lanes[index],
@@ -22,7 +28,7 @@ const createInitialMember = (index: number, lanes: Lane[]): PartyMemberSlotState
   },
   champion: {
     enabled: true,
-    currentValue: CHAMPIONS[getRandomIndex(CHAMPIONS.length)],
+    currentValue: champions[index],
     isSpinning: false,
   },
   damageType: {
@@ -35,8 +41,9 @@ const createInitialMember = (index: number, lanes: Lane[]): PartyMemberSlotState
 // 멤버 수에 따른 초기 상태 생성
 const createInitialState = (memberCount: number): PartySlotMachineState => {
   const randomLanes = getRandomLanes(memberCount);
+  const randomChampions = getRandomChampions(memberCount);
   return {
-    members: Array.from({ length: memberCount }, (_, i) => createInitialMember(i, randomLanes)),
+    members: Array.from({ length: memberCount }, (_, i) => createInitialMember(i, randomLanes, randomChampions)),
     isSpinning: false,
     showResult: false,
   };
@@ -81,10 +88,11 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
 
     setState(prev => ({ ...prev, showResult: false, isSpinning: true }));
 
-    // 각 멤버별 랜덤 결과 미리 계산
+    // 각 멤버별 랜덤 결과 미리 계산 (라인, 챔피언 중복 없음)
     const newRandomLanes = getRandomLanes(memberCount);
+    const newRandomChampions = getRandomChampions(memberCount);
     const newLaneIndices = newRandomLanes.map(lane => PARTY_LANES.indexOf(lane));
-    const newChampionIndices = Array.from({ length: memberCount }, () => getRandomIndex(CHAMPIONS.length));
+    const newChampionIndices = newRandomChampions.map(champ => CHAMPIONS.findIndex(c => c.id === champ.id));
     const newDamageIndices = Array.from({ length: memberCount }, () => getRandomIndex(DAMAGE_TYPES.length));
 
     setSelectedIndices({
@@ -116,7 +124,7 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
     setTimeout(() => {
       const results: PartyResult[] = Array.from({ length: memberCount }, (_, index) => ({
         lane: newRandomLanes[index],
-        champion: CHAMPIONS[newChampionIndices[index]],
+        champion: newRandomChampions[index],
         damageType: DAMAGE_TYPES[newDamageIndices[index]].id,
       }));
 
@@ -134,7 +142,7 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
           champion: {
             ...member.champion,
             isSpinning: false,
-            currentValue: CHAMPIONS[newChampionIndices[index]],
+            currentValue: newRandomChampions[index],
           },
           damageType: {
             ...member.damageType,
