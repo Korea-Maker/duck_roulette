@@ -181,55 +181,13 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
           />
         </div>
 
-        {/* 스핀 버튼 & 레버 */}
-        <div className="flex justify-center items-end gap-8 mt-6">
+        {/* 스핀 버튼 */}
+        <div className="flex justify-center items-center mt-6">
           <SpinButton
             onClick={spin}
             disabled={isSpinning || allDisabled}
             isSpinning={isSpinning}
           />
-
-          {/* 슬롯 머신 레버 */}
-          <motion.button
-            className="lever-container"
-            onClick={spin}
-            disabled={isSpinning || allDisabled}
-            whileHover={!isSpinning && !allDisabled ? { scale: 1.05 } : {}}
-            whileTap={!isSpinning && !allDisabled ? { scale: 0.95 } : {}}
-          >
-            {/* 레버 베이스 (고정부) */}
-            <div className="lever-base" />
-
-            {/* 코인 투입구 (숨김) */}
-            <div className="lever-arm" />
-
-            {/* 코인 - 투입 애니메이션 */}
-            <motion.div
-              className="lever-handle"
-              style={{ x: '-50%' }}
-              animate={isSpinning ? {
-                y: [0, 55, 55],
-                scale: [1, 0.8, 0],
-                rotateZ: [0, 180, 360],
-                opacity: [1, 1, 0],
-              } : {
-                y: 0,
-                scale: 1,
-                rotateZ: 0,
-                opacity: 1,
-              }}
-              transition={isSpinning ? {
-                duration: 0.7,
-                times: [0, 0.5, 1],
-                ease: 'easeIn',
-              } : {
-                type: 'spring',
-                stiffness: 300,
-                damping: 20,
-                delay: 0.3,
-              }}
-            />
-          </motion.button>
         </div>
 
         {/* 비활성화 경고 */}

@@ -37,11 +37,11 @@ export function SpinButton({ onClick, disabled, isSpinning }: SpinButtonProps) {
           >
             🎰
           </motion.span>
-          돌리는 중...
+          운명을 결정중...
         </span>
       ) : (
         <span className="flex items-center gap-2">
-          🎲 SPIN!
+          🎲 운명의 주사위
         </span>
       )}
     </motion.button>
