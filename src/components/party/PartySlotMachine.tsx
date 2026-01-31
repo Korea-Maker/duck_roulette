@@ -66,7 +66,7 @@ export function PartySlotMachine() {
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen flex flex-col items-center justify-start py-6 px-4">
+    <div className="relative w-full min-h-screen flex flex-col items-center justify-start py-4 px-4">
       {/* 배경 파티클 */}
       <AnimatePresence>
         {isSpinning && (
@@ -102,7 +102,7 @@ export function PartySlotMachine() {
 
       {/* 헤더 */}
       <motion.div
-        className="text-center mb-6 z-10"
+        className="text-center mb-3 z-10"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
@@ -121,7 +121,7 @@ export function PartySlotMachine() {
 
       {/* 컨트롤 패널 */}
       <motion.div
-        className="flex flex-col sm:flex-row items-center gap-4 mb-6 z-10"
+        className="flex flex-col sm:flex-row items-center gap-3 mb-3 z-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
@@ -142,7 +142,7 @@ export function PartySlotMachine() {
 
       {/* 슬롯 레이아웃 */}
       <motion.div
-        className="w-full flex-1 flex items-center justify-center z-10 mb-6"
+        className="w-full flex-1 flex items-center justify-center z-10 mb-3"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.3 }}
