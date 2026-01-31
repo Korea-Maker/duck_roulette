@@ -6,12 +6,14 @@ import { useSound } from '../../hooks/useSound';
 import { SpinButton } from '../SpinButton';
 import { SoundToggle } from '../SoundToggle';
 import { LayoutSelector } from './LayoutSelector';
+import { MemberCountSelector } from './MemberCountSelector';
 import { PartyResultDisplay } from './PartyResultDisplay';
 import { HorizontalLayout, VerticalLayout, CircularLayout } from './layouts';
 import { PARTY_CONFIG } from '../../config/constants';
 
 export function PartySlotMachine() {
   const [layout, setLayout] = useState<PartyLayoutType>(PARTY_CONFIG.DEFAULT_LAYOUT);
+  const [memberCount, setMemberCount] = useState(5);
   const sound = useSound();
 
   const {
@@ -21,7 +23,7 @@ export function PartySlotMachine() {
     spin,
     hideResult,
     getResults,
-  } = usePartySlotMachine();
+  } = usePartySlotMachine({ memberCount });
 
   const handleSpin = useCallback(() => {
     if (isSpinning) return;
@@ -33,8 +35,8 @@ export function PartySlotMachine() {
     setTimeout(() => {
       sound.stopSpin();
       sound.playWin();
-    }, 3000 + (PARTY_CONFIG.MEMBER_COUNT - 1) * PARTY_CONFIG.STAGGER_DELAY);
-  }, [isSpinning, sound, spin]);
+    }, 3000 + (memberCount - 1) * PARTY_CONFIG.STAGGER_DELAY);
+  }, [isSpinning, sound, spin, memberCount]);
 
   const handleClose = useCallback(() => {
     sound.playResult();
@@ -116,16 +118,24 @@ export function PartySlotMachine() {
         >
           🎰 파티 룰렛 🎰
         </h2>
-        <p className="text-gray-400 text-sm">5명의 챔피언을 한 번에!</p>
+        <p className="text-gray-400 text-sm">{memberCount}명의 챔피언을 한 번에!</p>
       </motion.div>
 
-      {/* 레이아웃 선택기 */}
+      {/* 컨트롤 패널 */}
       <motion.div
-        className="mb-6 z-10"
+        className="flex flex-col sm:flex-row items-center gap-4 mb-6 z-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
+        {/* 인원 선택 */}
+        <MemberCountSelector
+          count={memberCount}
+          onChange={setMemberCount}
+          disabled={isSpinning}
+        />
+
+        {/* 레이아웃 선택기 */}
         <LayoutSelector
           currentLayout={layout}
           onLayoutChange={setLayout}
@@ -141,7 +151,7 @@ export function PartySlotMachine() {
       >
         <AnimatePresence mode="wait">
           <motion.div
-            key={layout}
+            key={`${layout}-${memberCount}`}
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}

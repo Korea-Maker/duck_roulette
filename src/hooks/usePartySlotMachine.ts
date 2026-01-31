@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { PartySlotMachineState, PartyMemberSlotState, Lane, PartyResult } from '../types';
 import { PARTY_LANES } from '../types';
 import { CHAMPIONS } from '../data/champions';
@@ -22,28 +22,43 @@ const createInitialMember = (lane: Lane): PartyMemberSlotState => ({
   },
 });
 
-// 초기 상태 생성
-const createInitialState = (): PartySlotMachineState => ({
-  members: PARTY_LANES.map(createInitialMember),
+// 멤버 수에 따른 초기 상태 생성
+const createInitialState = (memberCount: number): PartySlotMachineState => ({
+  members: PARTY_LANES.slice(0, memberCount).map(createInitialMember),
   isSpinning: false,
   showResult: false,
 });
 
 interface UsePartySlotMachineOptions {
+  memberCount?: number;
   onSpinComplete?: (results: PartyResult[]) => void;
 }
 
 export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
-  const [state, setState] = useState<PartySlotMachineState>(createInitialState);
+  const memberCount = options?.memberCount ?? 5;
+  const activeLanes = PARTY_LANES.slice(0, memberCount);
+
+  const [state, setState] = useState<PartySlotMachineState>(() => createInitialState(memberCount));
 
   // 선택된 인덱스 (각 멤버별)
   const [selectedIndices, setSelectedIndices] = useState<{
     champion: number[];
     damageType: number[];
   }>({
-    champion: PARTY_LANES.map(() => 0),
-    damageType: PARTY_LANES.map(() => 0),
+    champion: activeLanes.map(() => 0),
+    damageType: activeLanes.map(() => 0),
   });
+
+  // 멤버 수 변경 시 상태 재생성
+  useEffect(() => {
+    if (state.members.length !== memberCount) {
+      setState(createInitialState(memberCount));
+      setSelectedIndices({
+        champion: activeLanes.map(() => 0),
+        damageType: activeLanes.map(() => 0),
+      });
+    }
+  }, [memberCount, activeLanes, state.members.length]);
 
   // 스핀 핸들러
   const spin = useCallback(() => {
@@ -52,8 +67,8 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
     setState(prev => ({ ...prev, showResult: false, isSpinning: true }));
 
     // 각 멤버별 랜덤 결과 미리 계산
-    const newChampionIndices = PARTY_LANES.map(() => getRandomIndex(CHAMPIONS.length));
-    const newDamageIndices = PARTY_LANES.map(() => getRandomIndex(DAMAGE_TYPES.length));
+    const newChampionIndices = activeLanes.map(() => getRandomIndex(CHAMPIONS.length));
+    const newDamageIndices = activeLanes.map(() => getRandomIndex(DAMAGE_TYPES.length));
 
     setSelectedIndices({
       champion: newChampionIndices,
@@ -61,7 +76,7 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
     });
 
     // 모든 멤버 스피닝 시작 (stagger 효과)
-    PARTY_LANES.forEach((_, index) => {
+    activeLanes.forEach((_, index) => {
       setTimeout(() => {
         setState(prev => ({
           ...prev,
@@ -80,7 +95,7 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
 
     // 스피닝 종료 후 결과 설정
     setTimeout(() => {
-      const results: PartyResult[] = PARTY_LANES.map((lane, index) => ({
+      const results: PartyResult[] = activeLanes.map((lane, index) => ({
         lane,
         champion: CHAMPIONS[newChampionIndices[index]],
         damageType: DAMAGE_TYPES[newDamageIndices[index]].id,
@@ -109,8 +124,8 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
       if (options?.onSpinComplete) {
         options.onSpinComplete(results);
       }
-    }, SLOT_CONFIG.SPIN_DURATION + (PARTY_LANES.length - 1) * PARTY_CONFIG.STAGGER_DELAY);
-  }, [state.isSpinning, options]);
+    }, SLOT_CONFIG.SPIN_DURATION + (activeLanes.length - 1) * PARTY_CONFIG.STAGGER_DELAY);
+  }, [state.isSpinning, activeLanes, options]);
 
   // 결과 닫기
   const hideResult = useCallback(() => {
@@ -119,12 +134,12 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
 
   // 리셋
   const reset = useCallback(() => {
-    setState(createInitialState());
+    setState(createInitialState(memberCount));
     setSelectedIndices({
-      champion: PARTY_LANES.map(() => 0),
-      damageType: PARTY_LANES.map(() => 0),
+      champion: activeLanes.map(() => 0),
+      damageType: activeLanes.map(() => 0),
     });
-  }, []);
+  }, [memberCount, activeLanes]);
 
   // 현재 결과 가져오기
   const getResults = useCallback((): PartyResult[] => {
@@ -138,6 +153,7 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
   return {
     state,
     selectedIndices,
+    memberCount,
     isSpinning: state.isSpinning,
     showResult: state.showResult,
     spin,
