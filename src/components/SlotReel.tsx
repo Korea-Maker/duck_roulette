@@ -153,11 +153,20 @@ export function SlotReel({
               animate={{
                 // 최종 아이템이 중앙(ITEM_HEIGHT 위치)에 정확히 멈추도록 계산
                 // spinItems.length - 2 = 선택된 아이템의 인덱스 (마지막에서 두번째)
-                y: -(spinItems.length - 2) * SLOT_CONFIG.ITEM_HEIGHT
+                // 마지막에 한 칸 더 올라갔다가 (긴장감) 진동하며 내려오는 효과
+                y: [
+                  0,
+                  -(spinItems.length - 1) * SLOT_CONFIG.ITEM_HEIGHT, // 한 칸 더 위로 (오버슈팅)
+                  -(spinItems.length - 2) * SLOT_CONFIG.ITEM_HEIGHT - 3, // 진동 1
+                  -(spinItems.length - 2) * SLOT_CONFIG.ITEM_HEIGHT + 2, // 진동 2
+                  -(spinItems.length - 2) * SLOT_CONFIG.ITEM_HEIGHT - 1, // 진동 3
+                  -(spinItems.length - 2) * SLOT_CONFIG.ITEM_HEIGHT, // 최종 위치
+                ],
               }}
               transition={{
-                duration: SLOT_CONFIG.SPIN_DURATION / 1000,
-                ease: [0.25, 0.1, 0.1, 1], // 극적인 감속 커브 - 천천히 시작, 급격히 감속
+                duration: SLOT_CONFIG.SPIN_DURATION / 1000 + 0.3, // 진동 시간 추가
+                times: [0, 0.85, 0.9, 0.94, 0.97, 1], // 키프레임 타이밍
+                ease: [0.25, 0.1, 0.1, 1], // 극적인 감속 커브
               }}
               style={{ top: 0 }}
             >

@@ -20,7 +20,7 @@ function App() {
       <main className="min-h-screen flex flex-col items-center p-4 gap-4">
         {/* 모드 선택기 */}
         <motion.div
-          className="fixed top-4 left-1/2 -translate-x-1/2 z-30"
+          className="fixed top-4 left-0 right-0 z-30 flex justify-center"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >

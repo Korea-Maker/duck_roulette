@@ -66,7 +66,7 @@ export function PartySlotMachine() {
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen flex flex-col items-center justify-start py-4 px-4">
+    <div className="relative w-full flex flex-col items-center justify-start py-2 px-4">
       {/* 배경 파티클 */}
       <AnimatePresence>
         {isSpinning && (
@@ -102,12 +102,12 @@ export function PartySlotMachine() {
 
       {/* 헤더 */}
       <motion.div
-        className="text-center mb-3 z-10"
+        className="text-center mb-1 z-10"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
         <h2
-          className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-red-400 mb-2"
+          className="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-red-400 mb-1"
           style={{
             fontFamily: "'Bebas Neue', 'Orbitron', sans-serif",
             letterSpacing: '0.1em',
@@ -116,12 +116,12 @@ export function PartySlotMachine() {
         >
           🎰 파티 룰렛 🎰
         </h2>
-        <p className="text-gray-400 text-sm">{memberCount}명의 챔피언을 한 번에!</p>
+        <p className="text-gray-400 text-xs">{memberCount}명의 챔피언을 한 번에!</p>
       </motion.div>
 
       {/* 컨트롤 패널 */}
       <motion.div
-        className="flex flex-col sm:flex-row items-center gap-3 mb-3 z-10"
+        className="flex flex-col sm:flex-row items-center gap-2 mb-2 z-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
@@ -142,7 +142,7 @@ export function PartySlotMachine() {
 
       {/* 슬롯 레이아웃 */}
       <motion.div
-        className="w-full flex-1 flex items-center justify-center z-10 mb-3"
+        className="w-full flex items-center justify-center z-10 mb-2"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.3 }}

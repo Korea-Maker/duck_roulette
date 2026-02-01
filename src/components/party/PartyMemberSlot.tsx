@@ -55,9 +55,20 @@ function MiniSlotReel({ items, isSpinning, currentValue, compact }: MiniSlotReel
             key="spinning"
             className="absolute w-full"
             initial={{ y: 0 }}
-            animate={{ y: -(spinItems.length - 1) * itemHeight }}
+            animate={{
+              // 마지막에 한 칸 더 올라갔다가 진동하며 내려오는 효과
+              y: [
+                0,
+                -spinItems.length * itemHeight, // 한 칸 더 위로 (오버슈팅)
+                -(spinItems.length - 1) * itemHeight - 2, // 진동 1
+                -(spinItems.length - 1) * itemHeight + 1.5, // 진동 2
+                -(spinItems.length - 1) * itemHeight - 0.5, // 진동 3
+                -(spinItems.length - 1) * itemHeight, // 최종 위치
+              ],
+            }}
             transition={{
-              duration: SLOT_CONFIG.SPIN_DURATION / 1000,
+              duration: SLOT_CONFIG.SPIN_DURATION / 1000 + 0.25,
+              times: [0, 0.85, 0.9, 0.94, 0.97, 1],
               ease: [0.25, 0.1, 0.1, 1],
             }}
           >
