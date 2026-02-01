@@ -9,10 +9,15 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+const VALID_THEMES: ThemeName[] = ['pure-dark', 'soft-gold', 'ocean-calm', 'sunset-warm', 'summoners-rift'];
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<ThemeName>(() => {
     const saved = localStorage.getItem('slot-machine-theme');
-    return (saved as ThemeName) || 'pure-dark';
+    if (saved && VALID_THEMES.includes(saved as ThemeName)) {
+      return saved as ThemeName;
+    }
+    return 'pure-dark';
   });
 
   useEffect(() => {
