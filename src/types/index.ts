@@ -4,12 +4,16 @@ export type Lane = 'TOP' | 'JUNGLE' | 'MID' | 'ADC' | 'SUPPORT';
 // 데미지 타입: 2개
 export type DamageType = 'AD' | 'AP';
 
+// 챔피언 역할 타입
+export type ChampionTag = 'Fighter' | 'Tank' | 'Mage' | 'Assassin' | 'Marksman' | 'Support';
+
 // 챔피언 인터페이스
 export interface Champion {
   id: string;
   name: string;
   koreanName: string;
   color: string; // 챔피언 대표 색상 (hex)
+  tags: ChampionTag[]; // 챔피언 역할 (예: ['Fighter', 'Tank'])
 }
 
 // 슬롯 아이템 타입 (제네릭)

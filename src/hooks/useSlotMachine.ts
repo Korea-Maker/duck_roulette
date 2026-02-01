@@ -1,5 +1,5 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
-import type { SlotMachineState } from '../types';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import type { SlotMachineState, ChampionTag } from '../types';
 import { CHAMPIONS } from '../data/champions';
 import { LANES } from '../data/lanes';
 import { DAMAGE_TYPES } from '../data/damageTypes';
@@ -9,9 +9,18 @@ const getRandomIndex = (max: number): number => Math.floor(Math.random() * max);
 
 interface UseSlotMachineOptions {
   onSpinComplete?: (champion: string, lane: string, type: string) => void;
+  filterTags?: ChampionTag[];
 }
 
 export function useSlotMachine(options?: UseSlotMachineOptions) {
+  // 필터링된 챔피언 목록
+  const filteredChampions = useMemo(() => {
+    if (!options?.filterTags || options.filterTags.length === 0) {
+      return CHAMPIONS;
+    }
+    return CHAMPIONS.filter((c) => c.tags.some((t) => options.filterTags!.includes(t)));
+  }, [options?.filterTags]);
+
   const [state, setState] = useState<SlotMachineState>({
     lane: {
       enabled: true,
@@ -82,9 +91,9 @@ export function useSlotMachine(options?: UseSlotMachineOptions) {
 
     setShowResult(false);
 
-    // 랜덤 결과 미리 계산
+    // 랜덤 결과 미리 계산 (필터링된 챔피언 목록 사용)
     const newLaneIndex = lane.enabled ? getRandomIndex(LANES.length) : selectedIndices.lane;
-    const newChampionIndex = champion.enabled ? getRandomIndex(CHAMPIONS.length) : selectedIndices.champion;
+    const newChampionIndex = champion.enabled ? getRandomIndex(filteredChampions.length) : selectedIndices.champion;
     const newDamageIndex = damageType.enabled ? getRandomIndex(DAMAGE_TYPES.length) : selectedIndices.damageType;
 
     setSelectedIndices({
@@ -105,10 +114,10 @@ export function useSlotMachine(options?: UseSlotMachineOptions) {
       clearTimeout(spinTimeoutRef.current);
     }
 
-    // 스피닝 종료 후 결과 설정
+    // 스피닝 종료 후 결과 설정 (필터링된 챔피언 목록 사용)
     spinTimeoutRef.current = setTimeout(() => {
       const finalLane = lane.enabled ? LANES[newLaneIndex].id : state.lane.currentValue;
-      const finalChampion = champion.enabled ? CHAMPIONS[newChampionIndex] : state.champion.currentValue;
+      const finalChampion = champion.enabled ? filteredChampions[newChampionIndex] : state.champion.currentValue;
       const finalType = damageType.enabled ? DAMAGE_TYPES[newDamageIndex].id : state.damageType.currentValue;
 
       setState((prev) => ({
@@ -135,7 +144,7 @@ export function useSlotMachine(options?: UseSlotMachineOptions) {
         options.onSpinComplete(finalChampion.id, finalLane, finalType);
       }
     }, SLOT_CONFIG.SPIN_DURATION);
-  }, [state, selectedIndices, options]);
+  }, [state, selectedIndices, options, filteredChampions]);
 
   // 결과 닫기
   const hideResult = useCallback(() => {
@@ -159,5 +168,6 @@ export function useSlotMachine(options?: UseSlotMachineOptions) {
     toggleDamageType,
     spin,
     hideResult,
+    filteredChampions,
   };
 }

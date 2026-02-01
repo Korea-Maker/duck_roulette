@@ -1352,3 +1352,13 @@ img[src*="ddragon.leagueoflegends.com"] {
 .party-particle {
   animation: party-particle-rise 1.5s ease-out infinite;
 }
+
+/* Hide scrollbar utility */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

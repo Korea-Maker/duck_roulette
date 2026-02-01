@@ -1,17 +1,17 @@
 import { motion } from 'framer-motion';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { SlotReel } from './SlotReel';
 import { SpinButton } from './SpinButton';
 import { ResultDisplay } from './ResultDisplay';
 import { ThemeSelector } from './ThemeSelector';
 import { SoundToggle } from './SoundToggle';
+import { ChampionFilter } from './ChampionFilter';
 import { useSlotMachine } from '../hooks/useSlotMachine';
 import { useSound } from '../hooks/useSound';
 import { LANES } from '../data/lanes';
-import { CHAMPIONS } from '../data/champions';
 import { DAMAGE_TYPES } from '../data/damageTypes';
 import { getChampionImageUrl } from '../utils/champion';
-import type { SlotItem } from '../types';
+import type { SlotItem, ChampionTag } from '../types';
 
 // 데이터를 SlotItem 형태로 변환
 const laneItems: SlotItem[] = LANES.map((lane) => ({
@@ -19,13 +19,6 @@ const laneItems: SlotItem[] = LANES.map((lane) => ({
   label: lane.koreanLabel,
   color: lane.color,
   image: lane.image,
-}));
-
-const championItems: SlotItem[] = CHAMPIONS.map((champ) => ({
-  id: champ.id,
-  label: champ.koreanName,
-  color: 'text-cyan-300',
-  image: getChampionImageUrl(champ.id),
 }));
 
 const damageTypeItems: SlotItem[] = DAMAGE_TYPES.map((type) => ({
@@ -40,6 +33,9 @@ interface SlotMachineProps {
 }
 
 export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
+  // 챔피언 필터 상태
+  const [filterTags, setFilterTags] = useState<ChampionTag[]>([]);
+
   const {
     state,
     selectedIndices,
@@ -51,7 +47,20 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
     toggleDamageType,
     spin,
     hideResult,
-  } = useSlotMachine({ onSpinComplete });
+    filteredChampions,
+  } = useSlotMachine({ onSpinComplete, filterTags });
+
+  // 필터링된 챔피언 목록을 SlotItem으로 변환
+  const championItems: SlotItem[] = useMemo(
+    () =>
+      filteredChampions.map((champ) => ({
+        id: champ.id,
+        label: champ.koreanName,
+        color: 'text-cyan-300',
+        image: getChampionImageUrl(champ.id),
+      })),
+    [filteredChampions]
+  );
 
   const { startSpin, stopSpin, playWin, isMuted, toggleMute } = useSound();
 
@@ -112,6 +121,9 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
         <br />
         각 슬롯을 ON/OFF하여 원하는 항목만 돌릴 수 있습니다.
       </p>
+
+      {/* 챔피언 필터 */}
+      <ChampionFilter selectedTags={filterTags} onTagsChange={setFilterTags} />
 
       {/* 슬롯 머신 컨테이너 */}
       <motion.div
@@ -231,7 +243,11 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
       >
         <div className="flex items-center gap-2">
           <span className="text-yellow-500">★</span>
-          <span>총 {CHAMPIONS.length}개의 챔피언 지원</span>
+          <span>
+            {filterTags.length > 0
+              ? `${filteredChampions.length}명 선택됨`
+              : `총 ${filteredChampions.length}개의 챔피언 지원`}
+          </span>
           <span className="text-yellow-500">★</span>
         </div>
         <div
