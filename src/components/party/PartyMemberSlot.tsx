@@ -29,8 +29,14 @@ function MiniSlotReel({ items, isSpinning, currentValue, compact }: MiniSlotReel
       const randomItem = items[Math.floor(Math.random() * items.length)];
       shuffled.push(randomItem);
     }
+    // SlotReel과 동일한 구조: [prevIndex, selectedIndex, nextIndex] 추가
+    // 오버슈팅 시 nextIndex가 스쳐지나가고 selectedIndex에서 멈춤
     if (selectedIndex >= 0) {
+      const prevIndex = (selectedIndex - 1 + items.length) % items.length;
+      const nextIndex = (selectedIndex + 1) % items.length;
+      shuffled.push(items[prevIndex]);
       shuffled.push(items[selectedIndex]);
+      shuffled.push(items[nextIndex]);
     }
     return shuffled;
   }, [items, selectedIndex]);
@@ -56,14 +62,14 @@ function MiniSlotReel({ items, isSpinning, currentValue, compact }: MiniSlotReel
             className="absolute w-full"
             initial={{ y: 0 }}
             animate={{
-              // 마지막에 살짝 오버슈팅 후 진동하며 멈추는 효과
+              // 오버슈팅(nextIndex가 스쳐지나감) 후 selectedIndex에서 진동하며 멈춤
               y: [
                 0,
-                -(spinItems.length - 0.7) * itemHeight, // 약간 더 위로 (30% 오버슈팅)
-                -(spinItems.length - 1) * itemHeight - 2, // 진동 1
-                -(spinItems.length - 1) * itemHeight + 1.5, // 진동 2
-                -(spinItems.length - 1) * itemHeight - 0.5, // 진동 3
-                -(spinItems.length - 1) * itemHeight, // 최종 위치
+                -(spinItems.length - 1) * itemHeight, // 오버슈팅 (nextIndex가 스쳐지나감)
+                -(spinItems.length - 2) * itemHeight - 2, // 진동 1 (selectedIndex 위치)
+                -(spinItems.length - 2) * itemHeight + 1.5, // 진동 2
+                -(spinItems.length - 2) * itemHeight - 0.5, // 진동 3
+                -(spinItems.length - 2) * itemHeight, // 최종 위치 (selectedIndex = 모달 값)
               ],
             }}
             transition={{
