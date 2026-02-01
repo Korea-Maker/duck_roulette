@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { LANES } from '../data/lanes';
 import { DAMAGE_TYPES } from '../data/damageTypes';
+import { getChampionImageUrl } from '../utils/champion';
 
 export interface SpinHistoryItem {
   champion: string;
@@ -54,7 +55,7 @@ export function SpinHistory({ history }: SpinHistoryProps) {
                   {/* 챔피언 아이콘 */}
                   <div className="relative">
                     <img
-                      src={`https://ddragon.leagueoflegends.com/cdn/16.2.1/img/champion/${item.champion}.png`}
+                      src={getChampionImageUrl(item.champion)}
                       alt={item.champion}
                       className="w-12 h-12 rounded-lg border-2 border-cyan-500/50 shadow-md"
                     />

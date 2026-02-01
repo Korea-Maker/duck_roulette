@@ -19,13 +19,14 @@ export function PartySlotMachine() {
 
   // 컴포넌트 언마운트 시 타이머 및 사운드 정리
   useEffect(() => {
+    const { stopSpin } = sound;
     return () => {
       if (soundTimeoutRef.current) {
         clearTimeout(soundTimeoutRef.current);
       }
-      sound.stopSpin();
+      stopSpin();
     };
-  }, [sound]);
+  }, [sound.stopSpin]);
 
   const {
     state,

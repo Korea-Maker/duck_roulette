@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import type { SlotMachineState } from '../types';
 import { CHAMPIONS } from '../data/champions';
 import { LANES } from '../data/lanes';
@@ -36,6 +36,18 @@ export function useSlotMachine(options?: UseSlotMachineOptions) {
     champion: 0,
     damageType: 0,
   });
+
+  // setTimeout cleanup ref
+  const spinTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (spinTimeoutRef.current) {
+        clearTimeout(spinTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // 토글 핸들러
   const toggleLane = useCallback(() => {
@@ -88,8 +100,13 @@ export function useSlotMachine(options?: UseSlotMachineOptions) {
       damageType: { ...prev.damageType, isSpinning: prev.damageType.enabled },
     }));
 
+    // 이전 타이머 정리
+    if (spinTimeoutRef.current) {
+      clearTimeout(spinTimeoutRef.current);
+    }
+
     // 스피닝 종료 후 결과 설정
-    setTimeout(() => {
+    spinTimeoutRef.current = setTimeout(() => {
       const finalLane = lane.enabled ? LANES[newLaneIndex].id : state.lane.currentValue;
       const finalChampion = champion.enabled ? CHAMPIONS[newChampionIndex] : state.champion.currentValue;
       const finalType = damageType.enabled ? DAMAGE_TYPES[newDamageIndex].id : state.damageType.currentValue;

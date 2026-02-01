@@ -32,6 +32,16 @@ export function useSound() {
     return audioContextRef.current;
   }, []);
 
+  // AudioContext cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+        audioContextRef.current = null;
+      }
+    };
+  }, []);
+
   // 코인 투입 사운드 - 금속성 딸깍 소리
   const playClick = useCallback(() => {
     if (isMuted) return;
@@ -255,13 +265,19 @@ export function useSound() {
     subBell.stop(ctx.currentTime + 1.2);
   }, [getAudioContext, isMuted]);
 
-  return useMemo(() => ({
+  // Stable function references (don't change when isMuted changes)
+  const soundFunctions = useMemo(() => ({
     playClick,
     startSpin,
     stopSpin,
     playWin,
     playResult,
-    isMuted,
     toggleMute,
-  }), [playClick, startSpin, stopSpin, playWin, playResult, isMuted, toggleMute]);
+  }), [playClick, startSpin, stopSpin, playWin, playResult, toggleMute]);
+
+  // Return with isMuted separate to avoid object reference changes
+  return {
+    ...soundFunctions,
+    isMuted,
+  };
 }
