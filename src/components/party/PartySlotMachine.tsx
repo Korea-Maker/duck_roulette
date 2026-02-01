@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { PartyLayoutType } from '../../types';
 import { usePartySlotMachine } from '../../hooks/usePartySlotMachine';
@@ -15,6 +15,17 @@ export function PartySlotMachine() {
   const [layout, setLayout] = useState<PartyLayoutType>(PARTY_CONFIG.DEFAULT_LAYOUT);
   const [memberCount, setMemberCount] = useState(5);
   const sound = useSound();
+  const soundTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // 컴포넌트 언마운트 시 타이머 및 사운드 정리
+  useEffect(() => {
+    return () => {
+      if (soundTimeoutRef.current) {
+        clearTimeout(soundTimeoutRef.current);
+      }
+      sound.stopSpin();
+    };
+  }, [sound]);
 
   const {
     state,
@@ -31,17 +42,21 @@ export function PartySlotMachine() {
     sound.startSpin();
     spin();
 
+    // 이전 타이머 정리
+    if (soundTimeoutRef.current) {
+      clearTimeout(soundTimeoutRef.current);
+    }
+
     // 스핀 종료 시 사운드
-    setTimeout(() => {
+    soundTimeoutRef.current = setTimeout(() => {
       sound.stopSpin();
       sound.playWin();
     }, 3000 + (memberCount - 1) * PARTY_CONFIG.STAGGER_DELAY);
   }, [isSpinning, sound, spin, memberCount]);
 
   const handleClose = useCallback(() => {
-    sound.playResult();
     hideResult();
-  }, [sound, hideResult]);
+  }, [hideResult]);
 
   // 레이아웃 렌더링
   const LayoutComponent = useMemo(() => {

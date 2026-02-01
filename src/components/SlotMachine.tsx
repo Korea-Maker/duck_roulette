@@ -53,7 +53,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
     hideResult,
   } = useSlotMachine({ onSpinComplete });
 
-  const { startSpin, stopSpin, playResult, isMuted, toggleMute } = useSound();
+  const { startSpin, stopSpin, playWin, isMuted, toggleMute } = useSound();
 
   // Pre-calculate particle positions (only once)
   const particlePositions = useMemo(() =>
@@ -71,10 +71,17 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
     } else {
       stopSpin();
       if (showResult) {
-        playResult();
+        playWin();
       }
     }
-  }, [isSpinning, showResult, startSpin, stopSpin, playResult]);
+  }, [isSpinning, showResult, startSpin, stopSpin, playWin]);
+
+  // 컴포넌트 언마운트 시 사운드 정리
+  useEffect(() => {
+    return () => {
+      stopSpin();
+    };
+  }, [stopSpin]);
 
   return (
     <div className="flex flex-col items-center gap-8 p-4">

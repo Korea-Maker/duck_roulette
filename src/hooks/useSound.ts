@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, useEffect } from 'react';
+import { useCallback, useRef, useState, useEffect, useMemo } from 'react';
 
 const SOUND_MUTED_KEY = 'duck-roulette-sound-muted';
 
@@ -255,7 +255,7 @@ export function useSound() {
     subBell.stop(ctx.currentTime + 1.2);
   }, [getAudioContext, isMuted]);
 
-  return {
+  return useMemo(() => ({
     playClick,
     startSpin,
     stopSpin,
@@ -263,5 +263,5 @@ export function useSound() {
     playResult,
     isMuted,
     toggleMute,
-  };
+  }), [playClick, startSpin, stopSpin, playWin, playResult, isMuted, toggleMute]);
 }

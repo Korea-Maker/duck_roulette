@@ -24,9 +24,9 @@ export function ModeSelector({ currentMode, onModeChange }: ModeSelectorProps) {
           {currentMode === type && (
             <motion.div
               className="absolute inset-0 bg-yellow-500/20 rounded-full border border-yellow-500/50"
-              layoutId="mode-selector-indicator"
-              initial={false}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.15 }}
             />
           )}
           <span className="relative z-10">

@@ -121,7 +121,47 @@ ${champions.map(c => `  { id: '${c.id}', name: '${c.name.replace(/'/g, "\\'")}',
     const outputPath = path.join(__dirname, '../src/data/champions.ts');
     fs.writeFileSync(outputPath, content, 'utf8');
     console.log(`💾 ${outputPath} 저장 완료`);
-    console.log('🎉 챔피언 목록 업데이트 완료!');
+
+    // CDN 버전 업데이트
+    console.log('🔄 CDN 버전 업데이트 중...');
+
+    // .env 파일 업데이트
+    const envPath = path.join(__dirname, '../.env');
+    if (fs.existsSync(envPath)) {
+      let envContent = fs.readFileSync(envPath, 'utf8');
+      envContent = envContent.replace(/VITE_DDRAGON_VERSION=[\d.]+/, `VITE_DDRAGON_VERSION=${latestVersion}`);
+      fs.writeFileSync(envPath, envContent, 'utf8');
+      console.log(`💾 .env 업데이트 완료 (${latestVersion})`);
+    }
+
+    // .env.example 파일 업데이트
+    const envExamplePath = path.join(__dirname, '../.env.example');
+    if (fs.existsSync(envExamplePath)) {
+      let envExampleContent = fs.readFileSync(envExamplePath, 'utf8');
+      envExampleContent = envExampleContent.replace(/VITE_DDRAGON_VERSION=[\d.]+/, `VITE_DDRAGON_VERSION=${latestVersion}`);
+      fs.writeFileSync(envExamplePath, envExampleContent, 'utf8');
+      console.log(`💾 .env.example 업데이트 완료 (${latestVersion})`);
+    }
+
+    // src/config/api.ts 파일 업데이트
+    const apiConfigPath = path.join(__dirname, '../src/config/api.ts');
+    if (fs.existsSync(apiConfigPath)) {
+      let apiContent = fs.readFileSync(apiConfigPath, 'utf8');
+      apiContent = apiContent.replace(/'\d+\.\d+\.\d+'/g, `'${latestVersion}'`);
+      fs.writeFileSync(apiConfigPath, apiContent, 'utf8');
+      console.log(`💾 src/config/api.ts 업데이트 완료 (${latestVersion})`);
+    }
+
+    // src/components/SpinHistory.tsx 파일 업데이트 (하드코딩된 버전)
+    const spinHistoryPath = path.join(__dirname, '../src/components/SpinHistory.tsx');
+    if (fs.existsSync(spinHistoryPath)) {
+      let spinHistoryContent = fs.readFileSync(spinHistoryPath, 'utf8');
+      spinHistoryContent = spinHistoryContent.replace(/cdn\/\d+\.\d+\.\d+\/img/g, `cdn/${latestVersion}/img`);
+      fs.writeFileSync(spinHistoryPath, spinHistoryContent, 'utf8');
+      console.log(`💾 src/components/SpinHistory.tsx 업데이트 완료 (${latestVersion})`);
+    }
+
+    console.log('🎉 챔피언 목록 및 CDN 버전 업데이트 완료!');
 
   } catch (error) {
     console.error('❌ 오류 발생:', error.message);

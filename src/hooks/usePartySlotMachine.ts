@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import type { PartySlotMachineState, PartyMemberSlotState, Lane, PartyResult } from '../types';
 import { PARTY_LANES } from '../types';
 import { CHAMPIONS } from '../data/champions';
@@ -58,6 +58,17 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
   const memberCount = options?.memberCount ?? 5;
 
   const [state, setState] = useState<PartySlotMachineState>(() => createInitialState(memberCount));
+
+  // setTimeout 참조 추적 (cleanup용)
+  const timeoutRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  // 컴포넌트 언마운트 시 모든 타이머 정리
+  useEffect(() => {
+    return () => {
+      timeoutRefs.current.forEach(clearTimeout);
+      timeoutRefs.current = [];
+    };
+  }, []);
 
   // 선택된 인덱스 (각 멤버별)
   const [selectedIndices, setSelectedIndices] = useState<{
@@ -121,9 +132,13 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
       })),
     }));
 
+    // 기존 타이머 정리
+    timeoutRefs.current.forEach(clearTimeout);
+    timeoutRefs.current = [];
+
     // 모든 멤버 스피닝 시작 (stagger 효과)
     Array.from({ length: memberCount }).forEach((_, index) => {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setState(prev => ({
           ...prev,
           members: prev.members.map((member, i) =>
@@ -138,10 +153,11 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
           ),
         }));
       }, index * PARTY_CONFIG.STAGGER_DELAY);
+      timeoutRefs.current.push(timeoutId);
     });
 
     // 스피닝 종료 후 결과 설정
-    setTimeout(() => {
+    const resultTimeoutId = setTimeout(() => {
       const results: PartyResult[] = Array.from({ length: memberCount }, (_, index) => ({
         lane: newRandomLanes[index],
         champion: newRandomChampions[index],
@@ -177,6 +193,7 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
         options.onSpinComplete(results);
       }
     }, SLOT_CONFIG.SPIN_DURATION + (memberCount - 1) * PARTY_CONFIG.STAGGER_DELAY);
+    timeoutRefs.current.push(resultTimeoutId);
   }, [state.isSpinning, memberCount, options]);
 
   // 결과 닫기
