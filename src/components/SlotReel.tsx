@@ -146,21 +146,20 @@ export function SlotReel({
         <AnimatePresence mode="wait">
           {isSpinning && enabled ? (
             // 스피닝 애니메이션
+            // 중앙 하이라이트가 top: ITEM_HEIGHT에 있으므로, selectedIndex가 중앙에 오려면
+            // prevIndex가 y=0에 와야 함 → spinItems.length - 3 위치
             <motion.div
               key="spinning"
               className="absolute w-full"
               initial={{ y: 0 }}
               animate={{
-                // 최종 아이템이 중앙(ITEM_HEIGHT 위치)에 정확히 멈추도록 계산
-                // spinItems.length - 2 = 선택된 아이템의 인덱스 (마지막에서 두번째)
-                // 마지막에 한 칸 더 올라갔다가 (긴장감) 진동하며 내려오는 효과
                 y: [
                   0,
-                  -(spinItems.length - 1) * SLOT_CONFIG.ITEM_HEIGHT, // 한 칸 더 위로 (오버슈팅)
-                  -(spinItems.length - 2) * SLOT_CONFIG.ITEM_HEIGHT - 3, // 진동 1
-                  -(spinItems.length - 2) * SLOT_CONFIG.ITEM_HEIGHT + 2, // 진동 2
-                  -(spinItems.length - 2) * SLOT_CONFIG.ITEM_HEIGHT - 1, // 진동 3
-                  -(spinItems.length - 2) * SLOT_CONFIG.ITEM_HEIGHT, // 최종 위치
+                  -(spinItems.length - 2) * SLOT_CONFIG.ITEM_HEIGHT, // 오버슈팅 (nextIndex가 중앙에 스쳐감)
+                  -(spinItems.length - 3) * SLOT_CONFIG.ITEM_HEIGHT - 3, // 진동 1 (selectedIndex가 중앙에)
+                  -(spinItems.length - 3) * SLOT_CONFIG.ITEM_HEIGHT + 2, // 진동 2
+                  -(spinItems.length - 3) * SLOT_CONFIG.ITEM_HEIGHT - 1, // 진동 3
+                  -(spinItems.length - 3) * SLOT_CONFIG.ITEM_HEIGHT, // 최종 위치 (selectedIndex가 중앙)
                 ],
               }}
               transition={{

@@ -56,10 +56,10 @@ function MiniSlotReel({ items, isSpinning, currentValue, compact }: MiniSlotReel
             className="absolute w-full"
             initial={{ y: 0 }}
             animate={{
-              // 마지막에 한 칸 더 올라갔다가 진동하며 내려오는 효과
+              // 마지막에 살짝 오버슈팅 후 진동하며 멈추는 효과
               y: [
                 0,
-                -spinItems.length * itemHeight, // 한 칸 더 위로 (오버슈팅)
+                -(spinItems.length - 0.7) * itemHeight, // 약간 더 위로 (30% 오버슈팅)
                 -(spinItems.length - 1) * itemHeight - 2, // 진동 1
                 -(spinItems.length - 1) * itemHeight + 1.5, // 진동 2
                 -(spinItems.length - 1) * itemHeight - 0.5, // 진동 3
