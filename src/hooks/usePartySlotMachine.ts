@@ -86,8 +86,6 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
   const spin = useCallback(() => {
     if (state.isSpinning) return;
 
-    setState(prev => ({ ...prev, showResult: false, isSpinning: true }));
-
     // 각 멤버별 랜덤 결과 미리 계산 (라인, 챔피언 중복 없음)
     const newRandomLanes = getRandomLanes(memberCount);
     const newRandomChampions = getRandomChampions(memberCount);
@@ -100,6 +98,28 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
       champion: newChampionIndices,
       damageType: newDamageIndices,
     });
+
+    // 스핀 시작 시 currentValue를 미리 새 결과로 설정 (MiniSlotReel이 올바른 spinItems를 생성하도록)
+    setState(prev => ({
+      ...prev,
+      showResult: false,
+      isSpinning: true,
+      members: prev.members.map((member, index) => ({
+        ...member,
+        lane: {
+          ...member.lane,
+          currentValue: newRandomLanes[index],
+        },
+        champion: {
+          ...member.champion,
+          currentValue: newRandomChampions[index],
+        },
+        damageType: {
+          ...member.damageType,
+          currentValue: DAMAGE_TYPES[newDamageIndices[index]].id,
+        },
+      })),
+    }));
 
     // 모든 멤버 스피닝 시작 (stagger 효과)
     Array.from({ length: memberCount }).forEach((_, index) => {
