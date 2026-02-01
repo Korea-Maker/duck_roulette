@@ -18,10 +18,15 @@ export function CircularLayout({ members, isSpinning }: PartyLayoutProps) {
     };
   };
 
+  // 슬롯 크기 (compact 모드)
+  const slotWidth = 80;
+  const slotHeight = 120;
+  const containerSize = radius * 2 + slotHeight + 40;
+
   return (
     <motion.div
       className="relative w-full flex items-center justify-center"
-      style={{ height: radius * 2 + 180 }}
+      style={{ height: containerSize }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -53,11 +58,11 @@ export function CircularLayout({ members, isSpinning }: PartyLayoutProps) {
       <svg
         className="absolute pointer-events-none"
         style={{
-          width: radius * 2 + 100,
-          height: radius * 2 + 100,
+          width: containerSize,
+          height: containerSize,
         }}
       >
-        <g transform={`translate(${radius + 50}, ${radius + 50})`}>
+        <g transform={`translate(${containerSize / 2}, ${containerSize / 2})`}>
           {members.map((_, index) => {
             const pos = getPosition(index);
             const nextIndex = (index + 1) % memberCount;
@@ -91,13 +96,15 @@ export function CircularLayout({ members, isSpinning }: PartyLayoutProps) {
             style={{
               left: '50%',
               top: '50%',
+              marginLeft: -slotWidth / 2,
+              marginTop: -slotHeight / 2,
             }}
             initial={{ opacity: 0, scale: 0 }}
             animate={{
               opacity: 1,
               scale: 1,
-              x: pos.x - 60,
-              y: pos.y - 50,
+              x: pos.x,
+              y: pos.y,
             }}
             transition={{
               delay: index * 0.1,
@@ -127,8 +134,8 @@ export function CircularLayout({ members, isSpinning }: PartyLayoutProps) {
           ease: 'linear',
         }}
       >
-        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 flex items-center justify-center">
-          <span className="text-2xl">🎰</span>
+        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 flex items-center justify-center">
+          <span className="text-xl">🎰</span>
         </div>
       </motion.div>
     </motion.div>
