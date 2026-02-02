@@ -4,6 +4,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 스크롤바 숨김 유틸리티 */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 :root {
   font-family: 'Orbitron', system-ui, sans-serif;
   line-height: 1.5;

@@ -67,7 +67,7 @@ export function ResultDisplay({ lane, champion, damageType, show, onClose, onSpi
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.7, y: 50 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className={`relative result-card w-full my-auto ${build ? 'max-w-2xl' : 'max-w-lg'}`}
+              className={`relative result-card w-full my-auto hide-scrollbar ${build ? 'max-w-2xl' : 'max-w-lg'}`}
               style={{
                 resize: 'none',
                 borderColor: championColor,
