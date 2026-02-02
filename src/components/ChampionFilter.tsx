@@ -53,13 +53,13 @@ export function ChampionFilter({ selectedTags, onTagsChange }: ChampionFilterPro
       transition={{ delay: 0.1 }}
     >
       {/* 헤더 */}
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-medium text-gray-400 flex items-center gap-2">
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-sm font-medium text-gray-400 flex items-center gap-1">
           <span>🎯</span>
           <span>챔피언 필터</span>
           <span className="text-xs text-gray-500">({filteredCount}명)</span>
         </h3>
-        <div className="flex gap-2">
+        <div className="flex gap-1">
           <button
             onClick={selectAll}
             className="text-xs px-2 py-1 rounded bg-gray-700/50 text-gray-400 hover:bg-gray-600/50 hover:text-gray-300 transition-colors"

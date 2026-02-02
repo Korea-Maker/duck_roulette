@@ -123,7 +123,7 @@ export function PartySlotMachine() {
         animate={{ opacity: 1, y: 0 }}
       >
         <h2
-          className="text-3xl sm:text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-red-400 mb-2"
+          className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 mb-2"
           style={{
             fontFamily: "'Bebas Neue', 'Orbitron', sans-serif",
             letterSpacing: '0.1em',

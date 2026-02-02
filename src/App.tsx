@@ -2,14 +2,11 @@ import { useState, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { AppMode } from './types';
 import { SlotMachine } from './components/SlotMachine';
-import { SpinHistory } from './components/SpinHistory';
-import { useSpinHistory } from './hooks/useSpinHistory';
 import { PartySlotMachine } from './components/party';
 import { ModeSelector } from './components/party/ModeSelector';
 
 function App() {
   const [mode, setMode] = useState<AppMode>('single');
-  const { history, addToHistory } = useSpinHistory();
 
   const handleModeChange = useCallback((newMode: AppMode) => {
     setMode(newMode);
@@ -32,14 +29,13 @@ function App() {
           {mode === 'single' ? (
             <motion.div
               key="single"
-              className="w-full flex flex-col items-center gap-4"
+              className="w-full flex flex-col items-center"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
             >
-              <SlotMachine onSpinComplete={addToHistory} />
-              <SpinHistory history={history} />
+              <SlotMachine />
             </motion.div>
           ) : (
             <motion.div

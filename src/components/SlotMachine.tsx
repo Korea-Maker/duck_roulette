@@ -110,7 +110,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
   }, [stopSpin]);
 
   return (
-    <div className="flex flex-col items-center gap-8 p-4">
+    <div className="flex flex-col items-center gap-4 p-2">
       {/* 테마 선택기 */}
       <ThemeSelector />
 
@@ -135,8 +135,6 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
 
       <p className="text-gray-400 text-center max-w-md">
         오늘의 챔피언, 라인, 템트리를 랜덤으로 정해보세요!
-        <br />
-        각 슬롯을 ON/OFF하여 원하는 항목만 돌릴 수 있습니다.
       </p>
 
       {/* 챔피언 필터 */}
@@ -147,7 +145,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="flex items-center gap-3 bg-gradient-to-r from-purple-900/30 to-pink-900/30 px-6 py-3 rounded-xl border border-purple-500/30"
+        className="flex items-center bg-gradient-to-r from-purple-900/30 to-pink-900/30 px-2 py-1 rounded border border-purple-500/30"
       >
         <ToggleSwitch
           enabled={buildRandomEnabled}
@@ -202,7 +200,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
         <div className="led-frame" />
 
         {/* 슬롯 릴들 */}
-        <div className="flex flex-col md:flex-row gap-6 md:gap-8 p-4">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-6 p-3">
           <SlotReel
             items={laneItems}
             isSpinning={state.lane.isSpinning}
@@ -232,7 +230,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
         </div>
 
         {/* 스핀 버튼 */}
-        <div className="flex justify-center items-center mt-6">
+        <div className="flex justify-center items-center mt-4">
           <SpinButton
             onClick={spin}
             disabled={isSpinning || allDisabled}
@@ -268,7 +266,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
 
       {/* 푸터 */}
       <motion.footer
-        className="text-gray-400 text-sm mt-8 flex flex-col items-center gap-2"
+        className="text-gray-400 text-sm mt-4 flex flex-col items-center gap-1"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
