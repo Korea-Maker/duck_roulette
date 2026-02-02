@@ -70,6 +70,7 @@ export interface ResultDisplayProps {
   show: boolean;
   onClose: () => void;
   onSpinAgain?: () => void;
+  build?: RandomBuild | null;
 }
 
 // 라인 정보 (표시용)
@@ -155,4 +156,59 @@ export interface LayoutSelectorProps {
 export interface ModeSelectorProps {
   currentMode: AppMode;
   onModeChange: (mode: AppMode) => void;
+}
+
+// ============================================
+// Ultimate Bravery 빌드 랜덤화 타입 정의
+// ============================================
+
+// 아이템
+export interface Item {
+  id: string;
+  name: string;
+  koreanName: string;
+  gold: number;
+  tags: string[];
+  image: string;
+}
+
+// 룬 트리
+export interface RuneTree {
+  id: string;
+  name: string;
+  koreanName: string;
+  icon: string;
+  keystones: Rune[];
+  slots: Rune[][];
+}
+
+export interface Rune {
+  id: number;
+  name: string;
+  koreanName: string;
+  icon: string;
+}
+
+// 소환사 주문
+export interface SummonerSpell {
+  id: string;
+  name: string;
+  koreanName: string;
+  icon: string;
+}
+
+// 빌드 결과
+export interface RandomBuild {
+  items: Item[];
+  primaryRune: {
+    tree: RuneTree;
+    keystone: Rune;
+    runes: Rune[];
+  };
+  secondaryRune: {
+    tree: RuneTree;
+    runes: Rune[];
+  };
+  summonerSpells: SummonerSpell[];
+  skillOrder: 'Q' | 'W' | 'E';
 }

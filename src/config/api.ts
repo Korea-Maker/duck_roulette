@@ -16,5 +16,17 @@ export const API_CONFIG = {
 
   getChampionLoadingUrl: (championKey: string, skinNum: number = 0) => {
     return `${DDRAGON_BASE_URL}/cdn/img/champion/loading/${championKey}_${skinNum}.jpg`;
+  },
+
+  getItemImageUrl: (itemId: string) => {
+    return `${DDRAGON_BASE_URL}/cdn/${DDRAGON_VERSION}/img/item/${itemId}`;
+  },
+
+  getRuneImageUrl: (runePath: string) => {
+    return `${DDRAGON_BASE_URL}/cdn/img/${runePath}`;
+  },
+
+  getSummonerSpellImageUrl: (spellId: string) => {
+    return `${DDRAGON_BASE_URL}/cdn/${DDRAGON_VERSION}/img/spell/${spellId}`;
   }
 } as const;

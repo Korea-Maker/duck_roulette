@@ -1,0 +1,106 @@
+import type { Item } from '../types';
+
+// 롤 완성 아이템 목록 (Data Dragon 기반)
+// 부츠는 별도로 관리
+export const BOOTS: Item[] = [
+  { id: '3006', name: 'Berserker\'s Greaves', koreanName: '광전사의 군화', gold: 1100, tags: ['Boots'], image: '3006.png' },
+  { id: '3047', name: 'Plated Steelcaps', koreanName: '판금 장화', gold: 1100, tags: ['Boots'], image: '3047.png' },
+  { id: '3020', name: 'Sorcerer\'s Shoes', koreanName: '마법사의 신발', gold: 1100, tags: ['Boots'], image: '3020.png' },
+  { id: '3111', name: 'Mercury\'s Treads', koreanName: '헤르메스의 발걸음', gold: 1100, tags: ['Boots'], image: '3111.png' },
+  { id: '3158', name: 'Ionian Boots of Lucidity', koreanName: '명석함의 아이오니아 장화', gold: 900, tags: ['Boots'], image: '3158.png' },
+  { id: '3009', name: 'Boots of Swiftness', koreanName: '신속의 장화', gold: 900, tags: ['Boots'], image: '3009.png' },
+  { id: '3117', name: 'Mobility Boots', koreanName: '기동력의 장화', gold: 900, tags: ['Boots'], image: '3117.png' },
+];
+
+// 완성 아이템 (부츠 제외)
+export const COMPLETED_ITEMS: Item[] = [
+  // AD 아이템
+  { id: '3031', name: 'Infinity Edge', koreanName: '무한의 대검', gold: 3400, tags: ['Damage', 'CriticalStrike'], image: '3031.png' },
+  { id: '3153', name: 'Blade of the Ruined King', koreanName: '몰락한 왕의 검', gold: 3200, tags: ['Damage', 'AttackSpeed', 'LifeSteal'], image: '3153.png' },
+  { id: '6672', name: 'Kraken Slayer', koreanName: '크라켄 학살자', gold: 3100, tags: ['Damage', 'AttackSpeed', 'CriticalStrike'], image: '6672.png' },
+  { id: '6673', name: 'Immortal Shieldbow', koreanName: '불멸의 철갑궁', gold: 3000, tags: ['Damage', 'AttackSpeed', 'LifeSteal'], image: '6673.png' },
+  { id: '6676', name: 'The Collector', koreanName: '징수자', gold: 3000, tags: ['Damage', 'CriticalStrike'], image: '6676.png' },
+  { id: '3072', name: 'Bloodthirster', koreanName: '피바라기', gold: 3400, tags: ['Damage', 'LifeSteal'], image: '3072.png' },
+  { id: '3094', name: 'Rapid Firecannon', koreanName: '고속 연사포', gold: 2600, tags: ['AttackSpeed', 'CriticalStrike'], image: '3094.png' },
+  { id: '3085', name: 'Runaan\'s Hurricane', koreanName: '루난의 허리케인', gold: 2600, tags: ['AttackSpeed', 'CriticalStrike'], image: '3085.png' },
+  { id: '3036', name: 'Lord Dominik\'s Regards', koreanName: '도미닉 경의 인사', gold: 3000, tags: ['Damage', 'ArmorPenetration'], image: '3036.png' },
+  { id: '3033', name: 'Mortal Reminder', koreanName: '필멸자의 운명', gold: 2800, tags: ['Damage', 'CriticalStrike', 'ArmorPenetration'], image: '3033.png' },
+  { id: '3508', name: 'Essence Reaver', koreanName: '정수 약탈자', gold: 2800, tags: ['Damage', 'CriticalStrike', 'Mana'], image: '3508.png' },
+  { id: '3156', name: 'Maw of Malmortius', koreanName: '맬모셔스의 아귀', gold: 2800, tags: ['Damage', 'MagicResist'], image: '3156.png' },
+  { id: '6609', name: 'Chempunk Chainsword', koreanName: '첨펑크 사슬검', gold: 2600, tags: ['Damage', 'Health'], image: '6609.png' },
+  { id: '3074', name: 'Ravenous Hydra', koreanName: '굶주린 히드라', gold: 3300, tags: ['Damage', 'LifeSteal'], image: '3074.png' },
+  { id: '3748', name: 'Titanic Hydra', koreanName: '거대한 히드라', gold: 3300, tags: ['Health', 'Damage'], image: '3748.png' },
+  { id: '6630', name: 'Stridebreaker', koreanName: '선혈포식자', gold: 3100, tags: ['Damage', 'Health'], image: '6630.png' },
+  { id: '6631', name: 'Black Cleaver', koreanName: '칠흑의 양날 도끼', gold: 3000, tags: ['Damage', 'Health'], image: '6631.png' },
+  { id: '3053', name: 'Sterak\'s Gage', koreanName: '스테락의 도전', gold: 3100, tags: ['Health', 'Damage'], image: '3053.png' },
+  { id: '3091', name: 'Wit\'s End', koreanName: '마법사의 최후', gold: 2800, tags: ['AttackSpeed', 'MagicResist'], image: '3091.png' },
+  { id: '3124', name: 'Guinsoo\'s Rageblade', koreanName: '구인수의 격노검', gold: 2800, tags: ['Damage', 'AttackSpeed'], image: '3124.png' },
+  { id: '3142', name: 'Youmuu\'s Ghostblade', koreanName: '요우무의 유령검', gold: 2900, tags: ['Damage', 'Lethality'], image: '3142.png' },
+  { id: '6691', name: 'Duskblade of Draktharr', koreanName: '드락사르의 황혼검', gold: 3100, tags: ['Damage', 'Lethality'], image: '6691.png' },
+  { id: '6692', name: 'Eclipse', koreanName: '월식', gold: 2800, tags: ['Damage', 'Lethality'], image: '6692.png' },
+  { id: '6676', name: 'The Collector', koreanName: '징수자', gold: 3000, tags: ['Damage', 'Lethality'], image: '6676.png' },
+  { id: '3179', name: 'Umbral Glaive', koreanName: '밤의 끝자락', gold: 2400, tags: ['Damage', 'Lethality'], image: '3179.png' },
+  { id: '3814', name: 'Edge of Night', koreanName: '밤의 끝자락', gold: 2900, tags: ['Damage', 'Lethality'], image: '3814.png' },
+  { id: '3161', name: 'Spear of Shojin', koreanName: '쇼진의 창', gold: 3100, tags: ['Damage', 'Health'], image: '3161.png' },
+
+  // AP 아이템
+  { id: '3040', name: 'Seraph\'s Embrace', koreanName: '대천사의 포옹', gold: 2900, tags: ['SpellDamage', 'Mana'], image: '3040.png' },
+  { id: '3165', name: 'Morellonomicon', koreanName: '모렐로노미콘', gold: 2500, tags: ['SpellDamage', 'Health'], image: '3165.png' },
+  { id: '4628', name: 'Horizon Focus', koreanName: '지평선의 초점', gold: 2700, tags: ['SpellDamage'], image: '4628.png' },
+  { id: '3102', name: 'Banshee\'s Veil', koreanName: '밴시의 장막', gold: 2600, tags: ['SpellDamage', 'MagicResist'], image: '3102.png' },
+  { id: '3157', name: 'Zhonya\'s Hourglass', koreanName: '존야의 모래시계', gold: 2600, tags: ['SpellDamage', 'Armor'], image: '3157.png' },
+  { id: '3089', name: 'Rabadon\'s Deathcap', koreanName: '라바돈의 죽음모자', gold: 3600, tags: ['SpellDamage'], image: '3089.png' },
+  { id: '3135', name: 'Void Staff', koreanName: '공허의 지팡이', gold: 2700, tags: ['SpellDamage', 'MagicPenetration'], image: '3135.png' },
+  { id: '3003', name: 'Archangel\'s Staff', koreanName: '대천사의 지팡이', gold: 2900, tags: ['SpellDamage', 'Mana'], image: '3003.png' },
+  { id: '4005', name: 'Imperial Mandate', koreanName: '제국의 명령', gold: 2300, tags: ['SpellDamage', 'Health', 'Mana'], image: '4005.png' },
+  { id: '6653', name: 'Liandry\'s Torment', koreanName: '리안드리의 고뇌', gold: 3000, tags: ['SpellDamage', 'Health'], image: '6653.png' },
+  { id: '3152', name: 'Hextech Rocketbelt', koreanName: '마법공학 로켓 벨트', gold: 2700, tags: ['SpellDamage', 'Health'], image: '3152.png' },
+  { id: '4636', name: 'Night Harvester', koreanName: '밤의 수확자', gold: 2800, tags: ['SpellDamage', 'Health'], image: '4636.png' },
+  { id: '3118', name: 'Malignance', koreanName: '악의', gold: 2700, tags: ['SpellDamage', 'Health'], image: '3118.png' },
+  { id: '3116', name: 'Rylai\'s Crystal Scepter', koreanName: '라일라이의 수정홀', gold: 2600, tags: ['SpellDamage', 'Health'], image: '3116.png' },
+  { id: '3137', name: 'Cryptbloom', koreanName: '크립트블룸', gold: 2800, tags: ['SpellDamage', 'MagicPenetration'], image: '3137.png' },
+  { id: '3100', name: 'Lich Bane', koreanName: '리치 베인', gold: 3000, tags: ['SpellDamage', 'Mana'], image: '3100.png' },
+  { id: '3115', name: 'Nashor\'s Tooth', koreanName: '내셔의 이빨', gold: 3000, tags: ['SpellDamage', 'AttackSpeed'], image: '3115.png' },
+  { id: '3128', name: 'Deathfire Grasp', koreanName: '죽음불꽃 손아귀', gold: 2800, tags: ['SpellDamage'], image: '3128.png' },
+  { id: '3041', name: 'Mejai\'s Soulstealer', koreanName: '메자이의 영혼약탈자', gold: 1600, tags: ['SpellDamage'], image: '3041.png' },
+  { id: '3151', name: 'Liandry\'s Anguish', koreanName: '리안드리의 고뇌', gold: 3000, tags: ['SpellDamage', 'Health'], image: '3151.png' },
+  { id: '4645', name: 'Shadowflame', koreanName: '그림자불꽃', gold: 3000, tags: ['SpellDamage'], image: '4645.png' },
+  { id: '3137', name: 'Cryptbloom', koreanName: '크립트블룸', gold: 2800, tags: ['SpellDamage'], image: '3137.png' },
+
+  // 탱크 아이템
+  { id: '3068', name: 'Sunfire Aegis', koreanName: '태양불꽃 방패', gold: 2800, tags: ['Health', 'Armor'], image: '3068.png' },
+  { id: '3001', name: 'Evenshroud', koreanName: '저녁갑옷', gold: 2500, tags: ['Health', 'Armor', 'MagicResist'], image: '3001.png' },
+  { id: '3190', name: 'Locket of the Iron Solari', koreanName: '강철의 솔라리 펜던트', gold: 2300, tags: ['Health', 'Armor', 'MagicResist'], image: '3190.png' },
+  { id: '6667', name: 'Radiant Virtue', koreanName: '찬란한 미덕', gold: 2700, tags: ['Health', 'MagicResist'], image: '6667.png' },
+  { id: '3084', name: 'Heartsteel', koreanName: '하트스틸', gold: 3000, tags: ['Health'], image: '3084.png' },
+  { id: '3143', name: 'Randuin\'s Omen', koreanName: '란두인의 예언', gold: 2700, tags: ['Health', 'Armor'], image: '3143.png' },
+  { id: '3075', name: 'Thornmail', koreanName: '가시 갑옷', gold: 2700, tags: ['Armor', 'Health'], image: '3075.png' },
+  { id: '3110', name: 'Frozen Heart', koreanName: '얼어붙은 심장', gold: 2500, tags: ['Armor', 'Mana'], image: '3110.png' },
+  { id: '3742', name: 'Dead Man\'s Plate', koreanName: '망자의 갑옷', gold: 2900, tags: ['Health', 'Armor'], image: '3742.png' },
+  { id: '3065', name: 'Spirit Visage', koreanName: '정령의 형상', gold: 2700, tags: ['Health', 'MagicResist'], image: '3065.png' },
+  { id: '3066', name: 'Winged Moonplate', koreanName: '날개 달린 월갑', gold: 2500, tags: ['Health', 'MagicResist'], image: '3066.png' },
+  { id: '3193', name: 'Gargoyle Stoneplate', koreanName: '가고일 돌갑옷', gold: 3200, tags: ['Armor', 'MagicResist'], image: '3193.png' },
+  { id: '3050', name: 'Zeke\'s Convergence', koreanName: '지크의 융합', gold: 2400, tags: ['Health', 'Armor', 'Mana'], image: '3050.png' },
+  { id: '3109', name: 'Knight\'s Vow', koreanName: '기사의 맹세', gold: 2300, tags: ['Health', 'Armor'], image: '3109.png' },
+  { id: '8001', name: 'Anathema\'s Chains', koreanName: '저주받은 자의 사슬', gold: 2500, tags: ['Health'], image: '8001.png' },
+  { id: '4401', name: 'Force of Nature', koreanName: '대자연의 힘', gold: 2800, tags: ['Health', 'MagicResist'], image: '4401.png' },
+  { id: '3078', name: 'Trinity Force', koreanName: '삼위일체', gold: 3333, tags: ['Damage', 'Health', 'AttackSpeed'], image: '3078.png' },
+  { id: '3071', name: 'Black Cleaver', koreanName: '칠흑의 양날 도끼', gold: 3000, tags: ['Damage', 'Health'], image: '3071.png' },
+  { id: '6632', name: 'Divine Sunderer', koreanName: '신성한 파괴자', gold: 3100, tags: ['Damage', 'Health'], image: '6632.png' },
+  { id: '3026', name: 'Guardian Angel', koreanName: '수호 천사', gold: 3000, tags: ['Damage', 'Armor'], image: '3026.png' },
+
+  // 서포터/유틸 아이템
+  { id: '3107', name: 'Redemption', koreanName: '구원', gold: 2300, tags: ['Health', 'Mana'], image: '3107.png' },
+  { id: '3504', name: 'Ardent Censer', koreanName: '불타는 향로', gold: 2300, tags: ['SpellDamage', 'Mana'], image: '3504.png' },
+  { id: '3222', name: 'Mikael\'s Blessing', koreanName: '미카엘의 축복', gold: 2300, tags: ['Health', 'Mana'], image: '3222.png' },
+  { id: '3114', name: 'Forbidden Idol', koreanName: '금지된 우상', gold: 800, tags: ['Mana'], image: '3114.png' },
+  { id: '3011', name: 'Chemtech Putrifier', koreanName: '케미테크 부패기', gold: 2300, tags: ['SpellDamage', 'Health'], image: '3011.png' },
+  { id: '6617', name: 'Moonstone Renewer', koreanName: '월석 재생기', gold: 2500, tags: ['Health', 'Mana'], image: '6617.png' },
+  { id: '2065', name: 'Shurelya\'s Battlesong', koreanName: '슈렐리아의 전투가', gold: 2300, tags: ['Health', 'Mana'], image: '2065.png' },
+  { id: '3869', name: 'Celestial Opposition', koreanName: '천상의 대립', gold: 2500, tags: ['Health', 'Mana'], image: '3869.png' },
+  { id: '3107', name: 'Redemption', koreanName: '구원', gold: 2300, tags: ['Health', 'Mana'], image: '3107.png' },
+  { id: '3119', name: 'Winter\'s Approach', koreanName: '겨울의 접근', gold: 2600, tags: ['Health', 'Mana'], image: '3119.png' },
+];
+
+// 모든 아이템 (부츠 + 완성 아이템)
+export const ALL_ITEMS = [...BOOTS, ...COMPLETED_ITEMS];

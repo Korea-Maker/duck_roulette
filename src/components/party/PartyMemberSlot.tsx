@@ -16,7 +16,9 @@ interface MiniSlotReelProps {
 function MiniSlotReel({ items, isSpinning, currentValue, compact }: MiniSlotReelProps) {
   const [spinItems, setSpinItems] = useState<SlotItemType[]>([]);
 
-  const itemHeight = compact ? 48 : 72;
+  // 크기 설정: compact=false일 때 솔로 모드와 비슷한 크기
+  const itemHeight = compact ? 56 : 96;
+  const itemWidth = compact ? 56 : 96;
 
   const selectedIndex = useMemo(() => {
     if (!currentValue) return 0;
@@ -52,7 +54,7 @@ function MiniSlotReel({ items, isSpinning, currentValue, compact }: MiniSlotReel
       className="relative overflow-hidden rounded-lg bg-gray-900/50"
       style={{
         height: itemHeight,
-        width: compact ? 48 : 72,
+        width: itemWidth,
       }}
     >
       <AnimatePresence mode="wait">
@@ -82,16 +84,16 @@ function MiniSlotReel({ items, isSpinning, currentValue, compact }: MiniSlotReel
               <div
                 key={`spin-${index}`}
                 className="flex items-center justify-center"
-                style={{ height: itemHeight, width: compact ? 48 : 72 }}
+                style={{ height: itemHeight, width: itemWidth }}
               >
                 {item.image ? (
                   <img
                     src={item.image}
                     alt={item.label}
-                    className={compact ? "w-10 h-10 rounded object-cover" : "w-14 h-14 rounded-lg object-cover"}
+                    className={compact ? "w-12 h-12 rounded object-cover" : "w-20 h-20 rounded-lg object-cover"}
                   />
                 ) : (
-                  <span className={`text-lg font-bold ${item.color || 'text-white'}`}>
+                  <span className={`${compact ? 'text-lg' : 'text-xl'} font-bold ${item.color || 'text-white'}`}>
                     {item.label}
                   </span>
                 )}
@@ -110,10 +112,10 @@ function MiniSlotReel({ items, isSpinning, currentValue, compact }: MiniSlotReel
               <img
                 src={currentValue.image}
                 alt={currentValue.label}
-                className={compact ? "w-10 h-10 rounded object-cover" : "w-14 h-14 rounded-lg object-cover"}
+                className={compact ? "w-12 h-12 rounded object-cover" : "w-20 h-20 rounded-lg object-cover"}
               />
             ) : (
-              <span className={`text-lg font-bold ${currentValue?.color || 'text-white'}`}>
+              <span className={`${compact ? 'text-lg' : 'text-xl'} font-bold ${currentValue?.color || 'text-white'}`}>
                 {currentValue?.label || '?'}
               </span>
             )}
@@ -159,9 +161,9 @@ export function PartyMemberSlot({ member, isSpinning, compact }: PartyMemberSlot
 
   return (
     <motion.div
-      className={`party-member-slot flex flex-col items-center gap-2 p-3 rounded-xl
+      className={`party-member-slot flex flex-col items-center rounded-xl
         bg-gradient-to-b from-gray-800/80 to-gray-900/80 border border-gray-700/50
-        ${compact ? 'p-2' : 'p-3'}`}
+        ${compact ? 'gap-2 p-2' : 'gap-3 p-4'}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.02, borderColor: 'rgba(255, 215, 0, 0.5)' }}
@@ -181,8 +183,8 @@ export function PartyMemberSlot({ member, isSpinning, compact }: PartyMemberSlot
             animate={{ scale: [1, 1.05, 1] }}
             transition={{ duration: 0.3, repeat: Infinity }}
           >
-            <span className={`${compact ? 'w-5 h-5' : 'w-6 h-6'} bg-gray-600 rounded animate-pulse`} />
-            <span className={`font-bold text-gray-400 ${compact ? 'text-xs' : 'text-sm'}`}>
+            <span className={`${compact ? 'w-6 h-6' : 'w-8 h-8'} bg-gray-600 rounded animate-pulse`} />
+            <span className={`font-bold text-gray-400 ${compact ? 'text-sm' : 'text-base'}`}>
               ???
             </span>
           </motion.div>
@@ -192,11 +194,11 @@ export function PartyMemberSlot({ member, isSpinning, compact }: PartyMemberSlot
               <img
                 src={currentLaneInfo.image}
                 alt={currentLaneInfo.label}
-                className={`${compact ? 'w-5 h-5' : 'w-6 h-6'} object-contain`}
+                className={`${compact ? 'w-6 h-6' : 'w-8 h-8'} object-contain`}
               />
             )}
             <span
-              className={`font-bold ${currentLaneInfo.color} ${compact ? 'text-xs' : 'text-sm'}`}
+              className={`font-bold ${currentLaneInfo.color} ${compact ? 'text-sm' : 'text-base'}`}
               style={{ textShadow: '0 0 10px currentColor' }}
             >
               {currentLaneInfo.koreanLabel}
@@ -233,7 +235,7 @@ export function PartyMemberSlot({ member, isSpinning, compact }: PartyMemberSlot
 
       {/* 데미지 타입 배지 */}
       <motion.div
-        className={`px-2 py-1 rounded-full text-xs font-bold
+        className={`${compact ? 'px-2 py-1 text-xs' : 'px-3 py-1.5 text-sm'} rounded-full font-bold
           ${member.damageType.currentValue === 'AD'
             ? 'bg-orange-500/20 text-orange-400 border border-orange-500/50'
             : 'bg-purple-500/20 text-purple-400 border border-purple-500/50'}`}

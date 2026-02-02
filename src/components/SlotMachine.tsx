@@ -6,12 +6,14 @@ import { ResultDisplay } from './ResultDisplay';
 import { ThemeSelector } from './ThemeSelector';
 import { SoundToggle } from './SoundToggle';
 import { ChampionFilter } from './ChampionFilter';
+import { ToggleSwitch } from './ToggleSwitch';
 import { useSlotMachine } from '../hooks/useSlotMachine';
 import { useSound } from '../hooks/useSound';
+import { useBuildRandomizer } from '../hooks/useBuildRandomizer';
 import { LANES } from '../data/lanes';
 import { DAMAGE_TYPES } from '../data/damageTypes';
 import { getChampionImageUrl } from '../utils/champion';
-import type { SlotItem, ChampionTag } from '../types';
+import type { SlotItem, ChampionTag, RandomBuild } from '../types';
 
 // 데이터를 SlotItem 형태로 변환
 const laneItems: SlotItem[] = LANES.map((lane) => ({
@@ -36,6 +38,12 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
   // 챔피언 필터 상태
   const [filterTags, setFilterTags] = useState<ChampionTag[]>([]);
 
+  // 빌드 랜덤화 토글 상태
+  const [buildRandomEnabled, setBuildRandomEnabled] = useState(false);
+
+  // 현재 빌드 상태
+  const [currentBuild, setCurrentBuild] = useState<RandomBuild | null>(null);
+
   const {
     state,
     selectedIndices,
@@ -49,6 +57,8 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
     hideResult,
     filteredChampions,
   } = useSlotMachine({ onSpinComplete, filterTags });
+
+  const { generateRandomBuild } = useBuildRandomizer();
 
   // 필터링된 챔피언 목록을 SlotItem으로 변환
   const championItems: SlotItem[] = useMemo(
@@ -81,9 +91,16 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
       stopSpin();
       if (showResult) {
         playWin();
+        // 스핀이 완료되면 빌드 생성
+        if (buildRandomEnabled && state.champion.currentValue) {
+          const build = generateRandomBuild(state.champion.currentValue.id);
+          setCurrentBuild(build);
+        } else {
+          setCurrentBuild(null);
+        }
       }
     }
-  }, [isSpinning, showResult, startSpin, stopSpin, playWin]);
+  }, [isSpinning, showResult, startSpin, stopSpin, playWin, buildRandomEnabled, state.champion.currentValue, generateRandomBuild]);
 
   // 컴포넌트 언마운트 시 사운드 정리
   useEffect(() => {
@@ -124,6 +141,20 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
 
       {/* 챔피언 필터 */}
       <ChampionFilter selectedTags={filterTags} onTagsChange={setFilterTags} />
+
+      {/* 빌드 랜덤화 토글 */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="flex items-center gap-3 bg-gradient-to-r from-purple-900/30 to-pink-900/30 px-6 py-3 rounded-xl border border-purple-500/30"
+      >
+        <ToggleSwitch
+          enabled={buildRandomEnabled}
+          onToggle={() => setBuildRandomEnabled(!buildRandomEnabled)}
+          label="🎲 빌드 랜덤화 (Ultimate Bravery) [TEST]"
+        />
+      </motion.div>
 
       {/* 슬롯 머신 컨테이너 */}
       <motion.div
@@ -229,6 +260,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
         show={showResult && !isSpinning}
         onClose={hideResult}
         onSpinAgain={spin}
+        build={currentBuild}
       />
 
       {/* 소리 토글 버튼 */}

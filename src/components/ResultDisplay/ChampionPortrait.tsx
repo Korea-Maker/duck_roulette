@@ -6,24 +6,31 @@ import { hexToRgba } from '../../utils/colorFilters';
 
 interface ChampionPortraitProps {
   champion: Champion;
+  compact?: boolean;
 }
 
-export function ChampionPortrait({ champion }: ChampionPortraitProps) {
+export function ChampionPortrait({ champion, compact = false }: ChampionPortraitProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
   const championImageUrl = getChampionImageUrl(champion.id);
   const championColor = champion.color || '#FFD700';
 
+  // 컴팩트 모드 사이즈
+  const imageSize = compact ? 'w-24 h-24' : 'w-48 h-48';
+  const borderWidth = compact ? 'border-4' : 'border-8';
+  const textSize = compact ? 'text-2xl' : 'text-4xl';
+  const gap = compact ? 'gap-2 mb-4' : 'gap-4 mb-8';
+
   return (
     <motion.div
-      className="flex flex-col items-center gap-4 mb-8"
+      className={`flex flex-col items-center ${gap}`}
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 20 }}
     >
       {!imageError && (
-        <div className="relative w-48 h-48">
+        <div className={`relative ${imageSize}`}>
           {/* Placeholder - absolute positioned */}
           {!imageLoaded && (
             <div className="absolute inset-0 bg-gray-700/50 rounded-2xl animate-pulse" />
@@ -32,10 +39,12 @@ export function ChampionPortrait({ champion }: ChampionPortraitProps) {
           <motion.img
             src={championImageUrl}
             alt={champion.koreanName}
-            className="absolute inset-0 w-48 h-48 rounded-2xl border-8"
+            className={`absolute inset-0 ${imageSize} rounded-2xl ${borderWidth}`}
             style={{
               borderColor: championColor,
-              boxShadow: `0 0 40px ${hexToRgba(championColor, 0.9)}, 0 0 80px ${hexToRgba(championColor, 0.6)}, 0 20px 60px rgba(0, 0, 0, 0.7)`,
+              boxShadow: compact
+                ? `0 0 20px ${hexToRgba(championColor, 0.7)}, 0 0 40px ${hexToRgba(championColor, 0.4)}`
+                : `0 0 40px ${hexToRgba(championColor, 0.9)}, 0 0 80px ${hexToRgba(championColor, 0.6)}, 0 20px 60px rgba(0, 0, 0, 0.7)`,
               opacity: imageLoaded ? 1 : 0,
               transition: 'opacity 0.3s ease',
             }}
@@ -48,7 +57,7 @@ export function ChampionPortrait({ champion }: ChampionPortraitProps) {
         </div>
       )}
       <motion.span
-        className="font-black text-4xl"
+        className={`font-black ${textSize}`}
         style={{
           fontFamily: "'Orbitron', sans-serif",
           color: championColor,

@@ -4,9 +4,10 @@ import type { ResultDisplayProps } from '../../types';
 import { useConfetti } from './useConfetti';
 import { ChampionPortrait } from './ChampionPortrait';
 import { ResultInfo } from './ResultInfo';
+import { BuildDisplay } from './BuildDisplay';
 import { hexToRgba } from '../../utils/colorFilters';
 
-export function ResultDisplay({ lane, champion, damageType, show, onClose, onSpinAgain }: ResultDisplayProps) {
+export function ResultDisplay({ lane, champion, damageType, show, onClose, onSpinAgain, build }: ResultDisplayProps) {
   const hasAnyResult = lane || champion || damageType;
 
   // 컨페티 효과
@@ -60,17 +61,19 @@ export function ResultDisplay({ lane, champion, damageType, show, onClose, onSpi
           />
 
           {/* 모달 컨텐츠 */}
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.7, y: 50 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.7, y: 50 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="relative result-card max-w-lg w-full"
+              className={`relative result-card w-full my-auto ${build ? 'max-w-2xl' : 'max-w-lg'}`}
               style={{
                 resize: 'none',
                 borderColor: championColor,
                 boxShadow: `0 0 40px ${hexToRgba(championColor, 0.6)}, 0 0 80px ${hexToRgba(championColor, 0.3)}, 0 20px 60px rgba(0, 0, 0, 0.7)`,
+                maxHeight: '90vh',
+                overflowY: 'auto',
               }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -95,7 +98,7 @@ export function ResultDisplay({ lane, champion, damageType, show, onClose, onSpi
 
               {/* 헤더 */}
               <motion.h3
-                className="text-3xl font-black text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-red-400"
+                className={`font-black text-center text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-red-400 ${build ? 'text-2xl mb-4' : 'text-3xl mb-8'}`}
                 style={{
                   fontFamily: "'Bebas Neue', 'Orbitron', sans-serif",
                   letterSpacing: '0.1em',
@@ -108,13 +111,16 @@ export function ResultDisplay({ lane, champion, damageType, show, onClose, onSpi
                 🎯 당신의 운명 🎯
               </motion.h3>
 
-              {/* 챔피언 이미지 (크게 강조) */}
+              {/* 챔피언 이미지 (빌드가 있으면 컴팩트하게) */}
               {champion && (
-                <ChampionPortrait key={champion.id} champion={champion} />
+                <ChampionPortrait key={champion.id} champion={champion} compact={!!build} />
               )}
 
               {/* 라인과 타입 정보 */}
               <ResultInfo lane={lane || undefined} damageType={damageType || undefined} />
+
+              {/* 빌드 정보 */}
+              {build && <BuildDisplay build={build} />}
 
               {/* 다시 돌리기 버튼 */}
               <motion.button
