@@ -8,9 +8,9 @@ export const SLOT_CONFIG = {
 
 // 애니메이션 설정
 export const ANIMATION_CONFIG = {
-  CONFETTI_DURATION: 2500,   // 컨페티 지속 시간 (ms)
-  CONFETTI_INTERVAL: 100,    // 컨페티 발사 간격 (ms)
-  CONFETTI_PARTICLE_COUNT: 3, // 한 번에 발사할 파티클 수
+  CONFETTI_DURATION: 3000,   // 컨페티 지속 시간 (ms)
+  CONFETTI_INTERVAL: 80,     // 컨페티 발사 간격 (ms)
+  CONFETTI_PARTICLE_COUNT: 5, // 한 번에 발사할 파티클 수
 } as const;
 
 // 컨페티 색상

@@ -116,7 +116,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
 
       {/* 타이틀 */}
       <motion.h1
-        className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500"
+        className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500"
         style={{
           fontFamily: "'Bebas Neue', 'Orbitron', sans-serif",
           letterSpacing: '0.1em',
@@ -133,7 +133,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
         🎰 LoL 슬롯 머신 🎰
       </motion.h1>
 
-      <p className="text-gray-400 text-center max-w-md">
+      <p className="text-gray-400 text-sm text-center max-w-md">
         오늘의 챔피언, 라인, 템트리를 랜덤으로 정해보세요!
       </p>
 
@@ -145,7 +145,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="flex items-center bg-gradient-to-r from-purple-900/30 to-pink-900/30 px-2 py-1 rounded border border-purple-500/30"
+        className="flex items-center bg-gradient-to-r from-purple-900/30 to-pink-900/30 px-2 py-1 rounded border border-purple-500/30 mb-4"
       >
         <ToggleSwitch
           enabled={buildRandomEnabled}
@@ -266,7 +266,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
 
       {/* 푸터 */}
       <motion.footer
-        className="text-gray-400 text-sm mt-4 flex flex-col items-center gap-1"
+        className="text-gray-400 text-sm mt-6 mb-4 flex flex-col items-center gap-1"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
