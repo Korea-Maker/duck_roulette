@@ -7,6 +7,11 @@ export function useSound() {
   const spinningOscillatorRef = useRef<OscillatorNode | null>(null);
   const spinningGainRef = useRef<GainNode | null>(null);
   const spinningLfoRef = useRef<OscillatorNode | null>(null);
+  // 로또 사운드용
+  const lottoOscillatorRef = useRef<OscillatorNode | null>(null);
+  const lottoGainRef = useRef<GainNode | null>(null);
+  const lottoNoiseRef = useRef<AudioBufferSourceNode | null>(null);
+  const lottoIntervalRef = useRef<ReturnType<typeof setInterval>>();
 
   // 음소거 상태 (localStorage에서 불러오기)
   const [isMuted, setIsMuted] = useState(() => {
@@ -160,6 +165,144 @@ export function useSound() {
     }
   }, [getAudioContext]);
 
+  // 로또 스핀 사운드 - 공이 통 안에서 튀기는 소리
+  const startLottoSpin = useCallback(() => {
+    if (isMuted) return;
+    const ctx = getAudioContext();
+
+    // 기존 로또 사운드 정지
+    stopLottoSpin();
+
+    // 깊은 드럼통 울림음
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    oscillator.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    filter.type = 'lowpass';
+    filter.frequency.value = 400;
+    filter.Q.value = 5;
+
+    oscillator.type = 'triangle';
+    oscillator.frequency.setValueAtTime(60, ctx.currentTime);
+
+    gainNode.gain.setValueAtTime(0.08, ctx.currentTime);
+
+    oscillator.start(ctx.currentTime);
+
+    lottoOscillatorRef.current = oscillator;
+    lottoGainRef.current = gainNode;
+
+    // 주기적인 공 튀기는 소리
+    lottoIntervalRef.current = setInterval(() => {
+      if (isMuted) return;
+
+      // 랜덤한 공 충돌음
+      const bounceOsc = ctx.createOscillator();
+      const bounceGain = ctx.createGain();
+      const bounceFilter = ctx.createBiquadFilter();
+
+      bounceOsc.connect(bounceFilter);
+      bounceFilter.connect(bounceGain);
+      bounceGain.connect(ctx.destination);
+
+      bounceFilter.type = 'bandpass';
+      bounceFilter.frequency.value = 800 + Math.random() * 600;
+      bounceFilter.Q.value = 3;
+
+      // 플라스틱 공 소리
+      bounceOsc.type = 'sine';
+      bounceOsc.frequency.setValueAtTime(200 + Math.random() * 150, ctx.currentTime);
+      bounceOsc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.08);
+
+      bounceGain.gain.setValueAtTime(0.15 + Math.random() * 0.1, ctx.currentTime);
+      bounceGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+
+      bounceOsc.start(ctx.currentTime);
+      bounceOsc.stop(ctx.currentTime + 0.1);
+
+      // 가끔 벽 충돌음 추가
+      if (Math.random() < 0.3) {
+        const wallOsc = ctx.createOscillator();
+        const wallGain = ctx.createGain();
+        wallOsc.connect(wallGain);
+        wallGain.connect(ctx.destination);
+        wallOsc.type = 'square';
+        wallOsc.frequency.value = 100 + Math.random() * 50;
+        wallGain.gain.setValueAtTime(0.05, ctx.currentTime);
+        wallGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+        wallOsc.start(ctx.currentTime);
+        wallOsc.stop(ctx.currentTime + 0.05);
+      }
+    }, 80 + Math.random() * 40);
+  }, [getAudioContext, isMuted]);
+
+  // 로또 스핀 정지
+  const stopLottoSpin = useCallback(() => {
+    if (lottoOscillatorRef.current && lottoGainRef.current) {
+      const ctx = getAudioContext();
+      lottoGainRef.current.gain.exponentialRampToValueAtTime(
+        0.001,
+        ctx.currentTime + 0.5
+      );
+      lottoOscillatorRef.current.stop(ctx.currentTime + 0.5);
+      lottoOscillatorRef.current = null;
+      lottoGainRef.current = null;
+    }
+    if (lottoNoiseRef.current) {
+      lottoNoiseRef.current.stop();
+      lottoNoiseRef.current = null;
+    }
+    if (lottoIntervalRef.current) {
+      clearInterval(lottoIntervalRef.current);
+      lottoIntervalRef.current = undefined;
+    }
+  }, [getAudioContext]);
+
+  // 공 탈락 사운드 - 퐁 하고 사라지는 소리
+  const playEliminate = useCallback(() => {
+    if (isMuted) return;
+    const ctx = getAudioContext();
+
+    // 떨어지는 음
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    filter.type = 'lowpass';
+    filter.frequency.value = 1000;
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(400 + Math.random() * 200, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.2);
+
+    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.2);
+
+    // 버블 팝 효과
+    const pop = ctx.createOscillator();
+    const popGain = ctx.createGain();
+    pop.connect(popGain);
+    popGain.connect(ctx.destination);
+    pop.type = 'sine';
+    pop.frequency.setValueAtTime(800, ctx.currentTime);
+    pop.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.05);
+    popGain.gain.setValueAtTime(0.08, ctx.currentTime);
+    popGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+    pop.start(ctx.currentTime);
+    pop.stop(ctx.currentTime + 0.08);
+  }, [getAudioContext, isMuted]);
+
   // 당첨 사운드 - 화려한 팡파레
   const playWin = useCallback(() => {
     if (isMuted) return;
@@ -270,10 +413,13 @@ export function useSound() {
     playClick,
     startSpin,
     stopSpin,
+    startLottoSpin,
+    stopLottoSpin,
+    playEliminate,
     playWin,
     playResult,
     toggleMute,
-  }), [playClick, startSpin, stopSpin, playWin, playResult, toggleMute]);
+  }), [playClick, startSpin, stopSpin, startLottoSpin, stopLottoSpin, playEliminate, playWin, playResult, toggleMute]);
 
   // Return with isMuted separate to avoid object reference changes
   return {

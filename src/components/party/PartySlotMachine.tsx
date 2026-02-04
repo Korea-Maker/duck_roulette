@@ -204,6 +204,30 @@ export function PartySlotMachine() {
 
       {/* 소리 토글 버튼 */}
       <SoundToggle isMuted={sound.isMuted} onToggle={sound.toggleMute} />
+
+      {/* 푸터 */}
+      <motion.footer
+        className="text-gray-400 text-sm mt-6 mb-4 flex flex-col items-center gap-1"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8 }}
+      >
+        <div className="flex items-center gap-2">
+          <span className="text-yellow-500">★</span>
+          <span>총 172개의 챔피언 지원</span>
+          <span className="text-yellow-500">★</span>
+        </div>
+        <div
+          className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-400 font-bold"
+          style={{
+            fontFamily: "'Orbitron', sans-serif",
+            letterSpacing: '0.05em',
+            textShadow: '0 0 20px rgba(255, 215, 0, 0.5)',
+          }}
+        >
+          Made by 제로콕
+        </div>
+      </motion.footer>
     </div>
   );
 }

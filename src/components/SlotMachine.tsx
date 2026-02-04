@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { SlotReel } from './SlotReel';
 import { SpinButton } from './SpinButton';
 import { ResultDisplay } from './ResultDisplay';
@@ -7,13 +7,14 @@ import { ThemeSelector } from './ThemeSelector';
 import { SoundToggle } from './SoundToggle';
 import { ChampionFilter } from './ChampionFilter';
 import { ToggleSwitch } from './ToggleSwitch';
+import { LottoBallMachine } from './LottoBallMachine';
 import { useSlotMachine } from '../hooks/useSlotMachine';
 import { useSound } from '../hooks/useSound';
 import { useBuildRandomizer } from '../hooks/useBuildRandomizer';
 import { LANES } from '../data/lanes';
 import { DAMAGE_TYPES } from '../data/damageTypes';
 import { getChampionImageUrl } from '../utils/champion';
-import type { SlotItem, ChampionTag, RandomBuild } from '../types';
+import type { SlotItem, ChampionTag, RandomBuild, Champion } from '../types';
 
 // 데이터를 SlotItem 형태로 변환
 const laneItems: SlotItem[] = LANES.map((lane) => ({
@@ -44,6 +45,16 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
   // 현재 빌드 상태
   const [currentBuild, setCurrentBuild] = useState<RandomBuild | null>(null);
 
+  // 로또 모드 상태
+  const [isLottoMode, setIsLottoMode] = useState(false);
+
+  // 로또 모드 스피닝 상태
+  const [isLottoSpinning, setIsLottoSpinning] = useState(false);
+
+  // 로또 선택된 챔피언 저장
+  const [lottoSelectedChampion, setLottoSelectedChampion] = useState<Champion | null>(null);
+  const [lottoShowResult, setLottoShowResult] = useState(false);
+
   const {
     state,
     selectedIndices,
@@ -72,7 +83,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
     [filteredChampions]
   );
 
-  const { startSpin, stopSpin, playWin, isMuted, toggleMute } = useSound();
+  const { startSpin, stopSpin, startLottoSpin, stopLottoSpin, playWin, isMuted, toggleMute } = useSound();
 
   // Pre-calculate particle positions (only once)
   const particlePositions = useMemo(() =>
@@ -83,7 +94,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
     })),
   []);
 
-  // Handle spinning sound
+  // Handle slot spinning sound
   useEffect(() => {
     if (isSpinning) {
       startSpin();
@@ -102,12 +113,56 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
     }
   }, [isSpinning, showResult, startSpin, stopSpin, playWin, buildRandomEnabled, state.champion.currentValue, generateRandomBuild]);
 
+  // Handle lotto spinning sound (separate from slot)
+  useEffect(() => {
+    if (isLottoSpinning) {
+      startLottoSpin();
+    } else {
+      stopLottoSpin();
+      if (lottoShowResult) {
+        playWin();
+      }
+    }
+  }, [isLottoSpinning, lottoShowResult, startLottoSpin, stopLottoSpin, playWin]);
+
   // 컴포넌트 언마운트 시 사운드 정리
   useEffect(() => {
     return () => {
       stopSpin();
+      stopLottoSpin();
     };
-  }, [stopSpin]);
+  }, [stopSpin, stopLottoSpin]);
+
+  // 로또 모드 스핀 핸들러
+  const handleLottoSpin = useCallback(() => {
+    if (isLottoSpinning) return;
+    hideResult();
+    setLottoShowResult(false);
+    setLottoSelectedChampion(null);
+    setIsLottoSpinning(true);
+  }, [isLottoSpinning, hideResult]);
+
+  // 로또 모드 완료 핸들러
+  const handleLottoComplete = useCallback((champion: Champion) => {
+    setIsLottoSpinning(false);
+    setLottoSelectedChampion(champion);
+
+    // 빌드 생성
+    if (buildRandomEnabled) {
+      const build = generateRandomBuild(champion.id);
+      setCurrentBuild(build);
+    } else {
+      setCurrentBuild(null);
+    }
+
+    // 결과 표시
+    setTimeout(() => {
+      setLottoShowResult(true);
+      if (onSpinComplete) {
+        onSpinComplete(champion.id, state.lane.currentValue || 'MID', state.damageType.currentValue || 'AD');
+      }
+    }, 100);
+  }, [buildRandomEnabled, generateRandomBuild, onSpinComplete, state.lane.currentValue, state.damageType.currentValue]);
 
   return (
     <div className="flex flex-col items-center gap-4 p-2">
@@ -140,6 +195,21 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
       {/* 챔피언 필터 */}
       <ChampionFilter selectedTags={filterTags} onTagsChange={setFilterTags} />
 
+      {/* 모드 토글 (슬롯 vs 로또) */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.25 }}
+        className="flex items-center gap-4 bg-gradient-to-r from-indigo-900/30 to-purple-900/30 px-4 py-2 rounded-lg border border-indigo-500/30"
+      >
+        <span className="text-sm text-gray-300 font-medium">🎰 슬롯</span>
+        <ToggleSwitch
+          enabled={isLottoMode}
+          onToggle={() => setIsLottoMode(!isLottoMode)}
+        />
+        <span className="text-sm text-gray-300 font-medium">🎱 로또 [TEST]</span>
+      </motion.div>
+
       {/* 빌드 랜덤화 토글 */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
@@ -154,13 +224,49 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
         />
       </motion.div>
 
-      {/* 슬롯 머신 컨테이너 */}
-      <motion.div
-        className={`slot-container ${isSpinning ? 'spinning' : ''}`}
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-      >
+      {/* 슬롯 머신 또는 로또 머신 */}
+      {isLottoMode ? (
+        // 로또 볼 머신
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="w-full"
+        >
+          <LottoBallMachine
+            champions={filteredChampions}
+            isSpinning={isLottoSpinning}
+            onComplete={handleLottoComplete}
+          />
+
+          {/* 스핀 버튼 */}
+          <div className="flex justify-center items-center mt-6">
+            <SpinButton
+              onClick={handleLottoSpin}
+              disabled={isLottoSpinning || filteredChampions.length === 0}
+              isSpinning={isLottoSpinning}
+            />
+          </div>
+
+          {/* 챔피언 없음 경고 */}
+          {filteredChampions.length === 0 && (
+            <motion.p
+              className="text-red-400 text-center mt-4 text-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              ⚠️ 선택 가능한 챔피언이 없습니다!
+            </motion.p>
+          )}
+        </motion.div>
+      ) : (
+        // 기존 슬롯 머신
+        <motion.div
+          className={`slot-container ${isSpinning ? 'spinning' : ''}`}
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
         {/* 배경 파티클 효과 - 스핀 중 */}
         {isSpinning && (
           <motion.div
@@ -248,16 +354,17 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
             ⚠️ 최소 하나의 슬롯을 활성화해주세요!
           </motion.p>
         )}
-      </motion.div>
+        </motion.div>
+      )}
 
       {/* 결과 표시 모달 */}
       <ResultDisplay
-        lane={state.lane.enabled ? state.lane.currentValue : null}
-        champion={state.champion.enabled ? state.champion.currentValue : null}
-        damageType={state.damageType.enabled ? state.damageType.currentValue : null}
-        show={showResult && !isSpinning}
-        onClose={hideResult}
-        onSpinAgain={spin}
+        lane={isLottoMode ? null : (state.lane.enabled ? state.lane.currentValue : null)}
+        champion={isLottoMode ? lottoSelectedChampion : (state.champion.enabled ? state.champion.currentValue : null)}
+        damageType={isLottoMode ? null : (state.damageType.enabled ? state.damageType.currentValue : null)}
+        show={isLottoMode ? lottoShowResult : (showResult && !isSpinning)}
+        onClose={isLottoMode ? () => setLottoShowResult(false) : hideResult}
+        onSpinAgain={isLottoMode ? handleLottoSpin : spin}
         build={currentBuild}
       />
 
