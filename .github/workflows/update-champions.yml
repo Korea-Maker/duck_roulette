@@ -25,14 +25,14 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          git diff --quiet src/data/champions.ts .env .env.example src/config/api.ts src/components/SpinHistory.tsx || echo "changed=true" >> $GITHUB_OUTPUT
+          git diff --quiet src/data/champions.ts src/config/api.ts || echo "changed=true" >> $GITHUB_OUTPUT
 
       - name: Commit and Push
         if: steps.changes.outputs.changed == 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add src/data/champions.ts .env .env.example src/config/api.ts src/components/SpinHistory.tsx
+          git add src/data/champions.ts src/config/api.ts
           git commit -m "chore: 챔피언 목록 및 DDragon CDN 버전 자동 업데이트 ($(date +%Y-%m-%d))"
           git push
 
