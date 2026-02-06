@@ -1,12 +1,9 @@
 import { motion } from 'framer-motion';
-import { useSound } from '../hooks/useSound';
 import type { SpinButtonProps } from '../types';
 
-export function SpinButton({ onClick, disabled, isSpinning }: SpinButtonProps) {
-  const { playClick } = useSound();
-
+export function SpinButton({ onClick, disabled, isSpinning, onPlayClick }: SpinButtonProps) {
   const handleClick = () => {
-    playClick();
+    onPlayClick?.();
     onClick();
   };
   return (

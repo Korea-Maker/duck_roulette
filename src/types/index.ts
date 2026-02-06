@@ -60,6 +60,7 @@ export interface SpinButtonProps {
   onClick: () => void;
   disabled: boolean;
   isSpinning: boolean;
+  onPlayClick?: () => void;
 }
 
 // 결과 표시 Props
@@ -94,9 +95,6 @@ export interface DamageTypeInfo {
 // ============================================
 // 파티 모드 타입 정의
 // ============================================
-
-// 라인 순서 (고정)
-export const PARTY_LANES: Lane[] = ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'];
 
 // 파티 멤버 슬롯 상태
 export interface PartyMemberSlotState {

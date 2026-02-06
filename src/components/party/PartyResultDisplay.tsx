@@ -1,38 +1,21 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect } from 'react';
 import type { PartyResultDisplayProps } from '../../types';
 import { useConfetti } from '../ResultDisplay/useConfetti';
 import { LANES } from '../../data/lanes';
 import { DAMAGE_TYPES } from '../../data/damageTypes';
 import { getChampionImageUrl } from '../../utils/champion';
+import { useBodyScrollLock } from '../../hooks/useBodyScrollLock';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 export function PartyResultDisplay({ results, show, onClose, onSpinAgain }: PartyResultDisplayProps) {
   // 컨페티 효과
   useConfetti(show, results.length > 0);
 
   // ESC 키로 닫기
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && show) {
-        onClose();
-      }
-    };
-
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, [show, onClose]);
+  useEscapeKey(show, onClose);
 
   // 모달이 열릴 때 body 스크롤 방지
-  useEffect(() => {
-    if (show) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [show]);
+  useBodyScrollLock(show);
 
   if (!show || results.length === 0) return null;
 

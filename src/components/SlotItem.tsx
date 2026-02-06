@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { SlotItem as SlotItemType } from '../types';
+import { getColorFilter } from '../utils/colorFilters';
 
 interface SlotItemProps {
   item: SlotItemType;
@@ -10,28 +11,7 @@ export function SlotItem({ item, isActive = false }: SlotItemProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  // Get color filter based on item color class
-  const getColorFilter = (colorClass: string | undefined) => {
-    switch (colorClass) {
-      case 'text-red-400':
-        return 'brightness(0) saturate(100%) invert(56%) sepia(94%) saturate(2664%) hue-rotate(327deg) brightness(102%) contrast(92%)';
-      case 'text-green-400':
-        return 'brightness(0) saturate(100%) invert(79%) sepia(26%) saturate(2089%) hue-rotate(75deg) brightness(93%) contrast(88%)';
-      case 'text-blue-400':
-        return 'brightness(0) saturate(100%) invert(61%) sepia(89%) saturate(2372%) hue-rotate(191deg) brightness(101%) contrast(101%)';
-      case 'text-yellow-400':
-        return 'brightness(0) saturate(100%) invert(84%) sepia(52%) saturate(1830%) hue-rotate(358deg) brightness(103%) contrast(104%)';
-      case 'text-pink-400':
-        return 'brightness(0) saturate(100%) invert(70%) sepia(87%) saturate(3295%) hue-rotate(296deg) brightness(102%) contrast(101%)';
-      case 'text-orange-400':
-      case 'text-purple-400':
-        return 'none'; // No filter for damage type icons (they're already colored)
-      default:
-        return 'none';
-    }
-  };
-
-  const colorFilter = getColorFilter(item.color);
+  const colorFilter = getColorFilter(item.color || '');
 
   return (
     <div

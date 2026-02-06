@@ -1,11 +1,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect } from 'react';
 import type { ResultDisplayProps } from '../../types';
 import { useConfetti } from './useConfetti';
 import { ChampionPortrait } from './ChampionPortrait';
 import { ResultInfo } from './ResultInfo';
 import { BuildDisplay } from './BuildDisplay';
 import { hexToRgba } from '../../utils/colorFilters';
+import { useBodyScrollLock } from '../../hooks/useBodyScrollLock';
+import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 export function ResultDisplay({ lane, champion, damageType, show, onClose, onSpinAgain, build }: ResultDisplayProps) {
   const hasAnyResult = lane || champion || damageType;
@@ -14,28 +15,10 @@ export function ResultDisplay({ lane, champion, damageType, show, onClose, onSpi
   useConfetti(show, !!hasAnyResult);
 
   // ESC 키로 닫기
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && show) {
-        onClose();
-      }
-    };
-
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, [show, onClose]);
+  useEscapeKey(show, onClose);
 
   // 모달이 열릴 때 body 스크롤 방지
-  useEffect(() => {
-    if (show) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [show]);
+  useBodyScrollLock(show);
 
   if (!show || !hasAnyResult) return null;
 

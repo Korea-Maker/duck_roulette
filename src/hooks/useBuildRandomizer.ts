@@ -3,17 +3,11 @@ import type { RandomBuild, Item, Rune } from '../types';
 import { BOOTS, COMPLETED_ITEMS } from '../data/items';
 import { RUNE_TREES } from '../data/runes';
 import { SUMMONER_SPELLS } from '../data/summonerSpells';
-
-const getRandomIndex = (max: number): number => Math.floor(Math.random() * max);
-
-const getRandomElement = <T,>(array: T[]): T => {
-  return array[getRandomIndex(array.length)];
-};
+import { getRandomIndex, getRandomElement, shuffleArray } from '../utils/random';
 
 const getRandomElements = <T,>(array: T[], count: number, excludeIndices: number[] = []): T[] => {
   const available = array.filter((_, index) => !excludeIndices.includes(index));
-  const shuffled = [...available].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, Math.min(count, available.length));
+  return shuffleArray(available).slice(0, Math.min(count, available.length));
 };
 
 export function useBuildRandomizer() {

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, useEffect, useMemo } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 
 const SOUND_MUTED_KEY = 'duck-roulette-sound-muted';
 
@@ -20,6 +20,12 @@ export function useSound() {
     }
     return false;
   });
+
+  // useRef로 최신 isMuted 값 추적 (콜백 참조 안정성 확보)
+  const isMutedRef = useRef(isMuted);
+  useEffect(() => {
+    isMutedRef.current = isMuted;
+  }, [isMuted]);
 
   // 음소거 상태 저장
   useEffect(() => {
@@ -49,7 +55,7 @@ export function useSound() {
 
   // 코인 투입 사운드 - 금속성 딸깍 소리
   const playClick = useCallback(() => {
-    if (isMuted) return;
+    if (isMutedRef.current) return;
     const ctx = getAudioContext();
 
     // 금속 코인 소리 (여러 주파수 조합)
@@ -88,11 +94,11 @@ export function useSound() {
     impactGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
     impactOsc.start(ctx.currentTime);
     impactOsc.stop(ctx.currentTime + 0.1);
-  }, [getAudioContext, isMuted]);
+  }, [getAudioContext]);
 
   // 스핀 사운드 - 카지노 슬롯머신 릴 회전음
   const startSpin = useCallback(() => {
-    if (isMuted) return;
+    if (isMutedRef.current) return;
     const ctx = getAudioContext();
 
     // 기존 스핀 사운드 정지
@@ -144,7 +150,7 @@ export function useSound() {
     spinningOscillatorRef.current = oscillator;
     spinningGainRef.current = gainNode;
     spinningLfoRef.current = lfo;
-  }, [getAudioContext, isMuted]);
+  }, [getAudioContext]);
 
   // 스핀 정지 사운드
   const stopSpin = useCallback(() => {
@@ -165,9 +171,31 @@ export function useSound() {
     }
   }, [getAudioContext]);
 
+  // 로또 스핀 정지
+  const stopLottoSpin = useCallback(() => {
+    if (lottoOscillatorRef.current && lottoGainRef.current) {
+      const ctx = getAudioContext();
+      lottoGainRef.current.gain.exponentialRampToValueAtTime(
+        0.001,
+        ctx.currentTime + 0.5
+      );
+      lottoOscillatorRef.current.stop(ctx.currentTime + 0.5);
+      lottoOscillatorRef.current = null;
+      lottoGainRef.current = null;
+    }
+    if (lottoNoiseRef.current) {
+      lottoNoiseRef.current.stop();
+      lottoNoiseRef.current = null;
+    }
+    if (lottoIntervalRef.current) {
+      clearInterval(lottoIntervalRef.current);
+      lottoIntervalRef.current = undefined;
+    }
+  }, [getAudioContext]);
+
   // 로또 스핀 사운드 - 공이 통 안에서 튀기는 소리
   const startLottoSpin = useCallback(() => {
-    if (isMuted) return;
+    if (isMutedRef.current) return;
     const ctx = getAudioContext();
 
     // 기존 로또 사운드 정지
@@ -198,7 +226,7 @@ export function useSound() {
 
     // 주기적인 공 튀기는 소리
     lottoIntervalRef.current = setInterval(() => {
-      if (isMuted) return;
+      if (isMutedRef.current) return;
 
       // 랜덤한 공 충돌음
       const bounceOsc = ctx.createOscillator();
@@ -238,33 +266,11 @@ export function useSound() {
         wallOsc.stop(ctx.currentTime + 0.05);
       }
     }, 80 + Math.random() * 40);
-  }, [getAudioContext, isMuted]);
-
-  // 로또 스핀 정지
-  const stopLottoSpin = useCallback(() => {
-    if (lottoOscillatorRef.current && lottoGainRef.current) {
-      const ctx = getAudioContext();
-      lottoGainRef.current.gain.exponentialRampToValueAtTime(
-        0.001,
-        ctx.currentTime + 0.5
-      );
-      lottoOscillatorRef.current.stop(ctx.currentTime + 0.5);
-      lottoOscillatorRef.current = null;
-      lottoGainRef.current = null;
-    }
-    if (lottoNoiseRef.current) {
-      lottoNoiseRef.current.stop();
-      lottoNoiseRef.current = null;
-    }
-    if (lottoIntervalRef.current) {
-      clearInterval(lottoIntervalRef.current);
-      lottoIntervalRef.current = undefined;
-    }
-  }, [getAudioContext]);
+  }, [getAudioContext, stopLottoSpin]);
 
   // 공 탈락 사운드 - 퐁 하고 사라지는 소리
   const playEliminate = useCallback(() => {
-    if (isMuted) return;
+    if (isMutedRef.current) return;
     const ctx = getAudioContext();
 
     // 떨어지는 음
@@ -301,11 +307,11 @@ export function useSound() {
     popGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
     pop.start(ctx.currentTime);
     pop.stop(ctx.currentTime + 0.08);
-  }, [getAudioContext, isMuted]);
+  }, [getAudioContext]);
 
   // 당첨 사운드 - 화려한 팡파레
   const playWin = useCallback(() => {
-    if (isMuted) return;
+    if (isMutedRef.current) return;
     const ctx = getAudioContext();
 
     // 팡파레 멜로디 (도-미-솔-도-미-솔-도)
@@ -364,11 +370,11 @@ export function useSound() {
       sparkle.start(sparkleTime);
       sparkle.stop(sparkleTime + 0.1);
     }
-  }, [getAudioContext, isMuted]);
+  }, [getAudioContext]);
 
   // 결과 확인 사운드 - 부드러운 벨 소리
   const playResult = useCallback(() => {
-    if (isMuted) return;
+    if (isMutedRef.current) return;
     const ctx = getAudioContext();
 
     // 벨 하모닉스
@@ -406,10 +412,9 @@ export function useSound() {
     subGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
     subBell.start(ctx.currentTime);
     subBell.stop(ctx.currentTime + 1.2);
-  }, [getAudioContext, isMuted]);
+  }, [getAudioContext]);
 
-  // Stable function references (don't change when isMuted changes)
-  const soundFunctions = useMemo(() => ({
+  return {
     playClick,
     startSpin,
     stopSpin,
@@ -419,11 +424,6 @@ export function useSound() {
     playWin,
     playResult,
     toggleMute,
-  }), [playClick, startSpin, stopSpin, startLottoSpin, stopLottoSpin, playEliminate, playWin, playResult, toggleMute]);
-
-  // Return with isMuted separate to avoid object reference changes
-  return {
-    ...soundFunctions,
     isMuted,
   };
 }

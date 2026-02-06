@@ -96,7 +96,28 @@ async function main() {
     const championsRes = await fetch(CHAMPIONS_URL(latestVersion));
     const championsData = await championsRes.json();
 
+    // API 응답 검증용 정규식 (영문, 숫자, 공백, 일부 특수문자 허용)
+    const VALID_NAME_REGEX = /^[a-zA-Z0-9\s'.&\-:!()]+$/;
+
     const champions = Object.entries(championsData.data)
+      .filter(([id, data]) => {
+        // id 검증: 문자열이고 허용 문자만 포함
+        if (typeof id !== 'string' || !VALID_NAME_REGEX.test(id)) {
+          console.error(`⚠️ 잘못된 챔피언 id 형식: ${JSON.stringify(id)}`);
+          return false;
+        }
+        // name 검증: 문자열이고 허용 문자만 포함
+        if (typeof data.name !== 'string' || !VALID_NAME_REGEX.test(data.name)) {
+          console.error(`⚠️ 잘못된 챔피언 name 형식 (id: ${id}): ${JSON.stringify(data.name)}`);
+          return false;
+        }
+        // tags 검증: 배열이면 유효
+        if (data.tags && !Array.isArray(data.tags)) {
+          console.error(`⚠️ 잘못된 tags 형식 (id: ${id}): ${JSON.stringify(data.tags)}`);
+          return false;
+        }
+        return true;
+      })
       .map(([id, data]) => ({
         id,
         name: data.name,

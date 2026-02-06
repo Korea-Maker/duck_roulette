@@ -1,4 +1,4 @@
-import type { LaneInfo } from '../types';
+import type { Lane, LaneInfo } from '../types';
 
 export const LANES: LaneInfo[] = [
   {
@@ -37,6 +37,9 @@ export const LANES: LaneInfo[] = [
     image: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-clash/global/default/assets/images/position-selector/positions/icon-position-utility.png'
   },
 ];
+
+// 파티 모드용 라인 순서 (고정)
+export const PARTY_LANES: Lane[] = ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'];
 
 export const getLaneInfo = (laneId: string): LaneInfo | undefined => {
   return LANES.find((lane) => lane.id === laneId);

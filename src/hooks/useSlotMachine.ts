@@ -4,8 +4,7 @@ import { CHAMPIONS } from '../data/champions';
 import { LANES } from '../data/lanes';
 import { DAMAGE_TYPES } from '../data/damageTypes';
 import { SLOT_CONFIG } from '../config/constants';
-
-const getRandomIndex = (max: number): number => Math.floor(Math.random() * max);
+import { getRandomIndex } from '../utils/random';
 
 interface UseSlotMachineOptions {
   onSpinComplete?: (champion: string, lane: string, type: string) => void;

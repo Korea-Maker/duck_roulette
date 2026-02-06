@@ -9,7 +9,8 @@ import { LayoutSelector } from './LayoutSelector';
 import { MemberCountSelector } from './MemberCountSelector';
 import { PartyResultDisplay } from './PartyResultDisplay';
 import { HorizontalLayout, CircularLayout } from './layouts';
-import { PARTY_CONFIG } from '../../config/constants';
+import { PARTY_CONFIG, SLOT_CONFIG } from '../../config/constants';
+import { CHAMPIONS } from '../../data/champions';
 
 export function PartySlotMachine() {
   const [layout, setLayout] = useState<PartyLayoutType>(PARTY_CONFIG.DEFAULT_LAYOUT);
@@ -39,7 +40,6 @@ export function PartySlotMachine() {
 
   const handleSpin = useCallback(() => {
     if (isSpinning) return;
-    sound.playClick();
     sound.startSpin();
     spin();
 
@@ -52,7 +52,7 @@ export function PartySlotMachine() {
     soundTimeoutRef.current = setTimeout(() => {
       sound.stopSpin();
       sound.playWin();
-    }, 3000 + (memberCount - 1) * PARTY_CONFIG.STAGGER_DELAY);
+    }, SLOT_CONFIG.SPIN_DURATION + (memberCount - 1) * PARTY_CONFIG.STAGGER_DELAY);
   }, [isSpinning, sound, spin, memberCount]);
 
   const handleClose = useCallback(() => {
@@ -191,6 +191,7 @@ export function PartySlotMachine() {
           onClick={handleSpin}
           disabled={isSpinning}
           isSpinning={isSpinning}
+          onPlayClick={sound.playClick}
         />
       </motion.div>
 
@@ -214,7 +215,7 @@ export function PartySlotMachine() {
       >
         <div className="flex items-center gap-2">
           <span className="text-yellow-500">★</span>
-          <span>총 172개의 챔피언 지원</span>
+          <span>총 {CHAMPIONS.length}개의 챔피언 지원</span>
           <span className="text-yellow-500">★</span>
         </div>
         <div

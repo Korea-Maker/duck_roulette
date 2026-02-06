@@ -1,22 +1,19 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { PartySlotMachineState, PartyMemberSlotState, Lane, PartyResult } from '../types';
-import { PARTY_LANES } from '../types';
 import { CHAMPIONS } from '../data/champions';
+import { PARTY_LANES } from '../data/lanes';
 import { DAMAGE_TYPES } from '../data/damageTypes';
 import { SLOT_CONFIG, PARTY_CONFIG } from '../config/constants';
-
-const getRandomIndex = (max: number): number => Math.floor(Math.random() * max);
+import { getRandomIndex, shuffleArray } from '../utils/random';
 
 // 중복 없이 랜덤 라인 선택
 const getRandomLanes = (count: number): Lane[] => {
-  const shuffled = [...PARTY_LANES].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
+  return shuffleArray(PARTY_LANES).slice(0, count);
 };
 
 // 중복 없이 랜덤 챔피언 선택
 const getRandomChampions = (count: number) => {
-  const shuffled = [...CHAMPIONS].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
+  return shuffleArray(CHAMPIONS).slice(0, count);
 };
 
 // 초기 멤버 상태 생성

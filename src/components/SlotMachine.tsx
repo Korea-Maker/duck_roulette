@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SlotReel } from './SlotReel';
 import { SpinButton } from './SpinButton';
 import { ResultDisplay } from './ResultDisplay';
@@ -50,6 +50,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
 
   // 로또 모드 스피닝 상태
   const [isLottoSpinning, setIsLottoSpinning] = useState(false);
+  const lottoResultTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // 로또 선택된 챔피언 저장
   const [lottoSelectedChampion, setLottoSelectedChampion] = useState<Champion | null>(null);
@@ -83,7 +84,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
     [filteredChampions]
   );
 
-  const { startSpin, stopSpin, startLottoSpin, stopLottoSpin, playWin, isMuted, toggleMute } = useSound();
+  const { playClick, startSpin, stopSpin, startLottoSpin, stopLottoSpin, playWin, isMuted, toggleMute } = useSound();
 
   // Pre-calculate particle positions (only once)
   const particlePositions = useMemo(() =>
@@ -125,11 +126,14 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
     }
   }, [isLottoSpinning, lottoShowResult, startLottoSpin, stopLottoSpin, playWin]);
 
-  // 컴포넌트 언마운트 시 사운드 정리
+  // 컴포넌트 언마운트 시 사운드 및 타이머 정리
   useEffect(() => {
     return () => {
       stopSpin();
       stopLottoSpin();
+      if (lottoResultTimeoutRef.current) {
+        clearTimeout(lottoResultTimeoutRef.current);
+      }
     };
   }, [stopSpin, stopLottoSpin]);
 
@@ -155,8 +159,13 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
       setCurrentBuild(null);
     }
 
+    // 이전 타이머 정리
+    if (lottoResultTimeoutRef.current) {
+      clearTimeout(lottoResultTimeoutRef.current);
+    }
+
     // 결과 표시
-    setTimeout(() => {
+    lottoResultTimeoutRef.current = setTimeout(() => {
       setLottoShowResult(true);
       if (onSpinComplete) {
         onSpinComplete(champion.id, state.lane.currentValue || 'MID', state.damageType.currentValue || 'AD');
@@ -245,6 +254,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
               onClick={handleLottoSpin}
               disabled={isLottoSpinning || filteredChampions.length === 0}
               isSpinning={isLottoSpinning}
+              onPlayClick={playClick}
             />
           </div>
 
@@ -341,6 +351,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
             onClick={spin}
             disabled={isSpinning || allDisabled}
             isSpinning={isSpinning}
+            onPlayClick={playClick}
           />
         </div>
 

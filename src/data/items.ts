@@ -38,7 +38,6 @@ export const COMPLETED_ITEMS: Item[] = [
   { id: '3142', name: 'Youmuu\'s Ghostblade', koreanName: '요우무의 유령검', gold: 2900, tags: ['Damage', 'Lethality'], image: '3142.png' },
   { id: '6691', name: 'Duskblade of Draktharr', koreanName: '드락사르의 황혼검', gold: 3100, tags: ['Damage', 'Lethality'], image: '6691.png' },
   { id: '6692', name: 'Eclipse', koreanName: '월식', gold: 2800, tags: ['Damage', 'Lethality'], image: '6692.png' },
-  { id: '6676', name: 'The Collector', koreanName: '징수자', gold: 3000, tags: ['Damage', 'Lethality'], image: '6676.png' },
   { id: '3179', name: 'Umbral Glaive', koreanName: '밤의 끝자락', gold: 2400, tags: ['Damage', 'Lethality'], image: '3179.png' },
   { id: '3814', name: 'Edge of Night', koreanName: '밤의 끝자락', gold: 2900, tags: ['Damage', 'Lethality'], image: '3814.png' },
   { id: '3161', name: 'Spear of Shojin', koreanName: '쇼진의 창', gold: 3100, tags: ['Damage', 'Health'], image: '3161.png' },

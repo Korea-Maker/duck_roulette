@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import type { Champion } from '../types';
+import { shuffleArray } from '../utils/random';
 
 interface Ball {
   id: string;
@@ -62,7 +63,7 @@ export function useLottoBalls({
     if (champions.length === 0 || containerWidth === 0) return;
 
     const ballCount = Math.min(30, champions.length);
-    const shuffled = [...champions].sort(() => Math.random() - 0.5);
+    const shuffled = shuffleArray(champions);
     const selectedChampions = shuffled.slice(0, ballCount);
 
     const newBalls: Ball[] = selectedChampions.map((champion, index) => {
