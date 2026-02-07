@@ -18,6 +18,9 @@ export function SlotReel({
 
   // 스핀용 아이템 배열 생성 (랜덤하게 섞인 아이템들 + 최종 결과)
   const generateSpinItems = useMemo(() => {
+    if (items.length === 0) return [];
+
+    const safeIndex = Math.min(selectedIndex, items.length - 1);
     const shuffled: SlotItemType[] = [];
     // 랜덤 아이템들 추가
     for (let i = 0; i < SLOT_CONFIG.SPIN_ITEMS_COUNT; i++) {
@@ -26,11 +29,11 @@ export function SlotReel({
     }
     // 마지막 3개 아이템: 중앙에 최종 선택 아이템이 정확히 멈추도록
     // [위의 아이템, 선택된 아이템(중앙), 아래 아이템]
-    const prevIndex = (selectedIndex - 1 + items.length) % items.length;
-    const nextIndex = (selectedIndex + 1) % items.length;
+    const prevIndex = (safeIndex - 1 + items.length) % items.length;
+    const nextIndex = (safeIndex + 1) % items.length;
 
     shuffled.push(items[prevIndex]);
-    shuffled.push(items[selectedIndex]); // 이것이 중앙에 위치할 최종 아이템
+    shuffled.push(items[safeIndex]); // 이것이 중앙에 위치할 최종 아이템
     shuffled.push(items[nextIndex]);
 
     return shuffled;
@@ -48,7 +51,7 @@ export function SlotReel({
     }
   }, [isSpinning, selectedIndex]);
 
-  const currentItem = items[displayIndex];
+  const currentItem = items[Math.min(displayIndex, Math.max(items.length - 1, 0))];
 
   return (
     <div className="flex flex-col items-center gap-4" role="group" aria-label={`${label} 선택`}>

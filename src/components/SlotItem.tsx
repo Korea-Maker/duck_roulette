@@ -11,6 +11,8 @@ export function SlotItem({ item, isActive = false }: SlotItemProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
+  if (!item) return null;
+
   const colorFilter = getColorFilter(item.color || '');
 
   return (

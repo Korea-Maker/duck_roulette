@@ -7,6 +7,7 @@ export const getRandomIndex = (max: number): number => Math.floor(Math.random() 
  * 배열에서 랜덤 요소 하나를 반환합니다.
  */
 export const getRandomElement = <T,>(array: T[]): T => {
+  if (array.length === 0) throw new Error('getRandomElement: empty array');
   return array[getRandomIndex(array.length)];
 };
 

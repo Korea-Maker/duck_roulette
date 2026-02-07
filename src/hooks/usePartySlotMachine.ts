@@ -20,12 +20,12 @@ const getRandomChampions = (count: number) => {
 const createInitialMember = (index: number, lanes: Lane[], champions: typeof CHAMPIONS): PartyMemberSlotState => ({
   lane: {
     enabled: true,
-    currentValue: lanes[index],
+    currentValue: lanes[index % lanes.length],
     isSpinning: false,
   },
   champion: {
     enabled: true,
-    currentValue: champions[index],
+    currentValue: champions[index % champions.length],
     isSpinning: false,
   },
   damageType: {
@@ -97,8 +97,8 @@ export function usePartySlotMachine(options?: UsePartySlotMachineOptions) {
     // 각 멤버별 랜덤 결과 미리 계산 (라인, 챔피언 중복 없음)
     const newRandomLanes = getRandomLanes(memberCount);
     const newRandomChampions = getRandomChampions(memberCount);
-    const newLaneIndices = newRandomLanes.map(lane => PARTY_LANES.indexOf(lane));
-    const newChampionIndices = newRandomChampions.map(champ => CHAMPIONS.findIndex(c => c.id === champ.id));
+    const newLaneIndices = newRandomLanes.map(lane => Math.max(0, PARTY_LANES.indexOf(lane)));
+    const newChampionIndices = newRandomChampions.map(champ => Math.max(0, CHAMPIONS.findIndex(c => c.id === champ.id)));
     const newDamageIndices = Array.from({ length: memberCount }, () => getRandomIndex(DAMAGE_TYPES.length));
 
     setSelectedIndices({

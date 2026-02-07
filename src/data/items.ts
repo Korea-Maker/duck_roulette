@@ -64,7 +64,6 @@ export const COMPLETED_ITEMS: Item[] = [
   { id: '3041', name: 'Mejai\'s Soulstealer', koreanName: '메자이의 영혼약탈자', gold: 1600, tags: ['SpellDamage'], image: '3041.png' },
   { id: '3151', name: 'Liandry\'s Anguish', koreanName: '리안드리의 고뇌', gold: 3000, tags: ['SpellDamage', 'Health'], image: '3151.png' },
   { id: '4645', name: 'Shadowflame', koreanName: '그림자불꽃', gold: 3000, tags: ['SpellDamage'], image: '4645.png' },
-  { id: '3137', name: 'Cryptbloom', koreanName: '크립트블룸', gold: 2800, tags: ['SpellDamage'], image: '3137.png' },
 
   // 탱크 아이템
   { id: '3068', name: 'Sunfire Aegis', koreanName: '태양불꽃 방패', gold: 2800, tags: ['Health', 'Armor'], image: '3068.png' },
@@ -97,7 +96,6 @@ export const COMPLETED_ITEMS: Item[] = [
   { id: '6617', name: 'Moonstone Renewer', koreanName: '월석 재생기', gold: 2500, tags: ['Health', 'Mana'], image: '6617.png' },
   { id: '2065', name: 'Shurelya\'s Battlesong', koreanName: '슈렐리아의 전투가', gold: 2300, tags: ['Health', 'Mana'], image: '2065.png' },
   { id: '3869', name: 'Celestial Opposition', koreanName: '천상의 대립', gold: 2500, tags: ['Health', 'Mana'], image: '3869.png' },
-  { id: '3107', name: 'Redemption', koreanName: '구원', gold: 2300, tags: ['Health', 'Mana'], image: '3107.png' },
   { id: '3119', name: 'Winter\'s Approach', koreanName: '겨울의 접근', gold: 2600, tags: ['Health', 'Mana'], image: '3119.png' },
 ];
 

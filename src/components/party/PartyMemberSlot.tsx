@@ -33,6 +33,9 @@ function MiniSlotReel({ items, isSpinning, currentValue, compact }: MiniSlotReel
   }, [items, currentValue]);
 
   const generateSpinItems = useMemo(() => {
+    if (items.length === 0) return [];
+
+    const safeIndex = selectedIndex >= 0 ? Math.min(selectedIndex, items.length - 1) : 0;
     const shuffled: SlotItemType[] = [];
     for (let i = 0; i < 25; i++) {
       const randomItem = items[Math.floor(Math.random() * items.length)];
@@ -40,13 +43,11 @@ function MiniSlotReel({ items, isSpinning, currentValue, compact }: MiniSlotReel
     }
     // SlotReel과 동일한 구조: [prevIndex, selectedIndex, nextIndex] 추가
     // 오버슈팅 시 nextIndex가 스쳐지나가고 selectedIndex에서 멈춤
-    if (selectedIndex >= 0) {
-      const prevIndex = (selectedIndex - 1 + items.length) % items.length;
-      const nextIndex = (selectedIndex + 1) % items.length;
-      shuffled.push(items[prevIndex]);
-      shuffled.push(items[selectedIndex]);
-      shuffled.push(items[nextIndex]);
-    }
+    const prevIndex = (safeIndex - 1 + items.length) % items.length;
+    const nextIndex = (safeIndex + 1) % items.length;
+    shuffled.push(items[prevIndex]);
+    shuffled.push(items[safeIndex]);
+    shuffled.push(items[nextIndex]);
     return shuffled;
   }, [items, selectedIndex]);
 
@@ -87,25 +88,28 @@ function MiniSlotReel({ items, isSpinning, currentValue, compact }: MiniSlotReel
               ease: [0.25, 0.1, 0.1, 1],
             }}
           >
-            {spinItems.map((item, index) => (
-              <div
-                key={`spin-${index}`}
-                className="flex items-center justify-center"
-                style={{ height: itemHeight, width: itemWidth }}
-              >
-                {item.image ? (
-                  <img
-                    src={item.image}
-                    alt={item.label}
-                    className={compact ? "w-12 h-12 rounded object-cover" : "w-20 h-20 rounded-lg object-cover"}
-                  />
-                ) : (
-                  <span className={`${compact ? 'text-lg' : 'text-xl'} font-bold ${item.color || 'text-white'}`}>
-                    {item.label}
-                  </span>
-                )}
-              </div>
-            ))}
+            {spinItems.map((item, index) => {
+              if (!item) return <div key={`spin-${index}`} style={{ height: itemHeight, width: itemWidth }} />;
+              return (
+                <div
+                  key={`spin-${index}`}
+                  className="flex items-center justify-center"
+                  style={{ height: itemHeight, width: itemWidth }}
+                >
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      alt={item.label}
+                      className={compact ? "w-12 h-12 rounded object-cover" : "w-20 h-20 rounded-lg object-cover"}
+                    />
+                  ) : (
+                    <span className={`${compact ? 'text-lg' : 'text-xl'} font-bold ${item.color || 'text-white'}`}>
+                      {item.label}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
           </motion.div>
         ) : (
           <motion.div

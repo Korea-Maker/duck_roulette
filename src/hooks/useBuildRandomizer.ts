@@ -37,8 +37,10 @@ export function useBuildRandomizer() {
 
     // 보조 룬트리는 주 룬트리와 다르게
     let secondaryTreeIndex = getRandomIndex(RUNE_TREES.length);
-    while (secondaryTreeIndex === primaryTreeIndex) {
+    let attempts = 0;
+    while (secondaryTreeIndex === primaryTreeIndex && attempts < 100) {
       secondaryTreeIndex = getRandomIndex(RUNE_TREES.length);
+      attempts++;
     }
     const secondaryTree = RUNE_TREES[secondaryTreeIndex];
 
@@ -53,12 +55,14 @@ export function useBuildRandomizer() {
     const secondaryRunes: Rune[] = [];
     const usedSlotIndices: number[] = [];
 
-    while (secondaryRunes.length < 2) {
+    let slotAttempts = 0;
+    while (secondaryRunes.length < 2 && slotAttempts < 100) {
       const slotIndex = getRandomIndex(secondaryTree.slots.length);
       if (!usedSlotIndices.includes(slotIndex)) {
         usedSlotIndices.push(slotIndex);
         secondaryRunes.push(getRandomElement(secondaryTree.slots[slotIndex]));
       }
+      slotAttempts++;
     }
 
     // 3. 랜덤 소환사 주문 2개 (완전 랜덤, 점멸 필수 아님)

@@ -65,19 +65,19 @@ test.describe('Duck Roulette - Build Randomization (Ultimate Bravery)', () => {
     await expect(buildHeader).toBeVisible();
 
     // Verify primary rune section exists
-    const primaryRuneSection = page.locator('h5:has-text("주 룬")');
+    const primaryRuneSection = page.locator('span:has-text("주룬")');
     await expect(primaryRuneSection).toBeVisible();
 
     // Verify secondary rune section exists
-    const secondaryRuneSection = page.locator('h5:has-text("보조")');
+    const secondaryRuneSection = page.locator('span:has-text("보조")');
     await expect(secondaryRuneSection).toBeVisible();
 
     // Verify summoner spells section exists
-    const summonerSection = page.locator('h5:has-text("소환사 주문")');
+    const summonerSection = page.locator('span:has-text("주문")');
     await expect(summonerSection).toBeVisible();
 
     // Verify skill order section exists
-    const skillSection = page.locator('h5:has-text("스킬 순서")');
+    const skillSection = page.locator('span:has-text("스킬")');
     await expect(skillSection).toBeVisible();
 
     console.log('✓ TC3 PASS: Complete build info displayed when toggle is ON');
