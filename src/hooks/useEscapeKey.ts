@@ -1,17 +1,20 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 /**
  * ESC 키를 누르면 콜백을 실행합니다.
  */
 export function useEscapeKey(isActive: boolean, onEscape: () => void) {
+  const onEscapeRef = useRef(onEscape);
+  useEffect(() => { onEscapeRef.current = onEscape; });
+
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isActive) {
-        onEscape();
-      }
+    if (!isActive) return;
+
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onEscapeRef.current();
     };
 
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, [isActive, onEscape]);
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [isActive]);
 }

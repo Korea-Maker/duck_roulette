@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { PartyResultDisplayProps } from '../../types';
 import { useConfetti } from '../ResultDisplay/useConfetti';
@@ -6,8 +7,11 @@ import { DAMAGE_TYPES } from '../../data/damageTypes';
 import { getChampionImageUrl } from '../../utils/champion';
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 
 export function PartyResultDisplay({ results, show, onClose, onSpinAgain }: PartyResultDisplayProps) {
+  const modalRef = useRef<HTMLDivElement>(null);
+
   // 컨페티 효과
   useConfetti(show, results.length > 0);
 
@@ -16,6 +20,9 @@ export function PartyResultDisplay({ results, show, onClose, onSpinAgain }: Part
 
   // 모달이 열릴 때 body 스크롤 방지
   useBodyScrollLock(show);
+
+  // 모달 포커스 트랩
+  useFocusTrap(show, modalRef);
 
   if (!show || results.length === 0) return null;
 
@@ -40,6 +47,10 @@ export function PartyResultDisplay({ results, show, onClose, onSpinAgain }: Part
           {/* 모달 컨텐츠 */}
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
             <motion.div
+              ref={modalRef}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="party-result-display-title"
               initial={{ opacity: 0, scale: 0.7, y: 50 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.7, y: 50 }}
@@ -68,6 +79,7 @@ export function PartyResultDisplay({ results, show, onClose, onSpinAgain }: Part
 
               {/* 헤더 */}
               <motion.h3
+                id="party-result-display-title"
                 className="text-2xl sm:text-3xl font-black text-center mb-6 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-red-400"
                 style={{
                   fontFamily: "'Bebas Neue', 'Orbitron', sans-serif",

@@ -6,6 +6,13 @@ import { CHAMPIONS } from '../../data/champions';
 import { LANES } from '../../data/lanes';
 import { getChampionImageUrl } from '../../utils/champion';
 
+const CHAMPION_ITEMS: SlotItemType[] = CHAMPIONS.map(champ => ({
+  id: champ.id,
+  label: champ.koreanName,
+  color: champ.color,
+  image: getChampionImageUrl(champ.id),
+}));
+
 interface MiniSlotReelProps {
   items: SlotItemType[];
   isSpinning: boolean;
@@ -133,15 +140,7 @@ interface PartyMemberSlotProps {
 }
 
 export function PartyMemberSlot({ member, isSpinning, compact }: PartyMemberSlotProps) {
-  // 챔피언 슬롯 아이템으로 변환
-  const championItems: SlotItemType[] = useMemo(() =>
-    CHAMPIONS.map(champ => ({
-      id: champ.id,
-      label: champ.koreanName,
-      color: champ.color,
-      image: getChampionImageUrl(champ.id),
-    })),
-  []);
+  const championItems = CHAMPION_ITEMS;
 
   // 현재 라인 정보
   const currentLaneInfo = useMemo(() => {

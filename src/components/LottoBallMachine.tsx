@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLottoBalls } from '../hooks/useLottoBalls';
 import { getChampionImageUrl } from '../utils/champion';
 import type { Champion } from '../types';
@@ -18,7 +18,7 @@ export function LottoBallMachine({
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 600, height: 450 });
 
-  // Update dimensions on mount and resize
+  // Update dimensions on mount and resize (debounced)
   useEffect(() => {
     const updateDimensions = () => {
       if (containerRef.current) {
@@ -27,9 +27,18 @@ export function LottoBallMachine({
       }
     };
 
+    let timeoutId: ReturnType<typeof setTimeout>;
+    const debouncedUpdate = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(updateDimensions, 300);
+    };
+
     updateDimensions();
-    window.addEventListener('resize', updateDimensions);
-    return () => window.removeEventListener('resize', updateDimensions);
+    window.addEventListener('resize', debouncedUpdate);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', debouncedUpdate);
+    };
   }, []);
 
   const { balls, selectedChampion } = useLottoBalls({
@@ -40,11 +49,22 @@ export function LottoBallMachine({
     onComplete,
   });
 
+  const activeBallCount = useMemo(() => balls.filter(b => !b.isEliminated).length, [balls]);
+
   return (
     <div className="relative w-full max-w-3xl mx-auto">
+      {/* 스크린 리더 전용 상태 안내 */}
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {isSpinning
+          ? `로또 볼 추첨 중. ${activeBallCount}명 남음`
+          : selectedChampion
+            ? `${selectedChampion.koreanName} 당첨!`
+            : `챔피언 로또. ${activeBallCount}명 참여`}
+      </div>
       {/* Lottery Machine Container */}
       <motion.div
         ref={containerRef}
+        aria-label="로또 볼 시뮬레이션"
         className="relative rounded-3xl overflow-hidden"
         style={{
           height: '450px',
@@ -244,7 +264,7 @@ export function LottoBallMachine({
             transition={{ duration: 1.5, repeat: Infinity }}
           >
             {isSpinning
-              ? `추첨 중... (${balls.filter(b => !b.isEliminated).length}명 남음)`
+              ? `추첨 중... (${activeBallCount}명 남음)`
               : selectedChampion
                 ? `🏆 ${selectedChampion.koreanName} 당첨!`
                 : '챔피언 로또'}

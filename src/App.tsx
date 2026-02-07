@@ -1,11 +1,13 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, lazy, Suspense } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { AppMode } from './types';
 import { SlotMachine } from './components/SlotMachine';
-import { PartySlotMachine } from './components/party';
 import { ModeSelector } from './components/party/ModeSelector';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
-function App() {
+const PartySlotMachine = lazy(() => import('./components/party/PartySlotMachine'));
+
+function AppContent() {
   const [mode, setMode] = useState<AppMode>('single');
 
   const handleModeChange = useCallback((newMode: AppMode) => {
@@ -46,12 +48,26 @@ function App() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
             >
-              <PartySlotMachine />
+              <Suspense fallback={
+                <div className="flex items-center justify-center py-20 text-gray-400">
+                  로딩 중...
+                </div>
+              }>
+                <PartySlotMachine />
+              </Suspense>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
     </main>
+  );
+}
+
+function App() {
+  return (
+    <ErrorBoundary>
+      <AppContent />
+    </ErrorBoundary>
   );
 }
 

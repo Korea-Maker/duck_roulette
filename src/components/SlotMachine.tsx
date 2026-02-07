@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { SlotReel } from './SlotReel';
 import { SpinButton } from './SpinButton';
 import { ResultDisplay } from './ResultDisplay';
@@ -11,10 +11,11 @@ import { LottoBallMachine } from './LottoBallMachine';
 import { useSlotMachine } from '../hooks/useSlotMachine';
 import { useSound } from '../hooks/useSound';
 import { useBuildRandomizer } from '../hooks/useBuildRandomizer';
+import { useLottoMode } from '../hooks/useLottoMode';
 import { LANES } from '../data/lanes';
 import { DAMAGE_TYPES } from '../data/damageTypes';
 import { getChampionImageUrl } from '../utils/champion';
-import type { SlotItem, ChampionTag, RandomBuild, Champion } from '../types';
+import type { SlotItem, ChampionTag, RandomBuild } from '../types';
 
 // 데이터를 SlotItem 형태로 변환
 const laneItems: SlotItem[] = LANES.map((lane) => ({
@@ -42,19 +43,8 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
   // 빌드 랜덤화 토글 상태
   const [buildRandomEnabled, setBuildRandomEnabled] = useState(false);
 
-  // 현재 빌드 상태
+  // 현재 빌드 상태 (슬롯 모드용)
   const [currentBuild, setCurrentBuild] = useState<RandomBuild | null>(null);
-
-  // 로또 모드 상태
-  const [isLottoMode, setIsLottoMode] = useState(false);
-
-  // 로또 모드 스피닝 상태
-  const [isLottoSpinning, setIsLottoSpinning] = useState(false);
-  const lottoResultTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // 로또 선택된 챔피언 저장
-  const [lottoSelectedChampion, setLottoSelectedChampion] = useState<Champion | null>(null);
-  const [lottoShowResult, setLottoShowResult] = useState(false);
 
   const {
     state,
@@ -71,6 +61,26 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
   } = useSlotMachine({ onSpinComplete, filterTags });
 
   const { generateRandomBuild } = useBuildRandomizer();
+
+  // 로또 모드 훅
+  const {
+    isLottoMode,
+    setIsLottoMode,
+    isLottoSpinning,
+    lottoSelectedChampion,
+    lottoShowResult,
+    setLottoShowResult,
+    handleLottoSpin,
+    handleLottoComplete,
+    lottoBuild,
+  } = useLottoMode({
+    buildRandomEnabled,
+    generateRandomBuild,
+    onSpinComplete,
+    laneValue: state.lane.currentValue,
+    damageTypeValue: state.damageType.currentValue,
+    hideResult,
+  });
 
   // 필터링된 챔피언 목록을 SlotItem으로 변환
   const championItems: SlotItem[] = useMemo(
@@ -126,52 +136,16 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
     }
   }, [isLottoSpinning, lottoShowResult, startLottoSpin, stopLottoSpin, playWin]);
 
-  // 컴포넌트 언마운트 시 사운드 및 타이머 정리
+  // 컴포넌트 언마운트 시 사운드 정리
   useEffect(() => {
     return () => {
       stopSpin();
       stopLottoSpin();
-      if (lottoResultTimeoutRef.current) {
-        clearTimeout(lottoResultTimeoutRef.current);
-      }
     };
   }, [stopSpin, stopLottoSpin]);
 
-  // 로또 모드 스핀 핸들러
-  const handleLottoSpin = useCallback(() => {
-    if (isLottoSpinning) return;
-    hideResult();
-    setLottoShowResult(false);
-    setLottoSelectedChampion(null);
-    setIsLottoSpinning(true);
-  }, [isLottoSpinning, hideResult]);
-
-  // 로또 모드 완료 핸들러
-  const handleLottoComplete = useCallback((champion: Champion) => {
-    setIsLottoSpinning(false);
-    setLottoSelectedChampion(champion);
-
-    // 빌드 생성
-    if (buildRandomEnabled) {
-      const build = generateRandomBuild(champion.id);
-      setCurrentBuild(build);
-    } else {
-      setCurrentBuild(null);
-    }
-
-    // 이전 타이머 정리
-    if (lottoResultTimeoutRef.current) {
-      clearTimeout(lottoResultTimeoutRef.current);
-    }
-
-    // 결과 표시
-    lottoResultTimeoutRef.current = setTimeout(() => {
-      setLottoShowResult(true);
-      if (onSpinComplete) {
-        onSpinComplete(champion.id, state.lane.currentValue || 'MID', state.damageType.currentValue || 'AD');
-      }
-    }, 100);
-  }, [buildRandomEnabled, generateRandomBuild, onSpinComplete, state.lane.currentValue, state.damageType.currentValue]);
+  // 결과에 사용할 빌드 선택 (로또 모드면 lottoBuild, 아니면 currentBuild)
+  const activeBuild = isLottoMode ? lottoBuild : currentBuild;
 
   return (
     <div className="flex flex-col items-center gap-4 p-2">
@@ -376,7 +350,7 @@ export function SlotMachine({ onSpinComplete }: SlotMachineProps) {
         show={isLottoMode ? lottoShowResult : (showResult && !isSpinning)}
         onClose={isLottoMode ? () => setLottoShowResult(false) : hideResult}
         onSpinAgain={isLottoMode ? handleLottoSpin : spin}
-        build={currentBuild}
+        build={activeBuild}
       />
 
       {/* 소리 토글 버튼 */}

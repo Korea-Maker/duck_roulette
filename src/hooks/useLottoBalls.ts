@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import type { Champion } from '../types';
 import { shuffleArray } from '../utils/random';
+import { BALL_RADIUS, updateBallPhysics, resolveBallCollisions } from '../utils/physics';
 
 interface Ball {
   id: string;
@@ -22,12 +23,6 @@ interface UseLottoBallsOptions {
   isSpinning: boolean;
   onComplete?: (champion: Champion) => void;
 }
-
-// Physics constants - super bouncy!
-const GRAVITY = 0.25;
-const BOUNCE_DAMPING = 0.92;
-const FRICTION = 0.998;
-const BALL_RADIUS = 22;
 
 // Timing constants
 const ELIMINATION_START = 1500; // Start eliminating after 1.5s
@@ -54,9 +49,13 @@ export function useLottoBalls({
     onCompleteRef.current = onComplete;
   }, [onComplete]);
 
-  useEffect(() => {
-    ballsRef.current = balls;
-  }, [balls]);
+  const updateBalls = useCallback((updater: (prev: Ball[]) => Ball[]) => {
+    setBalls(prev => {
+      const next = updater(prev);
+      ballsRef.current = next;
+      return next;
+    });
+  }, []);
 
   // Initialize balls
   const initializeBalls = useCallback(() => {
@@ -84,15 +83,14 @@ export function useLottoBalls({
       };
     });
 
-    setBalls(newBalls);
-  }, [champions, containerWidth, containerHeight]);
+    updateBalls(() => newBalls);
+  }, [champions, containerWidth, containerHeight, updateBalls]);
 
   // Combined physics update and collision detection (optimized - single setBalls call)
   const updateSimulation = useCallback((elapsed: number) => {
-    setBalls((prevBalls) => {
+    updateBalls((prevBalls) => {
       // Pre-calculate active balls count once
       const activeBallsCount = prevBalls.filter(b => !b.isEliminated).length;
-      const minDistSq = (BALL_RADIUS * 2) * (BALL_RADIUS * 2); // Pre-calculate squared distance
 
       // Pre-calculate shake values once per frame
       const shakeIntensity = Math.sin(elapsed * 0.015) * 1.2;
@@ -100,60 +98,9 @@ export function useLottoBalls({
       const shouldShake = activeBallsCount > 1;
 
       // Step 1: Update physics for all balls
-      const updatedBalls = prevBalls.map((ball) => {
-        if (ball.isEliminated) return ball;
-
-        let { x, y, vx, vy } = ball;
-        const { radius } = ball;
-
-        // Apply gravity and friction
-        vy += GRAVITY;
-        vx *= FRICTION;
-        vy *= FRICTION;
-
-        // Energy injection (only if multiple balls remain)
-        if (shouldShake) {
-          vx += shakeIntensity * (Math.random() - 0.5) * 2;
-          vy += shakeIntensity2 * (Math.random() - 0.5) * 2;
-
-          if (Math.random() < 0.05) {
-            vx += (Math.random() - 0.5) * 15;
-            vy += (Math.random() - 0.5) * 15 - 5;
-          }
-          if (Math.random() < 0.01) {
-            vx += (Math.random() - 0.5) * 25;
-            vy -= Math.random() * 20 + 10;
-          }
-        }
-
-        // Update position
-        x += vx;
-        y += vy;
-
-        // Wall collisions
-        if (x - radius < 0) {
-          x = radius;
-          vx = Math.abs(vx) * BOUNCE_DAMPING;
-        } else if (x + radius > containerWidth) {
-          x = containerWidth - radius;
-          vx = -Math.abs(vx) * BOUNCE_DAMPING;
-        }
-
-        if (y - radius < 0) {
-          y = radius;
-          vy = Math.abs(vy) * BOUNCE_DAMPING;
-        } else if (y + radius > containerHeight) {
-          y = containerHeight - radius;
-          vy = -Math.abs(vy) * BOUNCE_DAMPING;
-
-          if (Math.abs(vy) < 3 && shouldShake) {
-            vy = -Math.random() * 12 - 8;
-            vx += (Math.random() - 0.5) * 10;
-          }
-        }
-
-        return { ...ball, x, y, vx, vy };
-      });
+      const updatedBalls = prevBalls.map((ball) =>
+        updateBallPhysics(ball, containerWidth, containerHeight, shouldShake, shakeIntensity, shakeIntensity2)
+      );
 
       // Step 2: Ball-to-ball collisions (only on active balls)
       const activeBalls: Ball[] = [];
@@ -167,58 +114,16 @@ export function useLottoBalls({
         }
       }
 
-      // Optimized collision detection with squared distance check
-      for (let i = 0; i < activeBalls.length; i++) {
-        for (let j = i + 1; j < activeBalls.length; j++) {
-          const ball1 = activeBalls[i];
-          const ball2 = activeBalls[j];
-
-          const dx = ball2.x - ball1.x;
-          const dy = ball2.y - ball1.y;
-          const distSq = dx * dx + dy * dy;
-
-          // Early exit with squared distance comparison (avoids sqrt)
-          if (distSq >= minDistSq || distSq === 0) continue;
-
-          const distance = Math.sqrt(distSq);
-          const minDistance = ball1.radius + ball2.radius;
-
-          const angle = Math.atan2(dy, dx);
-          const sin = Math.sin(angle);
-          const cos = Math.cos(angle);
-
-          const vx1 = ball1.vx * cos + ball1.vy * sin;
-          const vy1 = ball1.vy * cos - ball1.vx * sin;
-          const vx2 = ball2.vx * cos + ball2.vy * sin;
-          const vy2 = ball2.vy * cos - ball2.vx * sin;
-
-          const finalVx1 = vx2 * BOUNCE_DAMPING;
-          const finalVx2 = vx1 * BOUNCE_DAMPING;
-
-          ball1.vx = finalVx1 * cos - vy1 * sin;
-          ball1.vy = vy1 * cos + finalVx1 * sin;
-          ball2.vx = finalVx2 * cos - vy2 * sin;
-          ball2.vy = vy2 * cos + finalVx2 * sin;
-
-          const overlap = minDistance - distance;
-          const invDist = 1 / distance;
-          const separationX = (overlap / 2 + 1) * dx * invDist;
-          const separationY = (overlap / 2 + 1) * dy * invDist;
-
-          ball1.x -= separationX;
-          ball1.y -= separationY;
-          ball2.x += separationX;
-          ball2.y += separationY;
-        }
-      }
+      // Resolve collisions (mutates activeBalls in-place)
+      resolveBallCollisions(activeBalls);
 
       return [...activeBalls, ...eliminatedBalls];
     });
-  }, [containerWidth, containerHeight]);
+  }, [containerWidth, containerHeight, updateBalls]);
 
   // Eliminate one random ball
   const eliminateRandomBall = useCallback((currentTime: number) => {
-    setBalls((prevBalls) => {
+    updateBalls((prevBalls) => {
       const activeBalls = prevBalls.filter(b => !b.isEliminated);
 
       // Keep at least 1 ball
@@ -233,7 +138,7 @@ export function useLottoBalls({
           : ball
       );
     });
-  }, []);
+  }, [updateBalls]);
 
   // Select the winner (last remaining ball)
   const selectWinner = useCallback(() => {
@@ -248,7 +153,7 @@ export function useLottoBalls({
     const winner = activeBalls[0];
     setSelectedChampion(winner.champion);
 
-    setBalls(prevBalls =>
+    updateBalls(prevBalls =>
       prevBalls.map(ball => ({
         ...ball,
         isSelected: ball.id === winner.id,
@@ -266,7 +171,7 @@ export function useLottoBalls({
         onCompleteRef.current(winnerChampion);
       }
     }, 1000);
-  }, []);
+  }, [updateBalls]);
 
   // Shake balls when spinning starts
   const shakeBalls = useCallback(() => {
@@ -284,20 +189,17 @@ export function useLottoBalls({
     lastEliminationRef.current = 0;
     setSelectedChampion(null);
 
-    setBalls((prevBalls) => {
-      const resetBalls = prevBalls.map((ball) => ({
+    updateBalls((prevBalls) =>
+      prevBalls.map((ball) => ({
         ...ball,
         vx: (Math.random() - 0.5) * 35,
         vy: (Math.random() - 0.5) * 30 - 15,
         isSelected: false,
         isEliminated: false,
         eliminatedAt: null,
-      }));
-      // Also update ref immediately for animation loop
-      ballsRef.current = resetBalls;
-      return resetBalls;
-    });
-  }, []);
+      }))
+    );
+  }, [updateBalls]);
 
   // Track active ball count for winner selection
   const activeBallCountRef = useRef<number>(0);
@@ -365,6 +267,9 @@ export function useLottoBalls({
       }
       if (winnerTimeoutRef.current) {
         clearTimeout(winnerTimeoutRef.current);
+      }
+      if (onCompleteTimeoutRef.current) {
+        clearTimeout(onCompleteTimeoutRef.current);
       }
     };
   }, [isSpinning, updateSimulation, eliminateRandomBall, selectWinner]);

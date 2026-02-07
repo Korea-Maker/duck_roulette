@@ -23,7 +23,9 @@ export function ThemeSelector() {
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        aria-label="Change theme"
+        aria-label="테마 변경"
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
       >
         <span className="text-2xl">{currentTheme.icon}</span>
       </motion.button>
@@ -31,6 +33,8 @@ export function ThemeSelector() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            role="listbox"
+            aria-label="테마 목록"
             className="theme-selector-dropdown"
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -40,6 +44,8 @@ export function ThemeSelector() {
             {themes.map((t) => (
               <motion.button
                 key={t.id}
+                role="option"
+                aria-selected={theme === t.id}
                 className={`theme-option ${theme === t.id ? 'active' : ''}`}
                 onClick={() => {
                   setTheme(t.id);
@@ -70,6 +76,7 @@ export function ThemeSelector() {
 
       {isOpen && (
         <div
+          role="presentation"
           className="fixed inset-0 -z-10"
           onClick={() => setIsOpen(false)}
         />

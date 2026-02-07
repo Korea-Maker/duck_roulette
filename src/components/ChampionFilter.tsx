@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import type { ChampionTag } from '../types';
 import { CHAMPION_TAGS, TAG_NAMES, CHAMPIONS } from '../data/champions';
@@ -17,10 +18,11 @@ const TAG_STYLES: Record<ChampionTag, { icon: string; color: string; bgColor: st
   Support: { icon: '💚', color: 'text-teal-400', bgColor: 'bg-teal-500/20 border-teal-500/50' },
 };
 
-// 역할별 챔피언 수 계산
-function getChampionCountByTag(tag: ChampionTag): number {
-  return CHAMPIONS.filter((c) => c.tags.includes(tag)).length;
-}
+// 역할별 챔피언 수 (모듈 레벨에서 미리 계산)
+const TAG_COUNTS: Record<ChampionTag, number> = CHAMPION_TAGS.reduce((acc, tag) => {
+  acc[tag] = CHAMPIONS.filter(c => c.tags.includes(tag)).length;
+  return acc;
+}, {} as Record<ChampionTag, number>);
 
 export function ChampionFilter({ selectedTags, onTagsChange }: ChampionFilterProps) {
   const toggleTag = (tag: ChampionTag) => {
@@ -40,10 +42,12 @@ export function ChampionFilter({ selectedTags, onTagsChange }: ChampionFilterPro
   };
 
   // 필터링된 챔피언 수 계산
-  const filteredCount =
+  const filteredCount = useMemo(() =>
     selectedTags.length === 0
       ? CHAMPIONS.length
-      : CHAMPIONS.filter((c) => c.tags.some((t) => selectedTags.includes(t))).length;
+      : CHAMPIONS.filter((c) => c.tags.some((t) => selectedTags.includes(t))).length,
+    [selectedTags]
+  );
 
   return (
     <motion.div
@@ -76,16 +80,17 @@ export function ChampionFilter({ selectedTags, onTagsChange }: ChampionFilterPro
       </div>
 
       {/* 필터 버튼들 - 가로 한 줄 */}
-      <div className="flex gap-1.5 sm:gap-2 justify-center overflow-x-auto hide-scrollbar px-4">
+      <div className="flex gap-1.5 sm:gap-2 justify-center overflow-x-auto hide-scrollbar px-4" role="group" aria-label="챔피언 역할 필터">
         {CHAMPION_TAGS.map((tag) => {
           const isSelected = selectedTags.includes(tag);
           const style = TAG_STYLES[tag];
-          const count = getChampionCountByTag(tag);
+          const count = TAG_COUNTS[tag];
 
           return (
             <motion.button
               key={tag}
               onClick={() => toggleTag(tag)}
+              aria-pressed={isSelected}
               className={`
                 flex items-center gap-0.5 px-1.5 py-0.5 rounded-full border text-[10px] sm:text-xs font-medium
                 transition-all duration-200 whitespace-nowrap flex-shrink-0

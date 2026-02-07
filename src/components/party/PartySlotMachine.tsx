@@ -232,3 +232,5 @@ export function PartySlotMachine() {
     </div>
   );
 }
+
+export default PartySlotMachine;

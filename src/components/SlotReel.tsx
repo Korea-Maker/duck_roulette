@@ -51,7 +51,11 @@ export function SlotReel({
   const currentItem = items[displayIndex];
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-4" role="group" aria-label={`${label} 선택`}>
+      {/* 스크린 리더 전용 현재 선택 값 */}
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {!isSpinning && currentItem ? `${label}: ${currentItem.label} 선택됨` : isSpinning && enabled ? `${label} 선택 중...` : ''}
+      </div>
       {/* 라벨 */}
       <motion.div
         className="text-xl font-black text-yellow-400"
@@ -83,6 +87,7 @@ export function SlotReel({
 
       {/* 슬롯 릴 */}
       <motion.div
+        aria-hidden="true"
         className={`slot-reel w-44 relative ${!enabled ? 'opacity-50' : ''}`}
         style={{
           height: SLOT_CONFIG.ITEM_HEIGHT * SLOT_CONFIG.VISIBLE_ITEMS,

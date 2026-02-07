@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { ResultDisplayProps } from '../../types';
 import { useConfetti } from './useConfetti';
@@ -7,9 +8,11 @@ import { BuildDisplay } from './BuildDisplay';
 import { hexToRgba } from '../../utils/colorFilters';
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 
 export function ResultDisplay({ lane, champion, damageType, show, onClose, onSpinAgain, build }: ResultDisplayProps) {
   const hasAnyResult = lane || champion || damageType;
+  const modalRef = useRef<HTMLDivElement>(null);
 
   // 컨페티 효과
   useConfetti(show, !!hasAnyResult);
@@ -19,6 +22,9 @@ export function ResultDisplay({ lane, champion, damageType, show, onClose, onSpi
 
   // 모달이 열릴 때 body 스크롤 방지
   useBodyScrollLock(show);
+
+  // 모달 포커스 트랩
+  useFocusTrap(show, modalRef);
 
   if (!show || !hasAnyResult) return null;
 
@@ -46,6 +52,10 @@ export function ResultDisplay({ lane, champion, damageType, show, onClose, onSpi
           {/* 모달 컨텐츠 */}
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
             <motion.div
+              ref={modalRef}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="result-display-title"
               initial={{ opacity: 0, scale: 0.7, y: 50 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.7, y: 50 }}
@@ -81,6 +91,7 @@ export function ResultDisplay({ lane, champion, damageType, show, onClose, onSpi
 
               {/* 헤더 */}
               <motion.h3
+                id="result-display-title"
                 className={`font-black text-center text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-red-400 ${build ? 'text-2xl mb-4' : 'text-3xl mb-8'}`}
                 style={{
                   fontFamily: "'Bebas Neue', 'Orbitron', sans-serif",
