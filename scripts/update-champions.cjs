@@ -94,7 +94,15 @@ async function main() {
 
     console.log('📥 챔피언 데이터 다운로드 중...');
     const championsRes = await fetch(CHAMPIONS_URL(latestVersion));
+    if (!championsRes.ok) {
+      console.error(`❌ API 응답 에러: ${championsRes.status} ${championsRes.statusText}`);
+      process.exit(1);
+    }
     const championsData = await championsRes.json();
+    if (!championsData || !championsData.data) {
+      console.error('❌ API 응답에 data 필드가 없습니다. 기존 파일을 유지합니다.');
+      process.exit(1);
+    }
 
     // API 응답 검증용 정규식 (영문, 한글, 숫자, 공백, 일부 특수문자 허용)
     const VALID_NAME_REGEX = /^[a-zA-Z0-9가-힣\s'.&\-:!()]+$/;
