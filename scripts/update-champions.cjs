@@ -96,8 +96,8 @@ async function main() {
     const championsRes = await fetch(CHAMPIONS_URL(latestVersion));
     const championsData = await championsRes.json();
 
-    // API 응답 검증용 정규식 (영문, 숫자, 공백, 일부 특수문자 허용)
-    const VALID_NAME_REGEX = /^[a-zA-Z0-9\s'.&\-:!()]+$/;
+    // API 응답 검증용 정규식 (영문, 한글, 숫자, 공백, 일부 특수문자 허용)
+    const VALID_NAME_REGEX = /^[a-zA-Z0-9가-힣\s'.&\-:!()]+$/;
 
     const champions = Object.entries(championsData.data)
       .filter(([id, data]) => {
@@ -128,6 +128,12 @@ async function main() {
       .sort((a, b) => a.id.localeCompare(b.id));
 
     console.log(`✅ ${champions.length}개 챔피언 로드 완료`);
+
+    // 안전장치: 챔피언 수가 100개 미만이면 비정상 데이터로 판단하고 중단
+    if (champions.length < 100) {
+      console.error(`❌ 챔피언 수가 ${champions.length}개로 비정상적입니다. 기존 파일을 유지합니다.`);
+      process.exit(1);
+    }
 
     const content = `import type { Champion } from '../types';
 
