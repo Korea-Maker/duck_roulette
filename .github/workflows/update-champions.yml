@@ -47,8 +47,7 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           npm install -g vercel
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
           vercel pull --yes --environment=production --token=$VERCEL_TOKEN
           vercel build --prod --token=$VERCEL_TOKEN
-          vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN --no-git-checks
+          rm -rf .git
+          vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
