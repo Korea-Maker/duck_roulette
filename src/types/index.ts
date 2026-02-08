@@ -114,7 +114,7 @@ export interface PartySlotMachineState {
 export type PartyLayoutType = 'horizontal' | 'circular';
 
 // 앱 모드
-export type AppMode = 'single' | 'party';
+export type AppMode = 'single' | 'party' | 'strategy' | 'gold-pressure' | 'color-blender' | 'fate-trade' | 'synergy';
 
 // 파티 결과 타입
 export interface PartyResult {
