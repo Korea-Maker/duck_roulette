@@ -2,8 +2,8 @@ import type { Champion } from '../types';
 
 // Riot Data Dragon 기반 챔피언 목록 (172개) - 각 챔피언의 대표 색상 및 역할 포함
 // 자동 생성됨 - 수동 수정 금지
-// 최종 업데이트: 2026-03-17
-// API 버전: 16.5.1
+// 최종 업데이트: 2026-03-18
+// API 버전: 16.6.1
 export const CHAMPIONS: Champion[] = [
   { id: 'Aatrox', name: '아트록스', koreanName: '아트록스', color: '#ff4444', tags: ['Fighter'] },
   { id: 'Ahri', name: '아리', koreanName: '아리', color: '#ff69b4', tags: ['Mage', 'Assassin'] },
@@ -126,7 +126,7 @@ export const CHAMPIONS: Champion[] = [
   { id: 'Sett', name: '세트', koreanName: '세트', color: '#ff6644', tags: ['Fighter', 'Tank'] },
   { id: 'Shaco', name: '샤코', koreanName: '샤코', color: '#ff8844', tags: ['Assassin'] },
   { id: 'Shen', name: '쉔', koreanName: '쉔', color: '#4466aa', tags: ['Tank'] },
-  { id: 'Shyvana', name: '쉬바나', koreanName: '쉬바나', color: '#ff4466', tags: ['Fighter', 'Mage'] },
+  { id: 'Shyvana', name: '쉬바나', koreanName: '쉬바나', color: '#ff4466', tags: ['Fighter', 'Tank'] },
   { id: 'Singed', name: '신지드', koreanName: '신지드', color: '#44aa44', tags: ['Tank', 'Mage'] },
   { id: 'Sion', name: '사이온', koreanName: '사이온', color: '#884444', tags: ['Tank', 'Fighter'] },
   { id: 'Sivir', name: '시비르', koreanName: '시비르', color: '#ffaa44', tags: ['Marksman'] },
