@@ -1,9 +1,9 @@
 import type { Champion } from '../types';
 
-// Riot Data Dragon 기반 챔피언 목록 (172개) - 각 챔피언의 대표 색상 및 역할 포함
+// Riot Data Dragon 기반 챔피언 목록 (173개) - 각 챔피언의 대표 색상 및 역할 포함
 // 자동 생성됨 - 수동 수정 금지
-// 최종 업데이트: 2026-06-23
-// API 버전: 16.12.1
+// 최종 업데이트: 2026-06-24
+// API 버전: 16.13.1
 export const CHAMPIONS: Champion[] = [
   { id: 'Aatrox', name: '아트록스', koreanName: '아트록스', color: '#ff4444', tags: ['Fighter'] },
   { id: 'Ahri', name: '아리', koreanName: '아리', color: '#ff69b4', tags: ['Mage', 'Assassin'] },
@@ -79,6 +79,7 @@ export const CHAMPIONS: Champion[] = [
   { id: 'Leona', name: '레오나', koreanName: '레오나', color: '#ffcc44', tags: ['Tank', 'Support'] },
   { id: 'Lillia', name: '릴리아', koreanName: '릴리아', color: '#ff88cc', tags: ['Fighter', 'Mage'] },
   { id: 'Lissandra', name: '리산드라', koreanName: '리산드라', color: '#4466ff', tags: ['Mage'] },
+  { id: 'Locke', name: '로크', koreanName: '로크', color: '#e052bf', tags: ['Assassin', 'Mage'] },
   { id: 'Lucian', name: '루시안', koreanName: '루시안', color: '#ffcc88', tags: ['Marksman', 'Assassin'] },
   { id: 'Lulu', name: '룰루', koreanName: '룰루', color: '#cc88ff', tags: ['Support', 'Mage'] },
   { id: 'Lux', name: '럭스', koreanName: '럭스', color: '#ffee88', tags: ['Mage', 'Support'] },
