@@ -2,8 +2,8 @@ import type { Champion } from '../types';
 
 // Riot Data Dragon 기반 챔피언 목록 (173개) - 각 챔피언의 대표 색상 및 역할 포함
 // 자동 생성됨 - 수동 수정 금지
-// 최종 업데이트: 2026-08-11
-// API 버전: 16.15.1
+// 최종 업데이트: 2026-08-12
+// API 버전: 16.16.1
 export const CHAMPIONS: Champion[] = [
   { id: 'Aatrox', name: '아트록스', koreanName: '아트록스', color: '#ff4444', tags: ['Fighter'] },
   { id: 'Ahri', name: '아리', koreanName: '아리', color: '#ff69b4', tags: ['Mage', 'Assassin'] },
