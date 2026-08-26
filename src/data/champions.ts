@@ -2,8 +2,8 @@ import type { Champion } from '../types';
 
 // Riot Data Dragon 기반 챔피언 목록 (173개) - 각 챔피언의 대표 색상 및 역할 포함
 // 자동 생성됨 - 수동 수정 금지
-// 최종 업데이트: 2026-08-25
-// API 버전: 16.16.1
+// 최종 업데이트: 2026-08-26
+// API 버전: 16.17.1
 export const CHAMPIONS: Champion[] = [
   { id: 'Aatrox', name: '아트록스', koreanName: '아트록스', color: '#ff4444', tags: ['Fighter'] },
   { id: 'Ahri', name: '아리', koreanName: '아리', color: '#ff69b4', tags: ['Mage', 'Assassin'] },
@@ -66,7 +66,7 @@ export const CHAMPIONS: Champion[] = [
   { id: 'Karthus', name: '카서스', koreanName: '카서스', color: '#44ff88', tags: ['Mage'] },
   { id: 'Kassadin', name: '카사딘', koreanName: '카사딘', color: '#6644ff', tags: ['Assassin', 'Mage'] },
   { id: 'Katarina', name: '카타리나', koreanName: '카타리나', color: '#ff4466', tags: ['Assassin', 'Mage'] },
-  { id: 'Kayle', name: '케일', koreanName: '케일', color: '#ffcc44', tags: ['Mage', 'Marksman'] },
+  { id: 'Kayle', name: '케일', koreanName: '케일', color: '#ffcc44', tags: ['Marksman', 'Mage'] },
   { id: 'Kayn', name: '케인', koreanName: '케인', color: '#ff4466', tags: ['Fighter', 'Assassin'] },
   { id: 'Kennen', name: '케넨', koreanName: '케넨', color: '#9944ff', tags: ['Mage'] },
   { id: 'Khazix', name: '카직스', koreanName: '카직스', color: '#9944ff', tags: ['Assassin'] },
@@ -170,7 +170,7 @@ export const CHAMPIONS: Champion[] = [
   { id: 'Yorick', name: '요릭', koreanName: '요릭', color: '#44aa66', tags: ['Fighter', 'Tank'] },
   { id: 'Yunara', name: '유나라', koreanName: '유나라', color: '#88ddff', tags: ['Marksman'] },
   { id: 'Yuumi', name: '유미', koreanName: '유미', color: '#ff88ff', tags: ['Support', 'Mage'] },
-  { id: 'Zaahen', name: '자헨', koreanName: '자헨', color: '#cc66ff', tags: ['Fighter', 'Assassin'] },
+  { id: 'Zaahen', name: '자헨', koreanName: '자헨', color: '#cc66ff', tags: ['Fighter'] },
   { id: 'Zac', name: '자크', koreanName: '자크', color: '#66ff44', tags: ['Tank', 'Fighter'] },
   { id: 'Zed', name: '제드', koreanName: '제드', color: '#ff4466', tags: ['Assassin'] },
   { id: 'Zeri', name: '제리', koreanName: '제리', color: '#44ffcc', tags: ['Marksman'] },

@@ -1,4 +1,4 @@
-const DDRAGON_VERSION = import.meta.env.VITE_DDRAGON_VERSION || '16.16.1';
+const DDRAGON_VERSION = import.meta.env.VITE_DDRAGON_VERSION || '16.17.1';
 const DDRAGON_BASE_URL = import.meta.env.VITE_DDRAGON_BASE_URL || 'https://ddragon.leagueoflegends.com';
 
 export const API_CONFIG = {
